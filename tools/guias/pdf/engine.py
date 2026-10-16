@@ -265,6 +265,10 @@ table.data.compact td {{ padding: 1.4mm 2mm; }}
 class Guide:
     def __init__(self, slug, number, title, subtitle, pages_fn):
         self.slug, self.number, self.title, self.subtitle, self.pages_fn = slug, number, title, subtitle, pages_fn
+        self.files = {}  # nome do PDF por idioma, quando difere de <slug>-<lang>
+
+    def file(self, lang):
+        return self.files.get(lang, f'{self.slug}-{lang}') + '.pdf'
 
 
 def frame(inner, lang, n, head_left, head_right='', dark=False, cls='', outside=''):
@@ -471,7 +475,7 @@ async def build(guides, outdir, langs=('pt', 'en'), check=True):
                     const used = last.getBoundingClientRect().bottom - c.getBoundingClientRect().top;
                     if (used < c.clientHeight * 0.66) p.appendChild(t.content.cloneNode(true)); }); }""")
                 over = await pg.evaluate("""() => [...document.querySelectorAll('.page')].map((p, i) => { const c = p.querySelector('.content'); return c && c.scrollHeight > c.clientHeight + 2 ? [i + 1, c.scrollHeight - c.clientHeight] : null }).filter(Boolean)""")
-                await pg.pdf(path=os.path.join(outdir, f'{g.slug}-{lang}.pdf'), prefer_css_page_size=True, print_background=True)
+                await pg.pdf(path=os.path.join(outdir, g.file(lang)), prefer_css_page_size=True, print_background=True)
                 report[f'{g.slug}-{lang}'] = (n, over)
                 print(f'{g.slug}-{lang}: {n} páginas', ('TRANSBORDO ' + str(over)) if over else 'ok')
         await b.close()

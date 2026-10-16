@@ -521,3 +521,4 @@ def closing_page(n):
 
 
 GUIDE = Guide('infusoes-de-autor', 1, L('Infusões Autorais', 'Signature Infusions'), L('40 chás e infusões em estilo barista, feitos com a sua despensa', '40 barista-style teas and infusions made from your pantry'), build_pages)
+GUIDE.files = {'pt': 'infusoes-autorais-pt'}

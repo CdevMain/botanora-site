@@ -362,7 +362,7 @@ async function apiPublic(req, res, pathname, ip, query) {
     if (!f) return send(req, res, 404, 'Arquivo indisponível', 'text/plain; charset=utf-8');
     o.downloads++; store.save();
     analytics.trackEvent(req, ip, 'download', { product: p.slug, lang: f.lang, path: '/library' });
-    return streamPdf(req, res, f.path, `botanora-${p.slug}-${f.lang}.pdf`);
+    return streamPdf(req, res, f.path, `botanora-${path.basename(f.path)}`);
   }
 
   // Webhook da Cakto
@@ -459,7 +459,7 @@ function download(req, res, orderId, query, ip) {
   if (o.downloads >= config.maxDownloads) return send(req, res, 429, 'Limite de downloads atingido. Fale com ' + config.contactEmail, 'text/plain; charset=utf-8');
   o.downloads++; store.save();
   analytics.trackEvent(req, ip, 'download', { product: p.slug, lang: f.lang, path: '/download' });
-  return streamPdf(req, res, f.path, `botanora-${p.slug}-${f.lang}.pdf`);
+  return streamPdf(req, res, f.path, `botanora-${path.basename(f.path)}`);
 }
 
 // ---------- API admin ----------

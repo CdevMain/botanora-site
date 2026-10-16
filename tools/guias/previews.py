@@ -70,7 +70,7 @@ def run(only=None):
         chosen = pick(pages)
         manifest[G.slug] = {}
         for lang in ('pt', 'en'):
-            pdf = os.path.join(ROOT, 'seed', f'{G.slug}-{lang}.pdf')
+            pdf = os.path.join(ROOT, 'seed', G.file(lang))
             if not os.path.exists(pdf):
                 print('sem PDF:', pdf)
                 continue

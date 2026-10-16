@@ -47,9 +47,9 @@ if (!db.meta.affSeeded) { db.affiliates.push(...JSON.parse(JSON.stringify(seedAf
 const UPLOAD_DIR = path.join(config.dataDir, 'uploads');
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
-// Copia os PDFs iniciais de seed/ (ex.: infusoes-de-autor-pt.pdf)
+// Copia os PDFs iniciais de seed/ (ex.: infusoes-autorais-pt.pdf)
 const seedPdfDir = path.join(config.root, 'seed');
-const GUIDES_V = 5;
+const GUIDES_V = 6;
 if (fs.existsSync(seedPdfDir)) {
   for (const f of fs.readdirSync(seedPdfDir)) {
     const dest = path.join(PDF_DIR, f);
