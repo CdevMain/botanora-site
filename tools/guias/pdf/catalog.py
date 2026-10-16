@@ -7,7 +7,7 @@ Uso:
 import importlib, json, sys, unicodedata, itertools, contextlib, io
 
 GUIDES = [
-    ('01', 'Infusões de Autor', ['g01_infusoes']),
+    ('01', 'Infusões Autorais', ['g01_infusoes']),
     ('02', 'Atlas do Chá', ['g02_atlas', 'x02_atlas']),
     ('03', 'Ritual da Noite', ['g03_ritual', 'x03_ritual']),
     ('04', 'Foco & Energia', ['g04_foco', 'x04_foco']),

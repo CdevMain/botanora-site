@@ -75,6 +75,10 @@ Os 10 guias já vêm prontos nas duas línguas em `seed/` (`<slug>-pt.pdf` e `<s
 
 Cada página de produto mostra 6 páginas de amostra do guia (capa, abertura, sumário, uma página de conteúdo e duas de receitas), no idioma do site, com um leitor em tela cheia que funciona no celular (deslizar) e no teclado (setas). As imagens ficam em `public/assets/img/previews/` e são geradas a partir dos PDFs de `seed/` com `python3 tools/guias/previews.py`. Quantas vezes as prévias foram abertas aparece no painel, em Engajamento.
 
+## Busca (Google) e IAs
+
+Páginas de chá (`/pt/guia/<chá>`), 20 receitas grátis (`/pt/receitas`), perguntas frequentes (`/pt/perguntas`), dados estruturados, `sitemap.xml`, `robots.txt` aberto para IAs, `/llms.txt`, versão Markdown de cada página (`.md` no fim da URL) e IndexNow automático. O plano completo, com o passo a passo do Search Console e ideias para crescer, está em `docs/seo-e-ia.md`. As receitas públicas saem dos guias com `python3 tools/guias/pdf/export_receitas.py`.
+
 ## Criar um guia novo
 
 Antes de escrever, consulte `docs/guias-conteudo.md`, o guia interno com tudo o que os 10 guias já cobrem (seções, receitas, ingredientes e temas livres). O passo a passo para escrever, checar repetições, gerar o PDF, a capa e a prévia está em `tools/guias/README.md`.

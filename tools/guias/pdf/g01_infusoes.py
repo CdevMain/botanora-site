@@ -507,7 +507,7 @@ def build_pages():
     return P
 
 
-OTHERS = [(1, L('Infusões de Autor', 'Signature Infusions')), (2, L('Atlas do Chá', 'The Tea Atlas')), (3, L('Ritual da Noite', 'The Night Ritual')), (4, L('Foco & Energia', 'Focus & Energy')),
+OTHERS = [(1, L('Infusões Autorais', 'Signature Infusions')), (2, L('Atlas do Chá', 'The Tea Atlas')), (3, L('Ritual da Noite', 'The Night Ritual')), (4, L('Foco & Energia', 'Focus & Energy')),
           (5, L('Gelados & Cold Brew', 'Iced & Cold Brew')), (6, L('Matcha em Casa', 'Matcha at Home')), (7, L('Ervas do Quintal', 'Backyard Herbs')), (8, L('Blends Autorais', 'Crafting Blends')),
           (9, L('Chá & Mesa', 'Tea & Table')), (10, L('Erva-Mate', 'Yerba Mate'))]
 
@@ -520,4 +520,4 @@ def closing_page(n):
                        '© Botanora. This guide is for personal use; reproduction or redistribution without permission is prohibited. The content is educational and does not replace medical or nutritional advice.')}
 
 
-GUIDE = Guide('infusoes-de-autor', 1, L('Infusões de Autor', 'Signature Infusions'), L('40 chás e infusões em estilo barista, feitos com a sua despensa', '40 barista-style teas and infusions made from your pantry'), build_pages)
+GUIDE = Guide('infusoes-de-autor', 1, L('Infusões Autorais', 'Signature Infusions'), L('40 chás e infusões em estilo barista, feitos com a sua despensa', '40 barista-style teas and infusions made from your pantry'), build_pages)

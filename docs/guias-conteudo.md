@@ -1,6 +1,6 @@
 # Guia interno: o que cada guia Botanora já cobre
 
-Documento interno, gerado automaticamente em 15/10/2026 a partir do código dos guias (`tools/guias/pdf`). Não é vendido nem publicado no site.
+Documento interno, gerado automaticamente em 16/10/2026 a partir do código dos guias (`tools/guias/pdf`). Não é vendido nem publicado no site.
 
 ## Como usar antes de criar um guia novo
 
@@ -22,7 +22,7 @@ Documento interno, gerado automaticamente em 15/10/2026 a partir do código dos 
 
 | Nº | Guia | Páginas | Receitas e fórmulas |
 |---|---|---|---|
-| 01 | Infusões de Autor (`infusoes-de-autor`) | 40 | 40 |
+| 01 | Infusões Autorais (`infusoes-de-autor`) | 40 | 40 |
 | 02 | Atlas do Chá (`atlas-do-cha`) | 40 | 12 |
 | 03 | Ritual da Noite (`ritual-da-noite`) | 24 | 24 |
 | 04 | Foco & Energia (`foco-e-energia`) | 24 | 18 |
@@ -33,7 +33,7 @@ Documento interno, gerado automaticamente em 15/10/2026 a partir do código dos 
 | 09 | Chá & Mesa (`cha-e-mesa`) | 28 | 20 |
 | 10 | Erva-Mate (`erva-mate`) | 24 | 18 |
 
-## 01. Infusões de Autor
+## 01. Infusões Autorais
 
 *40 chás e infusões em estilo barista, feitos com a sua despensa* · slug `infusoes-de-autor`
 

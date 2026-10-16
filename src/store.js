@@ -49,7 +49,7 @@ fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 // Copia os PDFs iniciais de seed/ (ex.: infusoes-de-autor-pt.pdf)
 const seedPdfDir = path.join(config.root, 'seed');
-const GUIDES_V = 4;
+const GUIDES_V = 5;
 if (fs.existsSync(seedPdfDir)) {
   for (const f of fs.readdirSync(seedPdfDir)) {
     const dest = path.join(PDF_DIR, f);
@@ -65,7 +65,7 @@ if ((db.meta.guidesV || 0) < GUIDES_V) {
     for (const l of LANGS) if (s.files[l] && fs.existsSync(path.join(PDF_DIR, s.files[l]))) p.files[l] = s.files[l];
     if (p.status === 'coming_soon') p.status = 'available';
     p.pages = s.pages;
-    for (const f of ['description', 'highlights', 'lang']) p[f] = JSON.parse(JSON.stringify(s[f]));
+    for (const f of ['title', 'subtitle', 'description', 'highlights', 'lang']) p[f] = JSON.parse(JSON.stringify(s[f]));
   }
   db.meta.guidesV = GUIDES_V;
 }

@@ -14,7 +14,7 @@ Parâmetros sugeridos no Midjourney: `--ar 1:1 --style raw --stylize 150` (ilust
 
 Negativo (onde houver campo): `text, letters, watermark, photo, 3d render, gradient colors, white background, color fill, cartoon, flat vector`
 
-## 01 · Infusões de Autor / *Signature Infusions*
+## 01 · Infusões Autorais / *Signature Infusions*
 
 ```
 a porcelain teacup on a saucer with three curls of steam rising, a cinnamon stick and a star anise resting beside the saucer, a thin circle drawn behind the cup, [bloco de estilo]

@@ -1,0 +1,1993 @@
+[
+ {
+  "slug": {
+   "pt": "preto-imperial-de-especiarias",
+   "en": "imperial-spiced-black"
+  },
+  "guide": "infusoes-de-autor",
+  "guideNumber": 1,
+  "name": {
+   "pt": "Preto Imperial de Especiarias",
+   "en": "Imperial Spiced Black"
+  },
+  "tag": {
+   "pt": "Malte, madeira doce e um final anisado longo.",
+   "en": "Malt, sweet wood and a long anise finish."
+  },
+  "time": {
+   "pt": "9 min",
+   "en": "9 min"
+  },
+  "yield": {
+   "pt": "1 xícara · 250 ml",
+   "en": "1 cup · 250 ml"
+  },
+  "caffeine": true,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "300 ml",
+     "en": "300 ml"
+    },
+    "item": {
+     "pt": "água",
+     "en": "water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 sachê",
+     "en": "1 bag"
+    },
+    "item": {
+     "pt": "chá preto",
+     "en": "black tea"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 pau (5 cm)",
+     "en": "1 stick (5 cm)"
+    },
+    "item": {
+     "pt": "canela em casca",
+     "en": "cinnamon stick"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 un.",
+     "en": "1"
+    },
+    "item": {
+     "pt": "anis-estrelado",
+     "en": "star anise"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 c. chá",
+     "en": "1 tsp"
+    },
+    "item": {
+     "pt": "mel",
+     "en": "honey"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Ferva a água com a canela e o anis por 4 min, fogo baixo e panela tampada. Especiaria dura pede decocção, não infusão.",
+    "en": "Simmer the water with the cinnamon and anise for 4 min, low heat, lid on. Hard spices need a decoction, not an infusion."
+   },
+   {
+    "pt": "Desligue e aguarde 30 s (≈ 95 °C). Junte o sachê e infunda 3 min, tampado.",
+    "en": "Turn off the heat and wait 30 s (≈ 95 °C). Add the bag and steep 3 min, covered."
+   },
+   {
+    "pt": "Retire o sachê sem espremer: espremer libera taninos amargos. Coe as especiarias.",
+    "en": "Lift out the bag without squeezing: squeezing releases bitter tannins. Strain the spices."
+   },
+   {
+    "pt": "Adoce com o mel fora do fogo.",
+    "en": "Sweeten with the honey off the heat."
+   }
+  ],
+  "finish": {
+   "pt": "A própria estrela de anis flutuando na xícara.",
+   "en": "The star anise itself floating in the cup."
+  },
+  "tip": {
+   "pt": "Toste a canela e o anis por 40 s na panela seca antes da água: os óleos essenciais se intensificam.",
+   "en": "Toast the cinnamon and anise for 40 s in the dry pan before adding water: the essential oils intensify."
+  }
+ },
+ {
+  "slug": {
+   "pt": "agua-fresca-de-hibisco",
+   "en": "hibiscus-agua-fresca"
+  },
+  "guide": "infusoes-de-autor",
+  "guideNumber": 1,
+  "name": {
+   "pt": "Água Fresca de Hibisco",
+   "en": "Hibiscus Agua Fresca"
+  },
+  "tag": {
+   "pt": "A \"agua de jamaica\" mexicana: vibrante, ácida e muito refrescante.",
+   "en": "Mexican \"agua de jamaica\": vibrant, tart and very refreshing."
+  },
+  "time": {
+   "pt": "15 min",
+   "en": "15 min"
+  },
+  "yield": {
+   "pt": "2 copos · 500 ml",
+   "en": "2 glasses · 500 ml"
+  },
+  "caffeine": false,
+  "iced": true,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "2 c. sopa",
+     "en": "2 tbsp"
+    },
+    "item": {
+     "pt": "flor de hibisco",
+     "en": "dried hibiscus flowers"
+    }
+   },
+   {
+    "qty": {
+     "pt": "250 ml",
+     "en": "250 ml"
+    },
+    "item": {
+     "pt": "água fervente",
+     "en": "boiling water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "250 ml",
+     "en": "250 ml"
+    },
+    "item": {
+     "pt": "água gelada",
+     "en": "ice-cold water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "3 c. sopa",
+     "en": "3 tbsp"
+    },
+    "item": {
+     "pt": "mel",
+     "en": "honey"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 un.",
+     "en": "1"
+    },
+    "item": {
+     "pt": "limão (suco)",
+     "en": "lime (juice)"
+    }
+   },
+   {
+    "qty": {
+     "pt": "a gosto",
+     "en": "to taste"
+    },
+    "item": {
+     "pt": "gelo e lâminas de maçã",
+     "en": "ice and apple slices"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Infunda o hibisco na água fervente por 5 min. Coe.",
+    "en": "Steep the hibiscus in the boiling water for 5 min. Strain."
+   },
+   {
+    "pt": "Dissolva o mel ainda quente.",
+    "en": "Dissolve the honey while hot."
+   },
+   {
+    "pt": "Complete com a água gelada e o suco de limão.",
+    "en": "Top up with the ice-cold water and lime juice."
+   },
+   {
+    "pt": "Sirva sobre gelo com lâminas de maçã.",
+    "en": "Serve over ice with apple slices."
+   }
+  ],
+  "finish": {
+   "pt": "Lâminas de maçã e cubos de hibisco.",
+   "en": "Apple slices and hibiscus ice cubes."
+  },
+  "tip": {
+   "pt": "Congele parte da bebida em forminha de gelo: cubos de hibisco esfriam sem diluir.",
+   "en": "Freeze some of the drink in an ice tray: hibiscus cubes chill without diluting."
+  }
+ },
+ {
+  "slug": {
+   "pt": "long-jing-no-copo",
+   "en": "long-jing-in-a-glass"
+  },
+  "guide": "atlas-do-cha",
+  "guideNumber": 2,
+  "name": {
+   "pt": "Long Jing no Copo",
+   "en": "Long Jing in a Glass"
+  },
+  "tag": {
+   "pt": "O verde de Hangzhou, folhas dançando.",
+   "en": "Hangzhou's green, leaves dancing."
+  },
+  "time": {
+   "pt": "3 min",
+   "en": "3 min"
+  },
+  "yield": {
+   "pt": "1 copo · 250 ml",
+   "en": "1 glass · 250 ml"
+  },
+  "caffeine": true,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "3 g",
+     "en": "3 g"
+    },
+    "item": {
+     "pt": "Long Jing (Poço do Dragão)",
+     "en": "Long Jing (Dragon Well)"
+    }
+   },
+   {
+    "qty": {
+     "pt": "250 ml",
+     "en": "250 ml"
+    },
+    "item": {
+     "pt": "água a 80 °C",
+     "en": "water at 80 °C"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Coloque um terço da água no copo e depois as folhas.",
+    "en": "Pour a third of the water into the glass, then add the leaves."
+   },
+   {
+    "pt": "Espere 30 s, até as folhas se abrirem.",
+    "en": "Wait 30 s for the leaves to open."
+   },
+   {
+    "pt": "Complete a água pela borda, em fio alto.",
+    "en": "Top up along the rim in a high stream."
+   },
+   {
+    "pt": "Beba quando as folhas afundarem; complete quando faltar um terço.",
+    "en": "Drink once the leaves sink; top up when a third is left."
+   }
+  ],
+  "finish": {
+   "pt": "Folhas em pé, como agulhas.",
+   "en": "Leaves standing like needles."
+  },
+  "tip": {
+   "pt": "Água primeiro protege a folha delicada do choque de calor.",
+   "en": "Water first protects the delicate leaf from heat shock."
+  }
+ },
+ {
+  "slug": {
+   "pt": "bubble-tea-caseiro",
+   "en": "homemade-bubble-tea"
+  },
+  "guide": "atlas-do-cha",
+  "guideNumber": 2,
+  "name": {
+   "pt": "Bubble Tea Caseiro",
+   "en": "Homemade Bubble Tea"
+  },
+  "tag": {
+   "pt": "Chá com leite taiwanês e pérolas de tapioca.",
+   "en": "Taiwanese milk tea with tapioca pearls."
+  },
+  "time": {
+   "pt": "40 min",
+   "en": "40 min"
+  },
+  "yield": {
+   "pt": "2 copos",
+   "en": "2 glasses"
+  },
+  "caffeine": true,
+  "iced": true,
+  "milk": true,
+  "level": {
+   "pt": "Intermediário",
+   "en": "Intermediate"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "6 g",
+     "en": "6 g"
+    },
+    "item": {
+     "pt": "oolong tostado ou Assam",
+     "en": "roasted oolong or Assam"
+    }
+   },
+   {
+    "qty": {
+     "pt": "300 ml",
+     "en": "300 ml"
+    },
+    "item": {
+     "pt": "água fervente",
+     "en": "boiling water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "60 g",
+     "en": "60 g"
+    },
+    "item": {
+     "pt": "pérolas de tapioca",
+     "en": "tapioca pearls"
+    }
+   },
+   {
+    "qty": {
+     "pt": "3 c. sopa",
+     "en": "3 tbsp"
+    },
+    "item": {
+     "pt": "açúcar mascavo",
+     "en": "brown sugar"
+    }
+   },
+   {
+    "qty": {
+     "pt": "200 ml",
+     "en": "200 ml"
+    },
+    "item": {
+     "pt": "leite",
+     "en": "milk"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Cozinhe as pérolas conforme a embalagem (20 a 30 min). Escorra e misture com o açúcar mascavo e 2 c. sopa de água quente.",
+    "en": "Cook the pearls as packaged (20 to 30 min). Drain and mix with the brown sugar and 2 tbsp hot water."
+   },
+   {
+    "pt": "Infunda o chá forte por 5 min, coe e esfrie.",
+    "en": "Steep the tea strong for 5 min, strain and cool."
+   },
+   {
+    "pt": "No copo: pérolas com calda, gelo, chá e leite.",
+    "en": "In the glass: pearls with syrup, ice, tea and milk."
+   }
+  ],
+  "finish": {
+   "pt": "Canudo largo.",
+   "en": "A wide straw."
+  },
+  "tip": {
+   "pt": "As pérolas endurecem na geladeira: faça só o que vai consumir em 4 horas.",
+   "en": "Pearls harden in the fridge: make only what you will drink within 4 hours."
+  }
+ },
+ {
+  "slug": {
+   "pt": "melissa-morna-com-limao",
+   "en": "warm-lemon-balm-and-lemon"
+  },
+  "guide": "ritual-da-noite",
+  "guideNumber": 3,
+  "name": {
+   "pt": "Melissa Morna com Limão",
+   "en": "Warm Lemon Balm and Lemon"
+  },
+  "tag": {
+   "pt": "Leve, cítrica, para depois do jantar.",
+   "en": "Light and citrusy, for after dinner."
+  },
+  "time": {
+   "pt": "8 min",
+   "en": "8 min"
+  },
+  "yield": {
+   "pt": "2 xícaras",
+   "en": "2 cups"
+  },
+  "caffeine": false,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "12 folhas",
+     "en": "12 leaves"
+    },
+    "item": {
+     "pt": "melissa fresca (ou 2 c. sopa seca)",
+     "en": "fresh lemon balm (or 2 tbsp dried)"
+    }
+   },
+   {
+    "qty": {
+     "pt": "3 botões",
+     "en": "3 buds"
+    },
+    "item": {
+     "pt": "lavanda",
+     "en": "lavender"
+    }
+   },
+   {
+    "qty": {
+     "pt": "400 ml",
+     "en": "400 ml"
+    },
+    "item": {
+     "pt": "água a 90 °C",
+     "en": "water at 90 °C"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2 rodelas",
+     "en": "2 slices"
+    },
+    "item": {
+     "pt": "limão-siciliano",
+     "en": "lemon"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Amasse levemente as folhas de melissa com as mãos.",
+    "en": "Bruise the lemon balm leaves lightly in your hands."
+   },
+   {
+    "pt": "Infunda com a lavanda e o limão por 6 min, tampado.",
+    "en": "Steep with the lavender and lemon for 6 min, covered."
+   },
+   {
+    "pt": "Coe e beba morna.",
+    "en": "Strain and drink warm."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Tampar é essencial: os óleos que acalmam são os que evaporam primeiro.",
+   "en": "Covering is essential: the calming oils are the first to evaporate."
+  }
+ },
+ {
+  "slug": {
+   "pt": "cha-de-banana-com-canela",
+   "en": "banana-and-cinnamon-tea"
+  },
+  "guide": "ritual-da-noite",
+  "guideNumber": 3,
+  "name": {
+   "pt": "Chá de Banana com Canela",
+   "en": "Banana and Cinnamon Tea"
+  },
+  "tag": {
+   "pt": "Feito com a fruta inteira, sem cafeína.",
+   "en": "Made with the whole fruit, caffeine-free."
+  },
+  "time": {
+   "pt": "15 min",
+   "en": "15 min"
+  },
+  "yield": {
+   "pt": "2 xícaras",
+   "en": "2 cups"
+  },
+  "caffeine": false,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "1",
+     "en": "1"
+    },
+    "item": {
+     "pt": "banana orgânica madura, com casca, bem lavada",
+     "en": "ripe organic banana, peel on, well washed"
+    }
+   },
+   {
+    "qty": {
+     "pt": "500 ml",
+     "en": "500 ml"
+    },
+    "item": {
+     "pt": "água",
+     "en": "water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1",
+     "en": "1"
+    },
+    "item": {
+     "pt": "pau de canela",
+     "en": "cinnamon stick"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Corte as pontas da banana e corte-a em 3 pedaços, com casca.",
+    "en": "Trim the ends of the banana and cut it into 3 pieces, peel on."
+   },
+   {
+    "pt": "Ferva com a canela em fogo baixo por 10 min.",
+    "en": "Simmer with the cinnamon over low heat for 10 min."
+   },
+   {
+    "pt": "Coe e beba morno. Coma a banana cozida, se quiser.",
+    "en": "Strain and drink warm. Eat the cooked banana, if you like."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Use banana orgânica: a casca vai para a água. O sabor é suave e naturalmente doce.",
+   "en": "Use an organic banana: the peel goes into the water. The taste is mild and naturally sweet."
+  }
+ },
+ {
+  "slug": {
+   "pt": "gyokuro-no-gelo",
+   "en": "ice-brewed-gyokuro"
+  },
+  "guide": "foco-e-energia",
+  "guideNumber": 4,
+  "name": {
+   "pt": "Gyokuro no Gelo",
+   "en": "Ice-brewed Gyokuro"
+  },
+  "tag": {
+   "pt": "Koridashi: o gelo derrete sobre as folhas e vira um caldo doce.",
+   "en": "Koridashi: ice melts over the leaves into a sweet broth."
+  },
+  "time": {
+   "pt": "40 min",
+   "en": "40 min"
+  },
+  "yield": {
+   "pt": "2 xícaras pequenas",
+   "en": "2 small cups"
+  },
+  "caffeine": true,
+  "iced": true,
+  "milk": false,
+  "level": {
+   "pt": "Intermediário",
+   "en": "Intermediate"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "6 g",
+     "en": "6 g"
+    },
+    "item": {
+     "pt": "gyokuro ou sencha de sombra",
+     "en": "gyokuro or shaded sencha"
+    }
+   },
+   {
+    "qty": {
+     "pt": "150 g",
+     "en": "150 g"
+    },
+    "item": {
+     "pt": "cubos de gelo de água filtrada",
+     "en": "ice cubes from filtered water"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Coloque as folhas no kyusu ou num bule pequeno com filtro.",
+    "en": "Put the leaves in a kyusu or small pot with a strainer."
+   },
+   {
+    "pt": "Cubra com os cubos de gelo.",
+    "en": "Cover with the ice cubes."
+   },
+   {
+    "pt": "Deixe derreter em temperatura ambiente, 30 a 40 min.",
+    "en": "Let it melt at room temperature, 30 to 40 min."
+   },
+   {
+    "pt": "Sirva em xícaras pequenas. Depois, faça uma infusão rápida com água a 60 °C.",
+    "en": "Serve in small cups. Then make a quick steep with water at 60 °C."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Gelo extrai quase só aminoácidos (umami e L-teanina) e muito pouca cafeína: é o chá mais calmo e concentrado que existe.",
+   "en": "Ice extracts mostly amino acids (umami and L-theanine) and very little caffeine: the calmest, most concentrated tea there is."
+  }
+ },
+ {
+  "slug": {
+   "pt": "mocha-de-cha-preto",
+   "en": "black-tea-mocha"
+  },
+  "guide": "foco-e-energia",
+  "guideNumber": 4,
+  "name": {
+   "pt": "Mocha de Chá Preto",
+   "en": "Black Tea Mocha"
+  },
+  "tag": {
+   "pt": "Chá preto, cacau e leite: o substituto do café com chocolate.",
+   "en": "Black tea, cocoa and milk: the stand-in for a café mocha."
+  },
+  "time": {
+   "pt": "6 min",
+   "en": "6 min"
+  },
+  "yield": {
+   "pt": "1 caneca · 250 ml",
+   "en": "1 mug · 250 ml"
+  },
+  "caffeine": true,
+  "iced": false,
+  "milk": true,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "3 g",
+     "en": "3 g"
+    },
+    "item": {
+     "pt": "chá preto Assam",
+     "en": "Assam black tea"
+    }
+   },
+   {
+    "qty": {
+     "pt": "100 ml",
+     "en": "100 ml"
+    },
+    "item": {
+     "pt": "água fervente",
+     "en": "boiling water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 c. sopa",
+     "en": "1 tbsp"
+    },
+    "item": {
+     "pt": "cacau em pó 100%",
+     "en": "100% cocoa powder"
+    }
+   },
+   {
+    "qty": {
+     "pt": "150 ml",
+     "en": "150 ml"
+    },
+    "item": {
+     "pt": "leite",
+     "en": "milk"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2 c. chá",
+     "en": "2 tsp"
+    },
+    "item": {
+     "pt": "açúcar mascavo",
+     "en": "brown sugar"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Infunda o chá por 4 min e coe.",
+    "en": "Steep the tea for 4 min and strain."
+   },
+   {
+    "pt": "Misture o cacau e o açúcar com um pouco do chá até virar pasta.",
+    "en": "Mix the cocoa and sugar with a little tea into a paste."
+   },
+   {
+    "pt": "Junte o resto do chá e o leite quente espumado.",
+    "en": "Add the rest of the tea and the hot frothed milk."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Cacau tem teobromina, um estimulante suave: soma bem ao chá preto sem passar do ponto.",
+   "en": "Cocoa contains theobromine, a gentle stimulant: it adds to black tea without overdoing it."
+  }
+ },
+ {
+  "slug": {
+   "pt": "cha-gelado-de-pessego-de-verdade",
+   "en": "real-peach-iced-tea"
+  },
+  "guide": "chas-gelados",
+  "guideNumber": 5,
+  "name": {
+   "pt": "Chá Gelado de Pêssego de Verdade",
+   "en": "Real Peach Iced Tea"
+  },
+  "tag": {
+   "pt": "O sabor de lata, feito com fruta e chá de verdade.",
+   "en": "The canned flavour, made with real fruit and tea."
+  },
+  "time": {
+   "pt": "25 min",
+   "en": "25 min"
+  },
+  "yield": {
+   "pt": "1 jarra · 1 L",
+   "en": "1 jug · 1 L"
+  },
+  "caffeine": true,
+  "iced": true,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "2",
+     "en": "2"
+    },
+    "item": {
+     "pt": "pêssegos maduros (ou 4 metades em calda, escorridas)",
+     "en": "ripe peaches (or 4 canned halves, drained)"
+    }
+   },
+   {
+    "qty": {
+     "pt": "60 g",
+     "en": "60 g"
+    },
+    "item": {
+     "pt": "açúcar",
+     "en": "sugar"
+    }
+   },
+   {
+    "qty": {
+     "pt": "100 ml",
+     "en": "100 ml"
+    },
+    "item": {
+     "pt": "água",
+     "en": "water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "4 sachês",
+     "en": "4 bags"
+    },
+    "item": {
+     "pt": "chá preto",
+     "en": "black tea"
+    }
+   },
+   {
+    "qty": {
+     "pt": "500 ml",
+     "en": "500 ml"
+    },
+    "item": {
+     "pt": "água fervente",
+     "en": "boiling water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "400 g",
+     "en": "400 g"
+    },
+    "item": {
+     "pt": "gelo",
+     "en": "ice"
+    }
+   },
+   {
+    "qty": {
+     "pt": "½",
+     "en": "½"
+    },
+    "item": {
+     "pt": "limão (suco)",
+     "en": "lemon (juice)"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Cozinhe o pêssego picado com o açúcar e 100 ml de água por 10 min. Amasse e coe: é o xarope.",
+    "en": "Cook the chopped peach with the sugar and 100 ml water for 10 min. Mash and strain: that is the syrup."
+   },
+   {
+    "pt": "Infunda o chá na água fervente por 4 min.",
+    "en": "Steep the tea in the boiling water for 4 min."
+   },
+   {
+    "pt": "Junte o xarope e o limão ao chá quente.",
+    "en": "Add the syrup and lemon to the hot tea."
+   },
+   {
+    "pt": "Verta sobre o gelo na jarra e mexa.",
+    "en": "Pour over the ice in the jug and stir."
+   }
+  ],
+  "finish": {
+   "pt": "Lâminas de pêssego e hortelã.",
+   "en": "Peach slices and mint."
+  },
+  "tip": {
+   "pt": "O xarope dura 1 semana na geladeira: faça em dobro.",
+   "en": "The syrup keeps 1 week in the fridge: make double."
+  }
+ },
+ {
+  "slug": {
+   "pt": "limonada-suica-de-cha-verde",
+   "en": "green-tea-brazilian-lemonade"
+  },
+  "guide": "chas-gelados",
+  "guideNumber": 5,
+  "name": {
+   "pt": "Limonada Suíça de Chá Verde",
+   "en": "Green Tea Brazilian Lemonade"
+  },
+  "tag": {
+   "pt": "A limonada suíça brasileira, com cold brew verde.",
+   "en": "Brazil's creamy lemonade, with green cold brew."
+  },
+  "time": {
+   "pt": "5 min",
+   "en": "5 min"
+  },
+  "yield": {
+   "pt": "4 copos",
+   "en": "4 glasses"
+  },
+  "caffeine": true,
+  "iced": true,
+  "milk": true,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "2",
+     "en": "2"
+    },
+    "item": {
+     "pt": "limões-taiti com casca, lavados",
+     "en": "washed limes, peel on"
+    }
+   },
+   {
+    "qty": {
+     "pt": "600 ml",
+     "en": "600 ml"
+    },
+    "item": {
+     "pt": "cold brew de chá verde",
+     "en": "green tea cold brew"
+    }
+   },
+   {
+    "qty": {
+     "pt": "4 c. sopa",
+     "en": "4 tbsp"
+    },
+    "item": {
+     "pt": "leite condensado ou xarope",
+     "en": "condensed milk or syrup"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 xícara",
+     "en": "1 cup"
+    },
+    "item": {
+     "pt": "gelo",
+     "en": "ice"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Corte os limões em quartos e retire o miolo branco do centro.",
+    "en": "Quarter the limes and remove the white core."
+   },
+   {
+    "pt": "Bata tudo no liquidificador por 10 s, no máximo.",
+    "en": "Blend everything for 10 s at most."
+   },
+   {
+    "pt": "Coe na hora e sirva.",
+    "en": "Strain immediately and serve."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Bater mais que 10 s solta o amargor da casca. Sirva logo: amarga em 20 minutos.",
+   "en": "Blending longer than 10 s releases the bitterness of the peel. Serve at once: it turns bitter within 20 minutes."
+  }
+ },
+ {
+  "slug": {
+   "pt": "usucha",
+   "en": "usucha"
+  },
+  "guide": "matcha-em-casa",
+  "guideNumber": 6,
+  "name": {
+   "pt": "Usucha",
+   "en": "Usucha"
+  },
+  "tag": {
+   "pt": "O matcha fino da cerimônia, leve e espumoso.",
+   "en": "Thin ceremonial matcha, light and frothy."
+  },
+  "time": {
+   "pt": "3 min",
+   "en": "3 min"
+  },
+  "yield": {
+   "pt": "1 tigela · 70 ml",
+   "en": "1 bowl · 70 ml"
+  },
+  "caffeine": true,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Intermediário",
+   "en": "Intermediate"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "2 g",
+     "en": "2 g"
+    },
+    "item": {
+     "pt": "matcha cerimonial (2 chashaku ou 1 c. chá rasa)",
+     "en": "ceremonial matcha (2 chashaku scoops or 1 level tsp)"
+    }
+   },
+   {
+    "qty": {
+     "pt": "70 ml",
+     "en": "70 ml"
+    },
+    "item": {
+     "pt": "água a 75–80 °C",
+     "en": "water at 75–80 °C"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Aqueça a tigela e o chasen com água quente. Descarte a água e seque a tigela.",
+    "en": "Warm the bowl and chasen with hot water. Discard the water and dry the bowl."
+   },
+   {
+    "pt": "Peneire o matcha na tigela.",
+    "en": "Sift the matcha into the bowl."
+   },
+   {
+    "pt": "Junte 15 ml de água e faça uma pasta lisa com o chasen, sem bater.",
+    "en": "Add 15 ml of water and make a smooth paste with the chasen, without whisking."
+   },
+   {
+    "pt": "Complete com o resto da água e bata em \"M\" ou \"W\", só com o pulso, por 15 a 20 s.",
+    "en": "Add the rest of the water and whisk in an \"M\" or \"W\" from the wrist only for 15 to 20 s."
+   },
+   {
+    "pt": "Nos últimos segundos, suba o batedor até a superfície para quebrar as bolhas grandes. Retire pelo centro.",
+    "en": "In the last seconds, lift the whisk to the surface to break the big bubbles. Lift out from the centre."
+   }
+  ],
+  "finish": {
+   "pt": "Espuma fina como creme, cor de jade.",
+   "en": "Fine, creamy foam, the colour of jade."
+  },
+  "tip": {
+   "pt": "Beba em três ou quatro goles, logo depois de bater: a espuma desaba em poucos minutos.",
+   "en": "Drink in three or four sips straight after whisking: the foam collapses within minutes."
+  }
+ },
+ {
+  "slug": {
+   "pt": "brigadeiro-de-matcha",
+   "en": "matcha-brigadeiro"
+  },
+  "guide": "matcha-em-casa",
+  "guideNumber": 6,
+  "name": {
+   "pt": "Brigadeiro de Matcha",
+   "en": "Matcha Brigadeiro"
+  },
+  "tag": {
+   "pt": "O doce brasileiro, verde e menos enjoativo.",
+   "en": "The Brazilian sweet, green and less cloying."
+  },
+  "time": {
+   "pt": "25 min + 2 h",
+   "en": "25 min + 2 h"
+  },
+  "yield": {
+   "pt": "≈ 25 unidades",
+   "en": "≈ 25 pieces"
+  },
+  "caffeine": true,
+  "iced": false,
+  "milk": true,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "1 lata",
+     "en": "1 can"
+    },
+    "item": {
+     "pt": "leite condensado (395 g)",
+     "en": "condensed milk (395 g)"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 c. sopa",
+     "en": "1 tbsp"
+    },
+    "item": {
+     "pt": "manteiga",
+     "en": "butter"
+    }
+   },
+   {
+    "qty": {
+     "pt": "4 g",
+     "en": "4 g"
+    },
+    "item": {
+     "pt": "matcha culinário peneirado",
+     "en": "sifted culinary matcha"
+    }
+   },
+   {
+    "qty": {
+     "pt": "50 g",
+     "en": "50 g"
+    },
+    "item": {
+     "pt": "chocolate branco picado",
+     "en": "chopped white chocolate"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Leve leite condensado, manteiga e chocolate ao fogo baixo, mexendo sem parar.",
+    "en": "Cook the condensed milk, butter and chocolate over low heat, stirring constantly."
+   },
+   {
+    "pt": "Quando começar a soltar do fundo (cerca de 12 min), desligue.",
+    "en": "When it starts to pull away from the base (about 12 min), turn off."
+   },
+   {
+    "pt": "Junte o matcha peneirado fora do fogo e misture bem.",
+    "en": "Stir in the sifted matcha off the heat."
+   },
+   {
+    "pt": "Esfrie 2 h, enrole e passe em matcha com açúcar de confeiteiro.",
+    "en": "Cool 2 h, roll into balls and coat in matcha mixed with icing sugar."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "O matcha entra fora do fogo para não escurecer. O amargor dele equilibra a doçura do leite condensado.",
+   "en": "Matcha goes in off the heat so it does not darken. Its bitterness balances the sweetness of the condensed milk."
+  }
+ },
+ {
+  "slug": {
+   "pt": "capim-cidreira-maracuja",
+   "en": "lemongrass-passion-fruit"
+  },
+  "guide": "ervas-do-quintal",
+  "guideNumber": 7,
+  "name": {
+   "pt": "Capim-cidreira & Maracujá",
+   "en": "Lemongrass & Passion Fruit"
+  },
+  "tag": {
+   "pt": "Quente, cítrico e tropical.",
+   "en": "Hot, citrusy and tropical."
+  },
+  "time": {
+   "pt": "10 min",
+   "en": "10 min"
+  },
+  "yield": {
+   "pt": "1 bule · 500 ml",
+   "en": "1 pot · 500 ml"
+  },
+  "caffeine": false,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "3 folhas",
+     "en": "3 leaves"
+    },
+    "item": {
+     "pt": "capim-cidreira fresco",
+     "en": "fresh lemongrass"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1",
+     "en": "1"
+    },
+    "item": {
+     "pt": "maracujá (polpa com sementes)",
+     "en": "passion fruit (pulp with seeds)"
+    }
+   },
+   {
+    "qty": {
+     "pt": "500 ml",
+     "en": "500 ml"
+    },
+    "item": {
+     "pt": "água a 95 °C",
+     "en": "water at 95 °C"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 c. chá",
+     "en": "1 tsp"
+    },
+    "item": {
+     "pt": "mel",
+     "en": "honey"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Corte o capim com tesoura em pedaços de 2 cm.",
+    "en": "Snip the lemongrass into 2 cm pieces."
+   },
+   {
+    "pt": "Infunda com a polpa de maracujá por 7 min, tampado.",
+    "en": "Steep with the passion fruit pulp for 7 min, covered."
+   },
+   {
+    "pt": "Coe e adoce morno.",
+    "en": "Strain and sweeten once warm."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Cortar o capim com tesoura (e não amassar) mantém o perfume sem soltar gosto de grama.",
+   "en": "Snipping the lemongrass (rather than crushing) keeps the scent without a grassy taste."
+  }
+ },
+ {
+  "slug": {
+   "pt": "sal-de-ervas-do-quintal",
+   "en": "backyard-herb-salt"
+  },
+  "guide": "ervas-do-quintal",
+  "guideNumber": 7,
+  "name": {
+   "pt": "Sal de Ervas do Quintal",
+   "en": "Backyard Herb Salt"
+  },
+  "tag": {
+   "pt": "Alecrim, tomilho e sálvia para carnes e legumes.",
+   "en": "Rosemary, thyme and sage for meat and vegetables."
+  },
+  "time": {
+   "pt": "15 min + 1 dia",
+   "en": "15 min + 1 day"
+  },
+  "yield": {
+   "pt": "1 pote · 200 g",
+   "en": "1 jar · 200 g"
+  },
+  "caffeine": false,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "1 xícara",
+     "en": "1 cup"
+    },
+    "item": {
+     "pt": "folhas frescas de alecrim, tomilho e sálvia",
+     "en": "fresh rosemary, thyme and sage leaves"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2",
+     "en": "2"
+    },
+    "item": {
+     "pt": "dentes de alho",
+     "en": "garlic cloves"
+    }
+   },
+   {
+    "qty": {
+     "pt": "150 g",
+     "en": "150 g"
+    },
+    "item": {
+     "pt": "sal grosso",
+     "en": "coarse salt"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1",
+     "en": "1"
+    },
+    "item": {
+     "pt": "raspas de limão",
+     "en": "lime zest"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Pique as ervas e o alho com metade do sal até virar uma pasta úmida.",
+    "en": "Chop the herbs and garlic with half the salt into a damp paste."
+   },
+   {
+    "pt": "Misture o resto do sal e as raspas.",
+    "en": "Mix in the rest of the salt and the zest."
+   },
+   {
+    "pt": "Espalhe numa assadeira e deixe secar 24 h ao ar, ou 1 h a 60 °C. Guarde em pote.",
+    "en": "Spread on a tray and air-dry 24 h, or 1 h at 60 °C. Store in a jar."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "O sal seca as ervas e conserva o aroma por meses. Ótimo presente.",
+   "en": "The salt dries the herbs and keeps the aroma for months. A great gift."
+  }
+ },
+ {
+  "slug": {
+   "pt": "quentao-sem-alcool",
+   "en": "alcohol-free-quentao"
+  },
+  "guide": "blends-autorais",
+  "guideNumber": 8,
+  "name": {
+   "pt": "Quentão sem Álcool",
+   "en": "Alcohol-free Quentão"
+  },
+  "tag": {
+   "pt": "O blend junino com suco de uva.",
+   "en": "The June-festival blend with grape juice."
+  },
+  "time": {
+   "pt": "20 min",
+   "en": "20 min"
+  },
+  "yield": {
+   "pt": "1 panela · 2 L",
+   "en": "1 pot · 2 L"
+  },
+  "caffeine": false,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "20 g",
+     "en": "20 g"
+    },
+    "item": {
+     "pt": "blend Quentão sem Álcool",
+     "en": "Alcohol-free Quentão blend"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 L",
+     "en": "1 L"
+    },
+    "item": {
+     "pt": "suco de uva integral",
+     "en": "pure grape juice"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 L",
+     "en": "1 L"
+    },
+    "item": {
+     "pt": "água",
+     "en": "water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "3 c. sopa",
+     "en": "3 tbsp"
+    },
+    "item": {
+     "pt": "açúcar mascavo (opcional)",
+     "en": "brown sugar (optional)"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Ferva a água com o blend por 10 min.",
+    "en": "Simmer the water with the blend for 10 min."
+   },
+   {
+    "pt": "Junte o suco e o açúcar e aqueça sem ferver.",
+    "en": "Add the juice and sugar and heat without boiling."
+   },
+   {
+    "pt": "Coe e sirva quente em canecas.",
+    "en": "Strain and serve hot in mugs."
+   }
+  ],
+  "finish": {
+   "pt": "Rodela de laranja.",
+   "en": "An orange wheel."
+  },
+  "tip": {
+   "pt": "Mantenha numa garrafa térmica durante a festa.",
+   "en": "Keep it in a thermos during the party."
+  }
+ },
+ {
+  "slug": {
+   "pt": "cold-brew-frutado-com-gas",
+   "en": "sparkling-fruity-cold-brew"
+  },
+  "guide": "blends-autorais",
+  "guideNumber": 8,
+  "name": {
+   "pt": "Cold Brew Frutado com Gás",
+   "en": "Sparkling Fruity Cold Brew"
+  },
+  "tag": {
+   "pt": "O refrigerante natural do ateliê.",
+   "en": "The studio's natural soda."
+  },
+  "time": {
+   "pt": "5 min + 8 h",
+   "en": "5 min + 8 h"
+  },
+  "yield": {
+   "pt": "1 L",
+   "en": "1 L"
+  },
+  "caffeine": false,
+  "iced": true,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "15 g",
+     "en": "15 g"
+    },
+    "item": {
+     "pt": "Morango & Rosa ou Rubi Tropical",
+     "en": "Strawberry & Rose or Tropical Ruby"
+    }
+   },
+   {
+    "qty": {
+     "pt": "500 ml",
+     "en": "500 ml"
+    },
+    "item": {
+     "pt": "água fria",
+     "en": "cold water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "500 ml",
+     "en": "500 ml"
+    },
+    "item": {
+     "pt": "água com gás gelada",
+     "en": "chilled sparkling water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2 c. sopa",
+     "en": "2 tbsp"
+    },
+    "item": {
+     "pt": "xarope de blend",
+     "en": "blend syrup"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Cold brew do blend na água fria por 8 h.",
+    "en": "Cold brew the blend in the cold water for 8 h."
+   },
+   {
+    "pt": "Coe e adoce com o xarope.",
+    "en": "Strain and sweeten with the syrup."
+   },
+   {
+    "pt": "Na hora de servir, complete com a água com gás.",
+    "en": "At serving time, top up with the sparkling water."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Concentrado em dobro + gás na hora = bebida com cor e sabor de refrigerante, sem corantes.",
+   "en": "Double concentrate + fizz at the last moment = soda colour and taste, no dyes."
+  }
+ },
+ {
+  "slug": {
+   "pt": "scones-classicos",
+   "en": "classic-scones"
+  },
+  "guide": "cha-e-mesa",
+  "guideNumber": 9,
+  "name": {
+   "pt": "Scones Clássicos",
+   "en": "Classic Scones"
+  },
+  "tag": {
+   "pt": "Altos, macios, para geleia e creme.",
+   "en": "Tall and tender, for jam and cream."
+  },
+  "time": {
+   "pt": "30 min",
+   "en": "30 min"
+  },
+  "yield": {
+   "pt": "10 scones",
+   "en": "10 scones"
+  },
+  "caffeine": false,
+  "iced": false,
+  "milk": true,
+  "level": {
+   "pt": "Intermediário",
+   "en": "Intermediate"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "300 g",
+     "en": "300 g"
+    },
+    "item": {
+     "pt": "farinha de trigo",
+     "en": "plain flour"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 c. sopa",
+     "en": "1 tbsp"
+    },
+    "item": {
+     "pt": "fermento químico",
+     "en": "baking powder"
+    }
+   },
+   {
+    "qty": {
+     "pt": "50 g",
+     "en": "50 g"
+    },
+    "item": {
+     "pt": "açúcar",
+     "en": "sugar"
+    }
+   },
+   {
+    "qty": {
+     "pt": "80 g",
+     "en": "80 g"
+    },
+    "item": {
+     "pt": "manteiga gelada em cubos",
+     "en": "cold butter, cubed"
+    }
+   },
+   {
+    "qty": {
+     "pt": "150 ml",
+     "en": "150 ml"
+    },
+    "item": {
+     "pt": "leite gelado",
+     "en": "cold milk"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1",
+     "en": "1"
+    },
+    "item": {
+     "pt": "ovo (metade para pincelar)",
+     "en": "egg (half for brushing)"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 pitada",
+     "en": "1 pinch"
+    },
+    "item": {
+     "pt": "sal",
+     "en": "salt"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Esfarele farinha, fermento, açúcar, sal e manteiga com as pontas dos dedos até virar uma farofa.",
+    "en": "Rub the flour, baking powder, sugar, salt and butter with your fingertips into crumbs."
+   },
+   {
+    "pt": "Junte o leite e metade do ovo batido e una sem sovar.",
+    "en": "Add the milk and half the beaten egg and bring together without kneading."
+   },
+   {
+    "pt": "Abra com 3 cm, corte com cortador redondo sem girar e pincele o topo.",
+    "en": "Pat to 3 cm, cut with a round cutter without twisting and brush the tops."
+   },
+   {
+    "pt": "Asse a 220 °C por 12 a 14 min.",
+    "en": "Bake at 220 °C for 12 to 14 min."
+   }
+  ],
+  "finish": {
+   "pt": "Geleia de hibisco (receita 20) e creme.",
+   "en": "Hibiscus jam (recipe 20) and cream."
+  },
+  "tip": {
+   "pt": "Girar o cortador sela as bordas e o scone não cresce. Corte reto, para baixo.",
+   "en": "Twisting the cutter seals the edges and the scone will not rise. Cut straight down."
+  }
+ },
+ {
+  "slug": {
+   "pt": "pudim-de-chai",
+   "en": "chai-flan"
+  },
+  "guide": "cha-e-mesa",
+  "guideNumber": 9,
+  "name": {
+   "pt": "Pudim de Chai",
+   "en": "Chai Flan"
+  },
+  "tag": {
+   "pt": "O pudim brasileiro com especiarias.",
+   "en": "Brazilian flan with spices."
+  },
+  "time": {
+   "pt": "1 h 20 + 6 h",
+   "en": "1 h 20 + 6 h"
+  },
+  "yield": {
+   "pt": "1 forma · 8 porções",
+   "en": "1 tin · 8 servings"
+  },
+  "caffeine": true,
+  "iced": false,
+  "milk": true,
+  "level": {
+   "pt": "Intermediário",
+   "en": "Intermediate"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "1 lata",
+     "en": "1 can"
+    },
+    "item": {
+     "pt": "leite condensado",
+     "en": "condensed milk"
+    }
+   },
+   {
+    "qty": {
+     "pt": "400 ml",
+     "en": "400 ml"
+    },
+    "item": {
+     "pt": "leite",
+     "en": "milk"
+    }
+   },
+   {
+    "qty": {
+     "pt": "3",
+     "en": "3"
+    },
+    "item": {
+     "pt": "ovos",
+     "en": "eggs"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2 sachês",
+     "en": "2 bags"
+    },
+    "item": {
+     "pt": "chá preto",
+     "en": "black tea"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1",
+     "en": "1"
+    },
+    "item": {
+     "pt": "pau de canela, 4 cardamomos, 3 cravos",
+     "en": "cinnamon stick, 4 cardamom, 3 cloves"
+    }
+   },
+   {
+    "qty": {
+     "pt": "150 g",
+     "en": "150 g"
+    },
+    "item": {
+     "pt": "açúcar para a calda",
+     "en": "sugar for the caramel"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Aqueça o leite com as especiarias por 5 min, desligue, junte o chá por 5 min e coe. Esfrie.",
+    "en": "Warm the milk with the spices for 5 min, turn off, add the tea for 5 min and strain. Cool."
+   },
+   {
+    "pt": "Derreta o açúcar até virar caramelo e forre a forma.",
+    "en": "Melt the sugar into caramel and coat the tin."
+   },
+   {
+    "pt": "Bata o leite de chai com o leite condensado e os ovos; despeje na forma.",
+    "en": "Blend the chai milk with the condensed milk and eggs; pour into the tin."
+   },
+   {
+    "pt": "Asse em banho-maria a 180 °C por 1 h. Geladeira por 6 h e desenforme.",
+    "en": "Bake in a water bath at 180 °C for 1 h. Chill 6 h and turn out."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "O leite precisa estar frio antes de bater com os ovos, senão o pudim fica com furinhos.",
+   "en": "The milk must be cold before blending with the eggs, or the flan gets little holes."
+  }
+ },
+ {
+  "slug": {
+   "pt": "mate-cocido-com-leite",
+   "en": "mate-cocido-with-milk"
+  },
+  "guide": "erva-mate",
+  "guideNumber": 10,
+  "name": {
+   "pt": "Mate Cocido com Leite",
+   "en": "Mate Cocido with Milk"
+  },
+  "tag": {
+   "pt": "O mate fervido da Argentina e do Paraguai, café da manhã de muitas famílias.",
+   "en": "Boiled mate from Argentina and Paraguay, breakfast for many families."
+  },
+  "time": {
+   "pt": "8 min",
+   "en": "8 min"
+  },
+  "yield": {
+   "pt": "2 canecas",
+   "en": "2 mugs"
+  },
+  "caffeine": true,
+  "iced": false,
+  "milk": true,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "2 c. sopa",
+     "en": "2 tbsp"
+    },
+    "item": {
+     "pt": "erva-mate",
+     "en": "yerba mate"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 c. sopa",
+     "en": "1 tbsp"
+    },
+    "item": {
+     "pt": "açúcar",
+     "en": "sugar"
+    }
+   },
+   {
+    "qty": {
+     "pt": "250 ml",
+     "en": "250 ml"
+    },
+    "item": {
+     "pt": "água",
+     "en": "water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "250 ml",
+     "en": "250 ml"
+    },
+    "item": {
+     "pt": "leite",
+     "en": "milk"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Caramelize levemente o açúcar com a erva numa leiteira, mexendo, por 1 min.",
+    "en": "Lightly caramelise the sugar with the yerba in a small pan, stirring, for 1 min."
+   },
+   {
+    "pt": "Junte a água e ferva 2 min.",
+    "en": "Add the water and simmer 2 min."
+   },
+   {
+    "pt": "Junte o leite, aqueça sem ferver e coe.",
+    "en": "Add the milk, heat without boiling and strain."
+   }
+  ],
+  "finish": {
+   "pt": "Com pão de queijo ou chipa (receita 16).",
+   "en": "With cheese bread or chipa (recipe 16)."
+  },
+  "tip": {
+   "pt": "Caramelizar a erva com açúcar é o segredo da versão tradicional: suaviza o amargor.",
+   "en": "Caramelising the yerba with sugar is the secret of the traditional version: it softens the bitterness."
+  }
+ },
+ {
+  "slug": {
+   "pt": "chipa",
+   "en": "chipa"
+  },
+  "guide": "erva-mate",
+  "guideNumber": 10,
+  "name": {
+   "pt": "Chipa",
+   "en": "Chipa"
+  },
+  "tag": {
+   "pt": "O pão de queijo paraguaio, parceiro do tererê.",
+   "en": "Paraguayan cheese bread, tereré's partner."
+  },
+  "time": {
+   "pt": "40 min",
+   "en": "40 min"
+  },
+  "yield": {
+   "pt": "≈ 20 unidades",
+   "en": "≈ 20 pieces"
+  },
+  "caffeine": false,
+  "iced": false,
+  "milk": true,
+  "level": {
+   "pt": "Intermediário",
+   "en": "Intermediate"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "500 g",
+     "en": "500 g"
+    },
+    "item": {
+     "pt": "polvilho doce",
+     "en": "sweet tapioca starch"
+    }
+   },
+   {
+    "qty": {
+     "pt": "200 g",
+     "en": "200 g"
+    },
+    "item": {
+     "pt": "queijo meia-cura ralado",
+     "en": "grated semi-hard cheese"
+    }
+   },
+   {
+    "qty": {
+     "pt": "100 g",
+     "en": "100 g"
+    },
+    "item": {
+     "pt": "manteiga",
+     "en": "butter"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2",
+     "en": "2"
+    },
+    "item": {
+     "pt": "ovos",
+     "en": "eggs"
+    }
+   },
+   {
+    "qty": {
+     "pt": "100 ml",
+     "en": "100 ml"
+    },
+    "item": {
+     "pt": "leite",
+     "en": "milk"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 c. chá",
+     "en": "1 tsp"
+    },
+    "item": {
+     "pt": "sal e 1 c. chá de erva-doce",
+     "en": "salt and 1 tsp fennel seed"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Misture o polvilho com a manteiga até virar uma farofa.",
+    "en": "Rub the starch and butter together into crumbs."
+   },
+   {
+    "pt": "Junte queijo, ovos, sal e erva-doce. Acrescente leite aos poucos até a massa ficar lisa e modelável.",
+    "en": "Add the cheese, eggs, salt and fennel. Add the milk gradually until the dough is smooth and mouldable."
+   },
+   {
+    "pt": "Modele roscas ou bolinhas.",
+    "en": "Shape into rings or balls."
+   },
+   {
+    "pt": "Asse a 200 °C por 20 a 25 min, até dourar por baixo.",
+    "en": "Bake at 200 °C for 20 to 25 min, until golden underneath."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Diferente do pão de queijo mineiro, a chipa leva massa sem escaldar: fica mais firme e dura mais.",
+   "en": "Unlike Brazilian pão de queijo, chipa dough is not scalded: it is firmer and keeps longer."
+  }
+ }
+]

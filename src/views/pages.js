@@ -28,6 +28,15 @@ function previewFor(slug, lang) {
   } catch (_) { return null; }
 }
 
+function freeRecipes(lang, p) {
+  const list = require('../content/recipes.json').filter(r => r.guide === p.slug);
+  if (!list.length) return '';
+  const h = lang === 'pt' ? 'Experimente grátis: receitas deste guia' : 'Try for free: recipes from this guide';
+  const sub = lang === 'pt' ? 'Duas receitas completas, do jeito que estão no guia.' : 'Two complete recipes, exactly as they appear in the guide.';
+  return `<section class="section band-paper"><div class="wrap"><p class="label">${lang === 'pt' ? 'Receitas grátis' : 'Free recipes'}</p><h2 class="h3">${esc(h)}</h2><p class="muted">${esc(sub)}</p>
+  <div class="recipe-grid">${list.map(r => `<a class="recipe-card" href="${url(lang, 'recipes', r.slug[lang])}"><h3>${esc(r.name[lang])}</h3><p>${esc(r.tag[lang])}</p><span class="recipe-card-meta">${icon('clock', 'ico-sm')} ${esc(r.time[lang])}</span></a>`).join('')}</div></div></section>`;
+}
+
 function previewSection(lang, p, pv) {
   const t = ui[lang].product.preview;
   const items = pv.items.map(x => ({ src: '/assets/img/previews/' + x.file, page: x.page }));
@@ -226,7 +235,7 @@ function guide(lang, products) {
       ${icon(tea.icon, 'ico-xl')}
     </div>
     <div class="tea-entry-main">
-      <h3 class="h2">${esc(tea.name[lang])}</h3>
+      <h3 class="h2"><a class="tea-link" href="${url(lang, 'guide', tea.id)}">${esc(tea.name[lang])}</a></h3>
       <p class="italic tagline">${esc(tea.tagline[lang])}</p>
       <p>${esc(tea.body[lang])}</p>
       <div class="ox-meter" aria-label="${esc(g.oxidation)} ${range(tea.oxidation[0], tea.oxidation[1], '%')}">
@@ -478,6 +487,7 @@ function product(lang, p, products) {
   </div>
 </section>
 ${pv ? previewSection(lang, p, pv) : ''}
+${freeRecipes(lang, p)}
 <section class="section band-paper">
   <div class="wrap split split-even">
     <div>
@@ -524,9 +534,11 @@ ${related.length ? `<section class="section band-paper-2">
   </div>
 </section>` : ''}`;
   return layout({
-    lang, key: 'shop', paths: pathsFor('shop', p.slug), title: `${p.title[lang]}: ${p.subtitle[lang]} | Botanora`, description: p.description[lang], body, dark: true, bodyClass: 'page-product',
+    lang, key: 'shop', paths: pathsFor('shop', p.slug), title: `${p.title[lang]}: ${p.subtitle[lang]} | Botanora`, description: p.description[lang], body, dark: true, bodyClass: 'page-product', markdown: url(lang, 'shop', p.slug) + '.md',
     jsonLd: {
       '@context': 'https://schema.org', '@type': 'Product', name: p.title[lang], description: p.description[lang], brand: { '@type': 'Brand', name: 'Botanora' },
+      sku: 'BOT-' + String(p.order).padStart(2, '0'), category: lang === 'pt' ? 'Guia digital em PDF' : 'Digital PDF guide', image: [config.siteUrl + `/assets/img/covers/${p.slug}-${lang}.jpg`],
+      inLanguage: ['pt-BR', 'en'], additionalProperty: [{ '@type': 'PropertyValue', name: lang === 'pt' ? 'Páginas' : 'Pages', value: p.pages }],
       offers: { '@type': 'Offer', price: (p.price / 100).toFixed(2), priceCurrency: 'BRL', availability: soon ? 'https://schema.org/PreOrder' : 'https://schema.org/InStock', url: config.siteUrl + url(lang, 'shop', p.slug) }
     }
   });

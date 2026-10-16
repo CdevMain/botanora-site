@@ -10,7 +10,9 @@ mkdir -p /var/backups/botanora
 tar -czf "/var/backups/botanora/data-$(date +%Y%m%d-%H%M%S).tgz" -C "$APP_DIR" data .env
 ls -1t /var/backups/botanora/data-*.tgz | tail -n +15 | xargs -r rm --
 
-git -c safe.directory="$APP_DIR" pull --ff-only
+# O repositório pertence ao usuário botanora; libera o git do root para usá-lo (gits antigos ignoram "-c safe.directory")
+git config --global --get-all safe.directory 2>/dev/null | grep -qx "$APP_DIR" || git config --global --add safe.directory "$APP_DIR"
+git pull --ff-only
 chown -R botanora:botanora "$APP_DIR"
 systemctl restart botanora
 sleep 2

@@ -9,7 +9,7 @@ const seedProducts = [
   {
     slug: 'infusoes-de-autor', order: 1, status: 'available', price: 2990, pages: 40, icon: 'cup',
     files: { pt: 'infusoes-de-autor-pt.pdf', en: 'infusoes-de-autor-en.pdf' },
-    title: { pt: 'Infusões de Autor', en: 'Signature Infusions' },
+    title: { pt: 'Infusões Autorais', en: 'Signature Infusions' },
     subtitle: { pt: '40 chás e infusões em estilo barista, feitos com a sua despensa', en: '40 barista-style teas and infusions made from your pantry' },
     description: {
       pt: 'Um caderno de receitas pensado como o menu de uma casa de chá: cada bebida tem base, camada aromática e acabamento. 36 quentes, 4 gelados, 6 cremosos e 30 sem cafeína, com técnica de temperatura e tempo sem termômetro e preparos base que duram semanas.',

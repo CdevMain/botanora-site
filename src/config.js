@@ -51,7 +51,11 @@ const config = {
   trustProxy: env.TRUST_PROXY === '1',
   // Ferramentas de terceiros: só carregam depois que o visitante aceita os cookies
   gaId: env.GA_ID === undefined ? 'G-VC1F9QT587' : env.GA_ID,
-  clarityId: env.CLARITY_ID === undefined ? 'yyqohzc7o5' : env.CLARITY_ID
+  clarityId: env.CLARITY_ID === undefined ? 'yyqohzc7o5' : env.CLARITY_ID,
+  // Busca: verificação do Google Search Console e do Bing Webmaster Tools, e chave do IndexNow
+  googleVerification: env.GOOGLE_SITE_VERIFICATION || '',
+  bingVerification: env.BING_SITE_VERIFICATION || '',
+  indexNowKey: env.INDEXNOW_KEY || require('crypto').createHash('sha256').update('indexnow:' + (env.SESSION_SECRET || 'botanora')).digest('hex').slice(0, 32)
 };
 
 module.exports = config;

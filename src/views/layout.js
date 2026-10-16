@@ -5,16 +5,16 @@ const { logo, icon, sprig } = require('./svg');
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-function layout({ lang, key, paths, title, description, body, bodyClass = '', jsonLd = null, dark = false, noindex = false, data = null }) {
+function layout({ lang, key, paths, title, description, body, bodyClass = '', jsonLd = null, dark = false, noindex = false, data = null, markdown = null }) {
   const t = ui[lang];
   const other = t.other;
-  const nav = ['guide', 'benefits', 'brewing', 'gear', 'quiz', 'shop'];
+  const nav = ['guide', 'benefits', 'brewing', 'recipes', 'gear', 'quiz', 'shop'];
   const canonical = config.siteUrl + paths[lang];
   const ld = [{
     '@context': 'https://schema.org', '@type': 'Organization', name: 'Botanora', url: config.siteUrl,
     logo: config.siteUrl + '/assets/img/og.png', email: config.contactEmail
   }];
-  if (jsonLd) ld.push(jsonLd);
+  if (jsonLd) Array.isArray(jsonLd) ? ld.push(...jsonLd) : ld.push(jsonLd);
 
   return `<!doctype html>
 <html lang="${t.htmlLang}">
@@ -23,11 +23,14 @@ function layout({ lang, key, paths, title, description, body, bodyClass = '', js
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-${noindex ? '<meta name="robots" content="noindex">' : ''}
 <link rel="canonical" href="${esc(canonical)}">
 <link rel="alternate" hreflang="pt-BR" href="${esc(config.siteUrl + paths.pt)}">
 <link rel="alternate" hreflang="en" href="${esc(config.siteUrl + paths.en)}">
 <link rel="alternate" hreflang="x-default" href="${esc(config.siteUrl + paths.pt)}">
+${markdown ? `<link rel="alternate" type="text/markdown" href="${esc(config.siteUrl + markdown)}" title="Markdown">` : ''}
+${config.googleVerification ? `<meta name="google-site-verification" content="${esc(config.googleVerification)}">` : ''}
+${config.bingVerification ? `<meta name="msvalidate.01" content="${esc(config.bingVerification)}">` : ''}
+<meta name="robots" content="${noindex ? 'noindex' : 'index, follow, max-image-preview:large, max-snippet:-1'}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Botanora">
 <meta property="og:title" content="${esc(title)}">
@@ -93,7 +96,7 @@ ${body}
     </div>
     <div>
       <h3 class="label">${esc(t.footer.learn)}</h3>
-      <ul>${['guide', 'benefits', 'brewing', 'gear', 'quiz'].map(k => `<li><a href="${url(lang, k)}">${esc(t.nav[k])}</a></li>`).join('')}</ul>
+      <ul>${['guide', 'benefits', 'brewing', 'recipes', 'gear', 'quiz', 'faq'].map(k => `<li><a href="${url(lang, k)}">${esc(t.nav[k])}</a></li>`).join('')}</ul>
     </div>
     <div>
       <h3 class="label">${esc(t.footer.shop)}</h3>

@@ -15,6 +15,7 @@ const access = require('./src/access');
 const mailer = require('./src/mailer');
 const { LANGS, routes, url, ui } = require('./src/i18n');
 const pages = require('./src/views/pages');
+const seo = require('./src/views/seo');
 const adminView = require('./src/views/admin');
 
 const PUBLIC = path.join(config.root, 'public');
@@ -43,6 +44,8 @@ const SECURITY_HEADERS = {
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   'Content-Security-Policy': "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.clarity.ms https://*.clarity.ms; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; frame-ancestors 'none'; form-action 'self' https://www.mercadopago.com.br; base-uri 'self'"
 };
+
+if (config.siteUrl.startsWith('https://')) SECURITY_HEADERS['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains';
 
 function send(req, res, status, body, type = 'text/html; charset=utf-8', headers = {}) {
   let buf = Buffer.isBuffer(body) ? body : Buffer.from(String(body));
@@ -151,6 +154,10 @@ function renderPublic(req, res, lang, rest, ip, query) {
   if (more.length) { /* rota desconhecida: 404 */ }
   else if (key === 'home' && !sub) html = pages.home(lang, products);
   else if (key === 'guide' && !sub) html = pages.guide(lang, products);
+  else if (key === 'guide' && sub) { const tea = seo.teaById(sub); if (tea) html = seo.teaPage(lang, tea); }
+  else if (key === 'recipes' && !sub) html = seo.recipesIndex(lang);
+  else if (key === 'recipes' && sub) { const r = seo.recipeBySlug(lang, sub); if (r) { if (r.slug[lang] !== sub) return redirect(res, seo.recipePaths(r)[lang], 301); html = seo.recipePage(lang, r); } }
+  else if (key === 'faq' && !sub) html = seo.faqPage(lang);
   else if (key === 'benefits' && !sub) html = pages.benefitsPage(lang);
   else if (key === 'brewing' && !sub) html = pages.brewing(lang);
   else if (key === 'quiz' && !sub) html = pages.quizPage(lang, products);
@@ -183,13 +190,60 @@ function renderPublic(req, res, lang, rest, ip, query) {
   });
 }
 
+// ---------- busca e IAs ----------
+// Robôs de busca e de IA são bem-vindos nas páginas públicas (ChatGPT, Claude, Perplexity, Gemini, Copilot, Apple).
+const AI_BOTS = ['OAI-SearchBot', 'ChatGPT-User', 'GPTBot', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended', 'Bingbot', 'DuckAssistBot', 'meta-externalagent', 'CCBot'];
+const PRIVATE_PATHS = ['/admin', '/api/', '/download/', '/pt/pedido/', '/en/order/', '/pt/biblioteca', '/en/library', '/r/'];
+function robotsTxt() {
+  const block = ua => `User-agent: ${ua}\nAllow: /\n${PRIVATE_PATHS.map(p => `Disallow: ${p}`).join('\n')}\n`;
+  return ['# Botanora: conteúdo aberto para buscadores e assistentes de IA.', '# Resumo para IAs: ' + config.siteUrl + '/llms.txt', '', block('*'), ...AI_BOTS.map(block), `Sitemap: ${config.siteUrl}/sitemap.xml`, ''].join('\n');
+}
+
+// Versão Markdown das páginas de conteúdo: mesma URL + .md
+function markdownFor(pathname) {
+  const parts = pathname.slice(0, -3).split('/').filter(Boolean).map(s => { try { return decodeURIComponent(s); } catch (_) { return s; } });
+  const [lang, seg, sub] = parts;
+  if (!LANGS.includes(lang)) return null;
+  const key = keyBySeg[lang][seg || ''];
+  if (key === 'guide' && sub) { const tea = seo.teaById(sub); return tea ? seo.mdTea(lang, tea) : null; }
+  if (key === 'recipes' && sub) { const r = seo.recipeBySlug(lang, sub); return r ? seo.mdRecipe(lang, r) : null; }
+  if (key === 'recipes') return seo.mdRecipes(lang);
+  if (key === 'faq') return seo.mdFaq(lang);
+  if (key === 'shop' && sub) { const p = store.getProduct(sub); return p && p.status !== 'hidden' ? seo.mdProduct(lang, p) : null; }
+  if (key === 'home' && !seg) return seo.llmsTxt(false);
+  return null;
+}
+
+// Lista de URLs públicas (sitemap e IndexNow)
+function publicUrls() {
+  const list = [];
+  const add = (pt, en, lastmod) => list.push({ pt, en, lastmod });
+  const both = (key, ...rest) => add(url('pt', key, ...rest), url('en', key, ...rest));
+  ['home', 'guide', 'benefits', 'brewing', 'recipes', 'faq', 'gear', 'quiz', 'shop', 'privacy'].forEach(k => both(k));
+  require('./src/content/teas').teas.forEach(t => both('guide', t.id));
+  seo.recipes.forEach(r => { const p = seo.recipePaths(r); add(p.pt, p.en); });
+  store.db.products.filter(p => p.status !== 'hidden').forEach(p => both('shop', p.slug));
+  return list;
+}
+
+// IndexNow: avisa Bing (base do Copilot) e outros buscadores das URLs, uma vez por dia no máximo
+async function indexNowPing() {
+  if (!config.siteUrl.startsWith('https://') || /localhost|127\.0\.0\.1/.test(config.siteUrl)) return;
+  const day = new Date().toISOString().slice(0, 10);
+  if (store.db.meta.indexNowDay === day) return;
+  const host = new URL(config.siteUrl).host;
+  const urlList = publicUrls().flatMap(e => [config.siteUrl + e.pt, config.siteUrl + e.en]);
+  try {
+    const r = await fetch('https://api.indexnow.org/indexnow', { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ host, key: config.indexNowKey, keyLocation: `${config.siteUrl}/${config.indexNowKey}.txt`, urlList }) });
+    console.log(`  IndexNow: ${urlList.length} URLs enviadas (${r.status})`);
+    store.db.meta.indexNowDay = day; store.save();
+  } catch (e) { console.log('  IndexNow falhou:', e.message); }
+}
+
 function sitemap() {
-  const base = config.siteUrl;
-  const entries = [];
-  const add = (key, ...rest) => entries.push({ pt: url('pt', key, ...rest), en: url('en', key, ...rest) });
-  ['home', 'guide', 'benefits', 'brewing', 'gear', 'quiz', 'shop', 'privacy'].forEach(k => add(k));
-  store.db.products.filter(p => p.status !== 'hidden').forEach(p => add('shop', p.slug));
-  const xml = entries.map(e => LANGS.map(l => `<url><loc>${base}${e[l]}</loc><xhtml:link rel="alternate" hreflang="pt-BR" href="${base}${e.pt}"/><xhtml:link rel="alternate" hreflang="en" href="${base}${e.en}"/></url>`).join('')).join('');
+  const base = config.siteUrl, today = new Date().toISOString().slice(0, 10);
+  const xml = publicUrls().map(e => LANGS.map(l => `<url><loc>${base}${e[l]}</loc><lastmod>${e.lastmod || today}</lastmod><xhtml:link rel="alternate" hreflang="pt-BR" href="${base}${e.pt}"/><xhtml:link rel="alternate" hreflang="en" href="${base}${e.en}"/><xhtml:link rel="alternate" hreflang="x-default" href="${base}${e.pt}"/></url>`).join('')).join('');
   return `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${xml}</urlset>`;
 }
 
@@ -565,7 +619,11 @@ const server = http.createServer(async (req, res) => {
     if (pathname.startsWith('/assets/') && serveStatic(req, res, pathname)) return;
     if (pathname === '/favicon.ico' || pathname === '/manifest.webmanifest') { if (serveStatic(req, res, pathname)) return; }
     if (pathname === '/receber' || pathname === '/receive') return redirect(res, (pathname === '/receber' ? '/pt/receber' : '/en/receive') + u.search);
-    if (pathname === '/robots.txt') return send(req, res, 200, `User-agent: *\nDisallow: /admin\nDisallow: /api/\nDisallow: /download/\nDisallow: /pt/pedido/\nDisallow: /en/order/\nDisallow: /pt/biblioteca\nDisallow: /en/library\nSitemap: ${config.siteUrl}/sitemap.xml\n`, 'text/plain; charset=utf-8');
+    if (pathname === '/robots.txt') return send(req, res, 200, robotsTxt(), 'text/plain; charset=utf-8');
+    if (pathname === '/llms.txt') return send(req, res, 200, seo.llmsTxt(false), 'text/plain; charset=utf-8');
+    if (pathname === '/llms-full.txt') return send(req, res, 200, seo.llmsTxt(true), 'text/plain; charset=utf-8');
+    if (pathname === `/${config.indexNowKey}.txt`) return send(req, res, 200, config.indexNowKey, 'text/plain; charset=utf-8');
+    if (pathname.endsWith('.md')) { const md = markdownFor(pathname); if (md) return send(req, res, 200, md, 'text/markdown; charset=utf-8', { 'Cache-Control': 'public, max-age=3600', 'X-Robots-Tag': 'noindex' }); }
     if (pathname === '/sitemap.xml') return send(req, res, 200, sitemap(), 'application/xml; charset=utf-8');
     if (pathname === '/') return redirect(res, '/' + preferredLang(req));
 
@@ -604,6 +662,9 @@ const server = http.createServer(async (req, res) => {
     if (!res.headersSent) send(req, res, 500, 'Erro interno', 'text/plain; charset=utf-8');
   }
 });
+
+setTimeout(indexNowPing, 15000);
+setInterval(indexNowPing, 6 * 3600 * 1000).unref();
 
 server.listen(config.port, config.host, () => {
   console.log(`\n  Botanora rodando em http://localhost:${config.port}`);

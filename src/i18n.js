@@ -14,7 +14,9 @@ const routes = {
   privacy: { pt: 'privacidade', en: 'privacy' },
   receive: { pt: 'receber', en: 'receive' },
   gear: { pt: 'utensilios', en: 'gear' },
-  library: { pt: 'biblioteca', en: 'library' }
+  library: { pt: 'biblioteca', en: 'library' },
+  recipes: { pt: 'receitas', en: 'recipes' },
+  faq: { pt: 'perguntas', en: 'questions' }
 };
 
 function url(lang, key, ...rest) {
@@ -29,7 +31,7 @@ const ui = {
   pt: {
     locale: 'pt-BR', htmlLang: 'pt-BR', other: 'en', otherLabel: 'English', langShort: 'PT',
     tagline: 'Chás e botânicos',
-    nav: { guide: 'Tipos de chá', benefits: 'Benefícios', brewing: 'Preparo', gear: 'Utensílios', quiz: 'Quiz', shop: 'Guias em PDF' },
+    nav: { guide: 'Tipos de chá', benefits: 'Benefícios', brewing: 'Preparo', recipes: 'Receitas', gear: 'Utensílios', quiz: 'Quiz', faq: 'Perguntas', shop: 'Guias em PDF' },
     skip: 'Pular para o conteúdo',
     menu: 'Menu',
     footer: {
@@ -200,7 +202,7 @@ const ui = {
   en: {
     locale: 'en-US', htmlLang: 'en', other: 'pt', otherLabel: 'Português', langShort: 'EN',
     tagline: 'Tea and botanicals',
-    nav: { guide: 'Types of tea', benefits: 'Benefits', brewing: 'Brewing', gear: 'Gear', quiz: 'Quiz', shop: 'PDF guides' },
+    nav: { guide: 'Types of tea', benefits: 'Benefits', brewing: 'Brewing', recipes: 'Recipes', gear: 'Gear', quiz: 'Quiz', faq: 'Questions', shop: 'PDF guides' },
     skip: 'Skip to content',
     menu: 'Menu',
     footer: {
