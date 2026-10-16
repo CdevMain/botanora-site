@@ -1,0 +1,602 @@
+{
+ "infusoes-de-autor": {
+  "pt": {
+   "pages": 40,
+   "items": [
+    {
+     "file": "infusoes-de-autor-pt-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "infusoes-de-autor-pt-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "infusoes-de-autor-pt-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "infusoes-de-autor-pt-4.jpg",
+     "page": 4
+    },
+    {
+     "file": "infusoes-de-autor-pt-5.jpg",
+     "page": 10
+    },
+    {
+     "file": "infusoes-de-autor-pt-6.jpg",
+     "page": 39
+    }
+   ]
+  },
+  "en": {
+   "pages": 40,
+   "items": [
+    {
+     "file": "infusoes-de-autor-en-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "infusoes-de-autor-en-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "infusoes-de-autor-en-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "infusoes-de-autor-en-4.jpg",
+     "page": 4
+    },
+    {
+     "file": "infusoes-de-autor-en-5.jpg",
+     "page": 10
+    },
+    {
+     "file": "infusoes-de-autor-en-6.jpg",
+     "page": 39
+    }
+   ]
+  }
+ },
+ "atlas-do-cha": {
+  "pt": {
+   "pages": 40,
+   "items": [
+    {
+     "file": "atlas-do-cha-pt-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "atlas-do-cha-pt-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "atlas-do-cha-pt-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "atlas-do-cha-pt-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "atlas-do-cha-pt-5.jpg",
+     "page": 21
+    },
+    {
+     "file": "atlas-do-cha-pt-6.jpg",
+     "page": 26
+    }
+   ]
+  },
+  "en": {
+   "pages": 40,
+   "items": [
+    {
+     "file": "atlas-do-cha-en-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "atlas-do-cha-en-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "atlas-do-cha-en-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "atlas-do-cha-en-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "atlas-do-cha-en-5.jpg",
+     "page": 21
+    },
+    {
+     "file": "atlas-do-cha-en-6.jpg",
+     "page": 26
+    }
+   ]
+  }
+ },
+ "ritual-da-noite": {
+  "pt": {
+   "pages": 24,
+   "items": [
+    {
+     "file": "ritual-da-noite-pt-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "ritual-da-noite-pt-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "ritual-da-noite-pt-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "ritual-da-noite-pt-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "ritual-da-noite-pt-5.jpg",
+     "page": 13
+    },
+    {
+     "file": "ritual-da-noite-pt-6.jpg",
+     "page": 20
+    }
+   ]
+  },
+  "en": {
+   "pages": 24,
+   "items": [
+    {
+     "file": "ritual-da-noite-en-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "ritual-da-noite-en-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "ritual-da-noite-en-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "ritual-da-noite-en-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "ritual-da-noite-en-5.jpg",
+     "page": 13
+    },
+    {
+     "file": "ritual-da-noite-en-6.jpg",
+     "page": 20
+    }
+   ]
+  }
+ },
+ "foco-e-energia": {
+  "pt": {
+   "pages": 24,
+   "items": [
+    {
+     "file": "foco-e-energia-pt-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "foco-e-energia-pt-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "foco-e-energia-pt-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "foco-e-energia-pt-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "foco-e-energia-pt-5.jpg",
+     "page": 13
+    },
+    {
+     "file": "foco-e-energia-pt-6.jpg",
+     "page": 22
+    }
+   ]
+  },
+  "en": {
+   "pages": 24,
+   "items": [
+    {
+     "file": "foco-e-energia-en-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "foco-e-energia-en-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "foco-e-energia-en-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "foco-e-energia-en-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "foco-e-energia-en-5.jpg",
+     "page": 13
+    },
+    {
+     "file": "foco-e-energia-en-6.jpg",
+     "page": 22
+    }
+   ]
+  }
+ },
+ "chas-gelados": {
+  "pt": {
+   "pages": 28,
+   "items": [
+    {
+     "file": "chas-gelados-pt-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "chas-gelados-pt-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "chas-gelados-pt-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "chas-gelados-pt-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "chas-gelados-pt-5.jpg",
+     "page": 18
+    },
+    {
+     "file": "chas-gelados-pt-6.jpg",
+     "page": 21
+    }
+   ]
+  },
+  "en": {
+   "pages": 28,
+   "items": [
+    {
+     "file": "chas-gelados-en-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "chas-gelados-en-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "chas-gelados-en-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "chas-gelados-en-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "chas-gelados-en-5.jpg",
+     "page": 18
+    },
+    {
+     "file": "chas-gelados-en-6.jpg",
+     "page": 21
+    }
+   ]
+  }
+ },
+ "matcha-em-casa": {
+  "pt": {
+   "pages": 28,
+   "items": [
+    {
+     "file": "matcha-em-casa-pt-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "matcha-em-casa-pt-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "matcha-em-casa-pt-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "matcha-em-casa-pt-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "matcha-em-casa-pt-5.jpg",
+     "page": 16
+    },
+    {
+     "file": "matcha-em-casa-pt-6.jpg",
+     "page": 25
+    }
+   ]
+  },
+  "en": {
+   "pages": 28,
+   "items": [
+    {
+     "file": "matcha-em-casa-en-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "matcha-em-casa-en-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "matcha-em-casa-en-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "matcha-em-casa-en-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "matcha-em-casa-en-5.jpg",
+     "page": 16
+    },
+    {
+     "file": "matcha-em-casa-en-6.jpg",
+     "page": 25
+    }
+   ]
+  }
+ },
+ "ervas-do-quintal": {
+  "pt": {
+   "pages": 32,
+   "items": [
+    {
+     "file": "ervas-do-quintal-pt-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "ervas-do-quintal-pt-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "ervas-do-quintal-pt-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "ervas-do-quintal-pt-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "ervas-do-quintal-pt-5.jpg",
+     "page": 17
+    },
+    {
+     "file": "ervas-do-quintal-pt-6.jpg",
+     "page": 20
+    }
+   ]
+  },
+  "en": {
+   "pages": 32,
+   "items": [
+    {
+     "file": "ervas-do-quintal-en-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "ervas-do-quintal-en-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "ervas-do-quintal-en-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "ervas-do-quintal-en-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "ervas-do-quintal-en-5.jpg",
+     "page": 17
+    },
+    {
+     "file": "ervas-do-quintal-en-6.jpg",
+     "page": 20
+    }
+   ]
+  }
+ },
+ "blends-autorais": {
+  "pt": {
+   "pages": 36,
+   "items": [
+    {
+     "file": "blends-autorais-pt-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "blends-autorais-pt-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "blends-autorais-pt-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "blends-autorais-pt-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "blends-autorais-pt-5.jpg",
+     "page": 23
+    },
+    {
+     "file": "blends-autorais-pt-6.jpg",
+     "page": 27
+    }
+   ]
+  },
+  "en": {
+   "pages": 36,
+   "items": [
+    {
+     "file": "blends-autorais-en-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "blends-autorais-en-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "blends-autorais-en-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "blends-autorais-en-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "blends-autorais-en-5.jpg",
+     "page": 23
+    },
+    {
+     "file": "blends-autorais-en-6.jpg",
+     "page": 27
+    }
+   ]
+  }
+ },
+ "cha-e-mesa": {
+  "pt": {
+   "pages": 28,
+   "items": [
+    {
+     "file": "cha-e-mesa-pt-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "cha-e-mesa-pt-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "cha-e-mesa-pt-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "cha-e-mesa-pt-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "cha-e-mesa-pt-5.jpg",
+     "page": 12
+    },
+    {
+     "file": "cha-e-mesa-pt-6.jpg",
+     "page": 17
+    }
+   ]
+  },
+  "en": {
+   "pages": 28,
+   "items": [
+    {
+     "file": "cha-e-mesa-en-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "cha-e-mesa-en-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "cha-e-mesa-en-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "cha-e-mesa-en-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "cha-e-mesa-en-5.jpg",
+     "page": 12
+    },
+    {
+     "file": "cha-e-mesa-en-6.jpg",
+     "page": 17
+    }
+   ]
+  }
+ },
+ "erva-mate": {
+  "pt": {
+   "pages": 24,
+   "items": [
+    {
+     "file": "erva-mate-pt-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "erva-mate-pt-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "erva-mate-pt-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "erva-mate-pt-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "erva-mate-pt-5.jpg",
+     "page": 13
+    },
+    {
+     "file": "erva-mate-pt-6.jpg",
+     "page": 18
+    }
+   ]
+  },
+  "en": {
+   "pages": 24,
+   "items": [
+    {
+     "file": "erva-mate-en-1.jpg",
+     "page": 1
+    },
+    {
+     "file": "erva-mate-en-2.jpg",
+     "page": 2
+    },
+    {
+     "file": "erva-mate-en-3.jpg",
+     "page": 3
+    },
+    {
+     "file": "erva-mate-en-4.jpg",
+     "page": 5
+    },
+    {
+     "file": "erva-mate-en-5.jpg",
+     "page": 13
+    },
+    {
+     "file": "erva-mate-en-6.jpg",
+     "page": 18
+    }
+   ]
+  }
+ }
+}
