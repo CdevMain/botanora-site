@@ -8,8 +8,65 @@
   const dataEl = $('#page-data');
   const DATA = dataEl ? JSON.parse(dataEl.textContent) : {};
 
+  // ---------- cookies: Google Analytics e Microsoft Clarity só com consentimento ----------
+  const CONSENT_KEY = 'botanora_consent';
+  const gaId = document.body.dataset.ga, clarityId = document.body.dataset.clarity;
+  function getConsent() {
+    try { const v = localStorage.getItem(CONSENT_KEY); if (v) return v; } catch (_) {}
+    const m = document.cookie.match(/(?:^|; )consent=(all|necessary)/);
+    return m ? m[1] : null;
+  }
+  function saveConsent(v) {
+    try { localStorage.setItem(CONSENT_KEY, v); } catch (_) {}
+    document.cookie = `consent=${v}; Path=/; Max-Age=${60 * 60 * 24 * 180}; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`;
+  }
+  let thirdPartyLoaded = false;
+  function loadThirdParty() {
+    if (thirdPartyLoaded) return;
+    thirdPartyLoaded = true;
+    if (gaId) {
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', gaId);
+      const s = document.createElement('script');
+      s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gaId);
+      document.head.appendChild(s);
+    }
+    if (clarityId) {
+      (function (c, l, a, r, i, t, y) {
+        c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+        t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+        y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+      })(window, document, 'clarity', 'script', clarityId);
+    }
+  }
+  function clearThirdPartyCookies() {
+    const host = location.hostname, root = host.split('.').slice(-3).join('.');
+    document.cookie.split('; ').map(c => c.split('=')[0]).filter(n => /^(_ga|_gid|_gat|_clck|_clsk|CLID|MUID)/.test(n)).forEach(n => {
+      [host, '.' + host, '.' + root, '.' + host.split('.').slice(-2).join('.')].forEach(d => { document.cookie = `${n}=; Path=/; Max-Age=0; Domain=${d}`; });
+      document.cookie = `${n}=; Path=/; Max-Age=0`;
+    });
+  }
+  const banner = document.querySelector('[data-consent]');
+  if (gaId || clarityId) {
+    const current = getConsent();
+    if (current === 'all') loadThirdParty();
+    else if (!current && banner) banner.hidden = false;
+    document.querySelectorAll('[data-consent-choice]').forEach(b => b.addEventListener('click', () => {
+      const v = b.dataset.consentChoice;
+      const before = getConsent();
+      saveConsent(v);
+      if (banner) banner.hidden = true;
+      if (v === 'all') loadThirdParty();
+      else if (before === 'all') { clearThirdPartyCookies(); location.reload(); }
+    }));
+    document.querySelectorAll('[data-consent-open]').forEach(b => b.addEventListener('click', () => { if (banner) { banner.hidden = false; const f = banner.querySelector('button'); if (f) f.focus(); } }));
+  }
+
   // ---------- métricas ----------
   function track(name, props) {
+    if (window.gtag && thirdPartyLoaded) { try { window.gtag('event', name, props || {}); } catch (_) {} }
     const body = JSON.stringify({ name, props: props || {}, path: location.pathname });
     try { navigator.sendBeacon('/api/event', new Blob([body], { type: 'application/json' })); }
     catch (_) { fetch('/api/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {}); }

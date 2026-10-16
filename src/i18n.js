@@ -37,9 +37,11 @@ const ui = {
       about: 'Uma central independente sobre chás: o que são, como prepará-los bem e o que a ciência diz sobre seus benefícios. E guias em PDF para ir mais fundo.',
       learn: 'Aprenda', shop: 'Loja', legal: 'Transparência',
       privacy: 'Privacidade', disclaimer: 'O conteúdo é educativo e não substitui orientação médica ou nutricional.',
-      analytics: 'Métricas sem cookies e sem rastreamento entre sites.',
+      analytics: 'Métricas próprias sem cookies. Google Analytics e Microsoft Clarity só com a sua permissão.',
+      cookies: 'Preferências de cookies',
       rights: 'Todos os direitos reservados.'
     },
+    consent: { text: 'Usamos cookies do Google Analytics e do Microsoft Clarity para entender como o site é usado e melhorá-lo. Eles só são ativados se você aceitar.', more: 'Saiba mais', accept: 'Aceitar', reject: 'Só os necessários', label: 'Aviso de cookies' },
     newsletter: {
       title: 'Uma carta por mês sobre chá',
       text: 'Receitas da estação, um tipo de chá explicado a fundo e aviso quando cada novo guia for lançado.',
@@ -161,7 +163,8 @@ const ui = {
     privacy: {
       title: 'Privacidade | Botanora', h1: 'Privacidade',
       body: [
-        'A Botanora não usa cookies de rastreamento nem ferramentas de publicidade.',
+        'A Botanora não usa ferramentas de publicidade. Cookies de medição de terceiros só são ativados se você aceitar no aviso de cookies.',
+        'Se você aceitar, usamos o Google Analytics (estatísticas de visitas) e o Microsoft Clarity (mapas de calor e gravações anônimas de navegação, sem o que você digita em formulários) para entender como o site é usado e melhorá-lo. Você pode mudar a escolha a qualquer momento em "Preferências de cookies", no rodapé.',
         'Para medir o uso do site, registramos a página visitada, a origem da visita, o tipo de dispositivo e um identificador anônimo gerado a partir do seu IP e navegador combinados com um código que muda todos os dias. O IP não é armazenado.',
         'Quando você compra um guia, entra numa lista de espera ou assina a newsletter, guardamos nome e e-mail apenas para entregar o que você pediu. Você pode pedir a exclusão a qualquer momento pelo e-mail de contato.',
         'Pagamentos são processados pelo seu banco (PIX) ou pelo Mercado Pago. Não temos acesso aos dados do seu cartão.'
@@ -205,9 +208,11 @@ const ui = {
       about: 'An independent hub about tea: what it is, how to brew it well and what the science says about its benefits. Plus PDF guides to go deeper.',
       learn: 'Learn', shop: 'Shop', legal: 'Transparency',
       privacy: 'Privacy', disclaimer: 'Content is educational and does not replace medical or nutritional advice.',
-      analytics: 'Cookie-free analytics, no cross-site tracking.',
+      analytics: 'Our own cookie-free analytics. Google Analytics and Microsoft Clarity only with your permission.',
+      cookies: 'Cookie preferences',
       rights: 'All rights reserved.'
     },
+    consent: { text: 'We use Google Analytics and Microsoft Clarity cookies to understand how the site is used and improve it. They are only enabled if you accept.', more: 'Learn more', accept: 'Accept', reject: 'Necessary only', label: 'Cookie notice' },
     newsletter: {
       title: 'One letter a month about tea',
       text: 'Seasonal recipes, one tea style explained in depth, and a note when each new guide launches.',
@@ -329,7 +334,8 @@ const ui = {
     privacy: {
       title: 'Privacy | Botanora', h1: 'Privacy',
       body: [
-        'Botanora uses no tracking cookies and no advertising tools.',
+        'Botanora uses no advertising tools. Third-party measurement cookies are only enabled if you accept them in the cookie notice.',
+        'If you accept, we use Google Analytics (visit statistics) and Microsoft Clarity (heatmaps and anonymous session recordings, without what you type into forms) to understand how the site is used and improve it. You can change your choice at any time under "Cookie preferences" in the footer.',
         'To measure site usage we record the page visited, the referrer, the device type and an anonymous identifier derived from your IP and browser combined with a code that changes every day. Your IP is never stored.',
         'When you buy a guide, join a waitlist or subscribe to the newsletter, we keep your name and email only to deliver what you asked for. You can request deletion at any time via the contact email.',
         'Payments are processed by your bank (PIX) or by Mercado Pago. We never see your card details.'

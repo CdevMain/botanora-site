@@ -48,7 +48,10 @@ const config = {
   accessDays: Number(env.ACCESS_DAYS || 365),
   cakto: { secret: env.CAKTO_WEBHOOK_SECRET || '' },
   mail: { resendKey: env.RESEND_API_KEY || '', from: env.MAIL_FROM || '' },
-  trustProxy: env.TRUST_PROXY === '1'
+  trustProxy: env.TRUST_PROXY === '1',
+  // Ferramentas de terceiros: só carregam depois que o visitante aceita os cookies
+  gaId: env.GA_ID === undefined ? 'G-VC1F9QT587' : env.GA_ID,
+  clarityId: env.CLARITY_ID === undefined ? 'yyqohzc7o5' : env.CLARITY_ID
 };
 
 module.exports = config;

@@ -46,7 +46,7 @@ ${noindex ? '<meta name="robots" content="noindex">' : ''}
 <link rel="stylesheet" href="/assets/css/site.css?v=${ASSET_V}">
 <script type="application/ld+json">${JSON.stringify(ld.length === 1 ? ld[0] : ld).replace(/</g, '\\u003c')}</script>
 </head>
-<body class="${bodyClass}${dark ? ' header-dark' : ''}" data-lang="${lang}">
+<body class="${bodyClass}${dark ? ' header-dark' : ''}" data-lang="${lang}"${config.gaId ? ` data-ga="${esc(config.gaId)}"` : ''}${config.clarityId ? ` data-clarity="${esc(config.clarityId)}"` : ''}>
 <a class="skip" href="#main">${esc(t.skip)}</a>
 <header class="site-header" id="top">
   <div class="wrap header-inner">
@@ -101,7 +101,7 @@ ${body}
     </div>
     <div>
       <h3 class="label">${esc(t.footer.legal)}</h3>
-      <ul><li><a href="${url(lang, 'privacy')}">${esc(t.footer.privacy)}</a></li></ul>
+      <ul><li><a href="${url(lang, 'privacy')}">${esc(t.footer.privacy)}</a></li>${config.gaId || config.clarityId ? `<li><button type="button" class="link-btn" data-consent-open>${esc(t.footer.cookies)}</button></li>` : ''}</ul>
       <p class="tiny muted-light">${esc(t.footer.analytics)}</p>
     </div>
   </div>
@@ -110,6 +110,13 @@ ${body}
     <p class="tiny">© ${new Date().getFullYear()} Botanora. ${esc(t.footer.rights)}</p>
   </div>
 </footer>
+${config.gaId || config.clarityId ? `<div class="consent" role="dialog" aria-live="polite" aria-label="${esc(t.consent.label)}" hidden data-consent>
+  <p>${esc(t.consent.text)} <a href="${url(lang, 'privacy')}">${esc(t.consent.more)}</a></p>
+  <div class="consent-actions">
+    <button type="button" class="btn btn-ghost btn-sm" data-consent-choice="necessary">${esc(t.consent.reject)}</button>
+    <button type="button" class="btn btn-gold btn-sm" data-consent-choice="all">${esc(t.consent.accept)}</button>
+  </div>
+</div>` : ''}
 ${data ? `<script id="page-data" type="application/json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>` : ''}
 <script src="/assets/js/site.js?v=${ASSET_V}" defer></script>
 </body>

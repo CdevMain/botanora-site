@@ -745,3 +745,17 @@ html.pv-lock { overflow: hidden; }
   .preview-dialog { width: 100vw; }
   .pv-top { padding: 0 12px; }
 }
+
+/* ---------- aviso de cookies ---------- */
+.consent { position: fixed; z-index: 90; left: 24px; bottom: 24px; max-width: 460px; padding: 22px 24px; background: var(--night-2); color: var(--paper); border: 1px solid var(--gold-line); box-shadow: 0 24px 50px -20px rgba(0, 0, 0, .6); font-size: 14px; line-height: 1.6; }
+.consent[hidden] { display: none; }
+.consent p { margin: 0 0 16px; color: rgba(244, 239, 228, .82); }
+.consent a { color: var(--gold); }
+.consent-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.link-btn { appearance: none; background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; text-decoration: underline; text-decoration-color: var(--gold-3); text-underline-offset: 3px; }
+@media (max-width: 600px) {
+  .consent { left: 12px; right: 12px; bottom: 12px; max-width: none; padding: 18px; }
+  .consent-actions .btn { flex: 1; }
+}
+.site-footer .link-btn { text-decoration: none; color: rgba(244, 239, 228, .75); font-size: 15px; }
+.site-footer .link-btn:hover { color: var(--gold); }
