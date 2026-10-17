@@ -19,16 +19,16 @@ const T = {
     teaEyebrow: 'Tipos de chá', summary: 'Em resumo', howTo: 'Como preparar', step: n => `Passo ${n}`,
     benefitsTitle: 'Para que costuma ser usado', faqTitle: 'Perguntas frequentes', others: 'Outros chás', recipesTitle: 'Receitas para experimentar',
     guideCta: 'Quer ir mais fundo?', guideCtaText: 'Este assunto está completo no guia em PDF, com receitas, tabelas e técnica.', seeGuide: 'Ver o guia',
-    rIndexTitle: 'Receitas de chá grátis | Botanora', rIndexH1: 'Receitas de chá', rIndexEyebrow: 'Receitas grátis',
-    rIndexLead: 'Vinte receitas testadas, duas de cada guia Botanora: chás quentes e gelados, lattes, doces e salgados com chá. Com medidas, temperatura e tempo.',
+    rIndexTitle: 'Receitas de chá grátis | Botânora', rIndexH1: 'Receitas de chá', rIndexEyebrow: 'Receitas grátis',
+    rIndexLead: 'Vinte receitas testadas, duas de cada guia Botânora: chás quentes e gelados, lattes, doces e salgados com chá. Com medidas, temperatura e tempo.',
     rIndexDesc: 'Receitas de chá grátis com medidas, temperatura e tempo: chá gelado, matcha, chimarrão, chai, scones, brigadeiro de matcha e mais.',
     ingredients: 'Ingredientes', method: 'Modo de preparo', finish: 'Finalização', tip: 'Dica', time: 'Tempo', yieldL: 'Rende', level: 'Nível',
     caf: 'Com cafeína', nocaf: 'Sem cafeína', iced: 'Gelado', hot: 'Quente', fromGuide: 'Do guia', more: 'Esta receita faz parte do guia', moreText: n => `O guia completo tem ${n} páginas, com mais receitas, técnica e tabelas, em português e inglês.`,
-    faqTitlePage: 'Perguntas frequentes sobre chá | Botanora', faqH1: 'Perguntas sobre chá', faqEyebrow: 'Respostas diretas',
+    faqTitlePage: 'Perguntas frequentes sobre chá | Botânora', faqH1: 'Perguntas sobre chá', faqEyebrow: 'Respostas diretas',
     faqLead: 'Temperatura da água, tempo de infusão, cafeína, chás para dormir, chimarrão, matcha e mais. Respostas curtas e práticas.',
     faqDesc: 'Respostas diretas sobre chá: temperatura da água, tempo de infusão, cafeína, chá para dormir, matcha, chimarrão e chá gelado.',
     general: 'Preparo e dúvidas gerais', byTea: 'Sobre cada chá', home: 'Início', guideName: 'Tipos de chá', recipesName: 'Receitas', faqName: 'Perguntas',
-    teaTitle: n => `${n}: como preparar, temperatura, cafeína e sabor | Botanora`,
+    teaTitle: n => `${n}: como preparar, temperatura, cafeína e sabor | Botânora`,
     caffeine: 'Cafeína', water: 'Água', steep: 'Tempo', amount: 'Quantidade', flavor: 'Sabor', origin: 'Origem', bestTime: 'Melhor momento', resteeps: 'Reinfusões',
     none: 'sem cafeína', perCup: 'por xícara de 200 ml', updated: 'Atualizado em'
   },
@@ -36,16 +36,16 @@ const T = {
     teaEyebrow: 'Types of tea', summary: 'At a glance', howTo: 'How to brew', step: n => `Step ${n}`,
     benefitsTitle: 'What it is commonly used for', faqTitle: 'Frequently asked questions', others: 'Other teas', recipesTitle: 'Recipes to try',
     guideCta: 'Want to go deeper?', guideCtaText: 'This topic is covered in full in the PDF guide, with recipes, tables and technique.', seeGuide: 'See the guide',
-    rIndexTitle: 'Free tea recipes | Botanora', rIndexH1: 'Tea recipes', rIndexEyebrow: 'Free recipes',
-    rIndexLead: 'Twenty tested recipes, two from each Botanora guide: hot and iced teas, lattes, sweets and savoury dishes with tea. With amounts, temperature and time.',
+    rIndexTitle: 'Free tea recipes | Botânora', rIndexH1: 'Tea recipes', rIndexEyebrow: 'Free recipes',
+    rIndexLead: 'Twenty tested recipes, two from each Botânora guide: hot and iced teas, lattes, sweets and savoury dishes with tea. With amounts, temperature and time.',
     rIndexDesc: 'Free tea recipes with amounts, temperature and time: iced tea, matcha, yerba mate, chai, scones, matcha brigadeiro and more.',
     ingredients: 'Ingredients', method: 'Method', finish: 'To finish', tip: 'Tip', time: 'Time', yieldL: 'Makes', level: 'Level',
     caf: 'Caffeinated', nocaf: 'Caffeine-free', iced: 'Iced', hot: 'Hot', fromGuide: 'From the guide', more: 'This recipe is part of the guide', moreText: n => `The full guide has ${n} pages, with more recipes, technique and tables, in Portuguese and English.`,
-    faqTitlePage: 'Tea FAQ: brewing, caffeine and more | Botanora', faqH1: 'Questions about tea', faqEyebrow: 'Straight answers',
+    faqTitlePage: 'Tea FAQ: brewing, caffeine and more | Botânora', faqH1: 'Questions about tea', faqEyebrow: 'Straight answers',
     faqLead: 'Water temperature, steeping time, caffeine, teas for sleep, yerba mate, matcha and more. Short, practical answers.',
     faqDesc: 'Straight answers about tea: water temperature, steeping time, caffeine, tea for sleep, matcha, yerba mate and iced tea.',
     general: 'Brewing and general questions', byTea: 'About each tea', home: 'Home', guideName: 'Types of tea', recipesName: 'Recipes', faqName: 'Questions',
-    teaTitle: n => `${n}: how to brew, temperature, caffeine and flavour | Botanora`,
+    teaTitle: n => `${n}: how to brew, temperature, caffeine and flavour | Botânora`,
     caffeine: 'Caffeine', water: 'Water', steep: 'Steep', amount: 'Amount', flavor: 'Flavour', origin: 'Origin', bestTime: 'Best time', resteeps: 'Resteeps',
     none: 'caffeine-free', perCup: 'per 200 ml cup', updated: 'Updated'
   }
@@ -151,8 +151,8 @@ ${crumbs(lang, crumbItems)}
 ${recs.length ? `<section class="section band-paper-2"><div class="wrap"><h2 class="h3">${esc(t.recipesTitle)}</h2><div class="recipe-grid">${recs.map(r => recipeCard(r, lang)).join('')}</div></div></section>` : ''}
 <section class="section band-paper"><div class="wrap"><h2 class="h3">${esc(t.others)}</h2><div class="chip-row">${others.map(o => `<a class="chip" href="${url(lang, 'guide', o.id)}">${esc(o.name[lang])}</a>`).join('')}</div></div></section>`;
   const ld = [
-    { '@context': 'https://schema.org', '@type': 'Article', headline: t.teaTitle(name).replace(' | Botanora', ''), description: answer, inLanguage: lang === 'pt' ? 'pt-BR' : 'en',
-      author: { '@type': 'Organization', name: 'Botanora', url: config.siteUrl }, publisher: { '@type': 'Organization', name: 'Botanora', logo: { '@type': 'ImageObject', url: abs('/assets/img/icon-512.png') } },
+    { '@context': 'https://schema.org', '@type': 'Article', headline: t.teaTitle(name).replace(' | Botânora', ''), description: answer, inLanguage: lang === 'pt' ? 'pt-BR' : 'en',
+      author: { '@type': 'Organization', name: 'Botânora', url: config.siteUrl }, publisher: { '@type': 'Organization', name: 'Botânora', logo: { '@type': 'ImageObject', url: abs('/assets/img/icon-512.png') } },
       dateModified: UPDATED, datePublished: UPDATED, mainEntityOfPage: abs(paths[lang]), image: abs('/assets/img/og.png') },
     breadcrumbLd(crumbItems)
   ];
@@ -179,7 +179,7 @@ function recipePage(lang, r) {
   const p = productBySlug(r.guide);
   const paths = recipePaths(r);
   const crumbItems = [[t.home, url(lang, 'home')], [t.recipesName, url(lang, 'recipes')], [r.name[lang], paths[lang]]];
-  const title = `${r.name[lang]}: ${lang === 'pt' ? 'receita' : 'recipe'} | Botanora`;
+  const title = `${r.name[lang]}: ${lang === 'pt' ? 'receita' : 'recipe'} | Botânora`;
   const desc = `${r.tag[lang]} ${lang === 'pt' ? 'Ingredientes' : 'Ingredients'}: ${r.ingredients.map(i => i.item[lang]).slice(0, 4).join(', ')}. ${t.time}: ${r.time[lang]}.`;
   const body = `${pageHero({ eyebrow: t.fromGuide + (p ? ' ' + p.title[lang] : ''), h1: r.name[lang], lead: r.tag[lang] })}
 ${crumbs(lang, crumbItems)}
@@ -207,7 +207,7 @@ ${crumbs(lang, crumbItems)}
 <section class="section band-paper-2"><div class="wrap"><h2 class="h3">${esc(t.recipesTitle)}</h2><div class="recipe-grid">${recipes.filter(x => x !== r).sort((a, b) => (a.guide === r.guide ? -1 : 0) - (b.guide === r.guide ? -1 : 0)).slice(0, 4).map(x => recipeCard(x, lang)).join('')}</div></div></section>`;
   const recipeLd = {
     '@context': 'https://schema.org', '@type': 'Recipe', name: r.name[lang], description: r.tag[lang], inLanguage: lang === 'pt' ? 'pt-BR' : 'en',
-    image: [abs(`/assets/img/covers/${r.guide}-${lang}.jpg`)], author: { '@type': 'Organization', name: 'Botanora', url: config.siteUrl }, datePublished: UPDATED,
+    image: [abs(`/assets/img/covers/${r.guide}-${lang}.jpg`)], author: { '@type': 'Organization', name: 'Botânora', url: config.siteUrl }, datePublished: UPDATED,
     recipeCategory: lang === 'pt' ? (r.iced ? 'Bebida gelada' : 'Bebida') : (r.iced ? 'Cold drink' : 'Drink'), recipeCuisine: lang === 'pt' ? 'Brasileira' : 'Brazilian',
     keywords: [r.name[lang], lang === 'pt' ? 'chá' : 'tea', p ? p.title[lang] : ''].filter(Boolean).join(', '),
     recipeYield: r.yield[lang], recipeIngredient: r.ingredients.map(i => `${i.qty[lang]} ${i.item[lang]}`),
@@ -263,8 +263,8 @@ function mdProduct(lang, p) {
 function llmsTxt(full = false) {
   const prods = store.db.products.filter(p => p.status === 'available');
   const L = [];
-  L.push('# Botanora', '');
-  L.push('> Botanora é uma central independente e bilíngue (português do Brasil e inglês) sobre chás: tipos de chá, preparo correto (temperatura, tempo e quantidade), cafeína, benefícios com nível de evidência, receitas e guias em PDF. Botanora is an independent, bilingual (Brazilian Portuguese and English) tea hub: tea types, correct brewing, caffeine, evidence-graded benefits, recipes and PDF guides.', '');
+  L.push('# Botânora', '');
+  L.push('> Botânora é uma central independente e bilíngue (português do Brasil e inglês) sobre chás: tipos de chá, preparo correto (temperatura, tempo e quantidade), cafeína, benefícios com nível de evidência, receitas e guias em PDF. Botânora is an independent, bilingual (Brazilian Portuguese and English) tea hub: tea types, correct brewing, caffeine, evidence-graded benefits, recipes and PDF guides.', '');
   L.push('Conteúdo educativo, sem promessas de cura. Valores de cafeína são médias por xícara de 200 ml. Todas as páginas existem em PT-BR (/pt/...) e EN (/en/...), e cada página de conteúdo tem uma versão em Markdown adicionando .md ao final da URL.', '');
   L.push('## Tipos de chá / Types of tea', '');
   teas.forEach(tea => L.push(`- [${tea.name.pt}](${abs(url('pt', 'guide', tea.id))}) ([EN](${abs(url('en', 'guide', tea.id))})): água ${range(tea.temp[0], tea.temp[1], ' °C')}, ${fmtTime(tea)}, cafeína ${cafTxt(tea, 'pt')} por xícara. ${tea.flavor.pt}.`));

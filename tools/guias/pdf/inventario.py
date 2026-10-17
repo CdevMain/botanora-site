@@ -32,7 +32,7 @@ def main(dest):
         by_guide[it['guide']].append(it)
     L = []
     w = L.append
-    w('# Guia interno: o que cada guia Botanora já cobre')
+    w('# Guia interno: o que cada guia Botânora já cobre')
     w('')
     w(f'Documento interno, gerado automaticamente em {datetime.date.today():%d/%m/%Y} a partir do código dos guias (`tools/guias/pdf`). Não é vendido nem publicado no site.')
     w('')

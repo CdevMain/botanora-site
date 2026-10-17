@@ -1,4 +1,4 @@
-# Botanora, prompts das 10 capas
+# Botânora, prompts das 10 capas
 
 Prompts para gerar as ilustrações das capas em uma IA de imagem (Midjourney, DALL·E, Ideogram, Firefly etc.) no mesmo estilo das capas do site: **desenho à mão com traços riscados e soltos, como nanquim branco sobre fundo preto, mas em dourado sobre azul-noite**.
 

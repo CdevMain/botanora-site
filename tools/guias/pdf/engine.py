@@ -1,4 +1,4 @@
-"""Botanora: motor de diagramação dos guias em PDF (A4, página a página).
+"""Botânora: motor de diagramação dos guias em PDF (A4, página a página).
 Cada guia é uma lista de páginas; cada página é um dicionário com tipo e conteúdo bilíngue.
 Texto bilíngue: tupla (pt, en) ou dict {'pt':..., 'en':...}. Render via Chromium (Playwright)."""
 import html, os, re, json, asyncio, sys
@@ -41,11 +41,11 @@ def rich(s):
 UI = {
     'pt': dict(chapter='Capítulo', contents='Sumário', page='p.', ingredients='Ingredientes', method='Preparo', finish='Finalização',
                tip='Toque do barista', hot='Quente', iced='Gelado', caf='Com cafeína', nocaf='Sem cafeína', milk='Com leite',
-               levels={'easy': 'Simples', 'mid': 'Intermediário', 'adv': 'Técnica'}, guide='Guia', made='Feito com cuidado pela Botanora',
+               levels={'easy': 'Simples', 'mid': 'Intermediário', 'adv': 'Técnica'}, guide='Guia', made='Feito com cuidado pela Botânora',
                note='Atenção', more='Continue explorando', site='botanora.com.br'),
     'en': dict(chapter='Chapter', contents='Contents', page='p.', ingredients='Ingredients', method='Method', finish='Finish',
                tip='Barista tip', hot='Hot', iced='Iced', caf='Caffeinated', nocaf='Caffeine-free', milk='With milk',
-               levels={'easy': 'Easy', 'mid': 'Intermediate', 'adv': 'Technique'}, guide='Guide', made='Made with care by Botanora',
+               levels={'easy': 'Easy', 'mid': 'Intermediate', 'adv': 'Technique'}, guide='Guide', made='Made with care by Botânora',
                note='Note', more='Keep exploring', site='botanora.com.br'),
 }
 
@@ -275,7 +275,7 @@ def frame(inner, lang, n, head_left, head_right='', dark=False, cls='', outside=
     return f"""<section class="page {'dark ' if dark else ''}{cls}">{outside}
 <div class="runhead"><span>{esc(head_left)}</span><span>{esc(head_right)}</span></div>
 <div class="content">{inner}</div>
-<div class="folio"><span>BOTANORA</span><span class="n">{n:02d}</span><span>{BMARK}</span></div>
+<div class="folio"><span>BOTÂNORA</span><span class="n">{n:02d}</span><span>{BMARK}</span></div>
 </section>"""
 
 
@@ -300,7 +300,7 @@ def render_guide(g, lang):
             out.append(f'<section class="page cover"><img src="file://{COVERS}{g.slug}-{lang}.jpg"></section>')
         elif t == 'title':
             how = ''.join(f'<div><span class="n">{i + 1:02d}</span><b>{esc(tr(a, lang))}</b>{rich(tr(b, lang))}</div>' for i, (a, b) in enumerate(p.get('how', [])))
-            inner = f"""<div class="brand">Botanora · {esc(u['guide'])} Nº {g.number:02d}</div>
+            inner = f"""<div class="brand">Botânora · {esc(u['guide'])} Nº {g.number:02d}</div>
 <h1>{esc(title)}</h1><div class="sub">{esc(tr(g.subtitle, lang))}</div>
 <div style="margin-top:12mm;max-width:150mm">{''.join(f'<p>{rich(tr(x, lang))}</p>' for x in p.get('intro', []))}</div>
 <div class="titleart-in">{cover_art(g.slug, g.number - 1)}</div>
@@ -401,7 +401,7 @@ def h4(x):
 
 
 def tip(text, key=None):
-    return lambda lang: f'<div class="tip"><span class="k">{esc(tr(key, lang) if key else UI[lang]["tip"].replace("do barista", "Botanora").replace("Barista tip", "Botanora tip"))}</span>{rich(tr(text, lang))}</div>'
+    return lambda lang: f'<div class="tip"><span class="k">{esc(tr(key, lang) if key else UI[lang]["tip"].replace("do barista", "Botânora").replace("Barista tip", "Botânora tip"))}</span>{rich(tr(text, lang))}</div>'
 
 
 def warn(text, key=None):

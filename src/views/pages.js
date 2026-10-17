@@ -213,7 +213,7 @@ ${activeAff().length ? `<section class="section band-paper-2 gear-band" aria-lab
 
   return layout({
     lang, key: 'home', paths: pathsFor('home'), title: h.title, description: h.description, body, dark: true,
-    jsonLd: { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Botanora', url: config.siteUrl, inLanguage: ui[lang].htmlLang }
+    jsonLd: { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Botânora', url: config.siteUrl, inLanguage: ui[lang].htmlLang }
   });
 }
 
@@ -303,7 +303,7 @@ ${groups.map(([fam, label]) => `<section class="section band-paper tea-group">
 
   return layout({
     lang, key: 'guide', paths: pathsFor('guide'), title: g.title, description: g.description, body, dark: true,
-    jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: g.h1, inLanguage: t.htmlLang, publisher: { '@type': 'Organization', name: 'Botanora' } }
+    jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: g.h1, inLanguage: t.htmlLang, publisher: { '@type': 'Organization', name: 'Botânora' } }
   });
 }
 
@@ -534,9 +534,9 @@ ${related.length ? `<section class="section band-paper-2">
   </div>
 </section>` : ''}`;
   return layout({
-    lang, key: 'shop', paths: pathsFor('shop', p.slug), title: `${p.title[lang]}: ${p.subtitle[lang]} | Botanora`, description: p.description[lang], body, dark: true, bodyClass: 'page-product', markdown: url(lang, 'shop', p.slug) + '.md',
+    lang, key: 'shop', paths: pathsFor('shop', p.slug), title: `${p.title[lang]}: ${p.subtitle[lang]} | Botânora`, description: p.description[lang], body, dark: true, bodyClass: 'page-product', markdown: url(lang, 'shop', p.slug) + '.md',
     jsonLd: {
-      '@context': 'https://schema.org', '@type': 'Product', name: p.title[lang], description: p.description[lang], brand: { '@type': 'Brand', name: 'Botanora' },
+      '@context': 'https://schema.org', '@type': 'Product', name: p.title[lang], description: p.description[lang], brand: { '@type': 'Brand', name: 'Botânora' },
       sku: 'BOT-' + String(p.order).padStart(2, '0'), category: lang === 'pt' ? 'Guia digital em PDF' : 'Digital PDF guide', image: [config.siteUrl + `/assets/img/covers/${p.slug}-${lang}.jpg`],
       inLanguage: ['pt-BR', 'en'], additionalProperty: [{ '@type': 'PropertyValue', name: lang === 'pt' ? 'Páginas' : 'Pages', value: p.pages }],
       offers: { '@type': 'Offer', price: (p.price / 100).toFixed(2), priceCurrency: 'BRL', availability: soon ? 'https://schema.org/PreOrder' : 'https://schema.org/InStock', url: config.siteUrl + url(lang, 'shop', p.slug) }
@@ -619,7 +619,7 @@ ${pageHero({ eyebrow: g.eyebrow, h1: g.h1, lead: g.lead })}
 function receive(lang, { expired = false, email = '' } = {}) {
   const t = ui[lang], r = t.receive;
   const body = `
-${pageHero({ eyebrow: 'Botanora', h1: r.h1, lead: r.lead, art: false })}
+${pageHero({ eyebrow: 'Botânora', h1: r.h1, lead: r.lead, art: false })}
 <section class="section band-paper">
   <div class="wrap receive-grid">
     <form class="buy-box stack-form" data-form="access" novalidate>
@@ -681,7 +681,7 @@ ${pageHero({ eyebrow: email, h1: lb.h1, lead: lb.lead, art: false })}
 
 function privacy(lang) {
   const t = ui[lang].privacy;
-  const body = `${pageHero({ eyebrow: 'Botanora', h1: t.h1, lead: '', art: false })}
+  const body = `${pageHero({ eyebrow: 'Botânora', h1: t.h1, lead: '', art: false })}
 <section class="section band-paper"><div class="wrap prose">${t.body.map(p => `<p>${esc(p)}</p>`).join('')}<p><a href="mailto:${esc(config.contactEmail)}">${esc(config.contactEmail)}</a></p></div></section>`;
   return layout({ lang, key: 'privacy', paths: pathsFor('privacy'), title: t.title, description: t.body[0], body, dark: true });
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Botanora: atualizar a VPS com a versão mais recente do repositório.
+# Botânora: atualizar a VPS com a versão mais recente do repositório.
 #   sudo bash /var/www/botanora/deploy/update.sh
 set -euo pipefail
 APP_DIR=/var/www/botanora
@@ -16,4 +16,4 @@ git pull --ff-only
 chown -R botanora:botanora "$APP_DIR"
 systemctl restart botanora
 sleep 2
-systemctl is-active --quiet botanora && echo "Botanora atualizado e rodando." || { journalctl -u botanora -n 30 --no-pager; exit 1; }
+systemctl is-active --quiet botanora && echo "Botânora atualizado e rodando." || { journalctl -u botanora -n 30 --no-pager; exit 1; }

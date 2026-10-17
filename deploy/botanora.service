@@ -1,9 +1,9 @@
-# Botanora como serviço do systemd
+# Botânora como serviço do systemd
 # Instale em /etc/systemd/system/botanora.service e rode:
 #   systemctl daemon-reload && systemctl enable --now botanora
 
 [Unit]
-Description=Botanora (botanora.cdev.com.br)
+Description=Botânora (botanora.cdev.com.br)
 After=network.target
 
 [Service]

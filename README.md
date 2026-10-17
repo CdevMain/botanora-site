@@ -1,4 +1,4 @@
-# Botanora
+# Botânora
 
 Central sobre chás (tipos, benefícios com nível de evidência, guia de preparo com timer e quiz) com loja de guias em PDF e painel administrativo com métricas reais. Bilíngue (PT-BR e EN).
 

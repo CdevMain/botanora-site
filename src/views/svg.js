@@ -113,7 +113,7 @@ function icon(name, cls = 'ico') {
 
 // Logotipo: ramo pequeno + wordmark espaçado
 function logo(cls = 'logo') {
-  return `<span class="${cls}"><svg class="logo-mark" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 30 C20 34 36 20 60 14 ${leafPath(16, 31, -110, 16, 0.38, 1)} ${leafPath(26, 28, -60, 15, 0.38, 1)} ${leafPath(36, 23, -125, 14, 0.38, 1)} ${leafPath(46, 19, -55, 12, 0.38, 1)} ${leafPath(56, 15, -100, 9, 0.4, 0)}"/></svg><span class="logo-word">BOTANORA</span></span>`;
+  return `<span class="${cls}"><svg class="logo-mark" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 30 C20 34 36 20 60 14 ${leafPath(16, 31, -110, 16, 0.38, 1)} ${leafPath(26, 28, -60, 15, 0.38, 1)} ${leafPath(36, 23, -125, 14, 0.38, 1)} ${leafPath(46, 19, -55, 12, 0.38, 1)} ${leafPath(56, 15, -100, 9, 0.4, 0)}"/></svg><span class="logo-word">BOTÂNORA</span></span>`;
 }
 
 module.exports = { sprig, icon, logo, leafPath };

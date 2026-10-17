@@ -1,4 +1,4 @@
-# Guia interno: o que cada guia Botanora já cobre
+# Guia interno: o que cada guia Botânora já cobre
 
 Documento interno, gerado automaticamente em 16/10/2026 a partir do código dos guias (`tools/guias/pdf`). Não é vendido nem publicado no site.
 

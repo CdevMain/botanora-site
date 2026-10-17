@@ -24,7 +24,7 @@ function cover(p, lang, cls = '', eager = false) {
   }
   const n = String(p.order).padStart(2, '0');
   return `<div class="cover ${cls}" role="img" aria-label="${esc(p.title[lang])}">
-    <span class="cover-top">Botanora · Nº ${n}</span>
+    <span class="cover-top">Botânora · Nº ${n}</span>
     <span class="cover-ring">${icon(p.icon || 'leaf', 'cover-ico')}</span>
     <span class="cover-title">${esc(p.title[lang])}</span>
     <span class="cover-sub">${esc(p.subtitle[lang])}</span>

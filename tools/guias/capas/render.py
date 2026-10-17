@@ -43,7 +43,7 @@ html, body {{ margin: 0; }}
 </style></head><body><div class="c">
 <svg class="grain" width="1000" height="1414"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .55 0"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
 <div class="f1"></div><div class="f2"></div>
-<div class="top">BOTANORA<small>Nº {n}</small></div>
+<div class="top">BOTÂNORA<small>Nº {n}</small></div>
 <svg class="art" viewBox="0 0 1000 1000" fill="none" stroke-linecap="round" stroke-linejoin="round">{svg_paths}</svg>
 <div class="t"><h1>{p['title'][lang]}</h1><p>{p['subtitle'][lang]}</p></div>
 <div class="mark">{bmark}</div>

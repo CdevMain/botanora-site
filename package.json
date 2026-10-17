@@ -2,7 +2,7 @@
   "name": "botanora-site",
   "version": "1.0.0",
   "private": true,
-  "description": "Botanora: central sobre chás, guias em PDF e painel com métricas reais (PT-BR / EN).",
+  "description": "Botânora: central sobre chás, guias em PDF e painel com métricas reais (PT-BR / EN).",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

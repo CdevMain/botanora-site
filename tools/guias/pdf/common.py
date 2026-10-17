@@ -33,8 +33,8 @@ def text(heading=None, body=None, eyebrow=None, lead=None, toc=None, art=False, 
 
 
 def title_page(intro, how, colophon_extra=('', '')):
-    base = ('© Botanora. Uso pessoal; é proibida a reprodução ou redistribuição sem autorização. O conteúdo é educativo e não substitui orientação médica, nutricional ou de outro profissional de saúde.',
-            '© Botanora. For personal use; reproduction or redistribution without permission is prohibited. The content is educational and does not replace medical, nutritional or other professional health advice.')
+    base = ('© Botânora. Uso pessoal; é proibida a reprodução ou redistribuição sem autorização. O conteúdo é educativo e não substitui orientação médica, nutricional ou de outro profissional de saúde.',
+            '© Botânora. For personal use; reproduction or redistribution without permission is prohibited. The content is educational and does not replace medical, nutritional or other professional health advice.')
     return {'type': 'title', 'intro': [L(*x) for x in intro], 'how': [(L(*a), L(*b)) for a, b in how],
             'colophon': L((base[0] + ' ' + colophon_extra[0]).strip(), (base[1] + ' ' + colophon_extra[1]).strip())}
 

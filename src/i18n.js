@@ -50,7 +50,7 @@ const ui = {
       placeholder: 'seu@email.com', button: 'Inscrever', ok: 'Pronto! Você está na lista.', err: 'Não deu certo. Confira o e-mail.'
     },
     home: {
-      title: 'Botanora | Chás, benefícios e guias de preparo',
+      title: 'Botânora | Chás, benefícios e guias de preparo',
       description: 'Central sobre chás: tipos, benefícios com base em evidência, guia de preparo com timer e guias em PDF.',
       eyebrow: 'Central do chá',
       h1a: 'Tudo o que uma folha', h1b: 'pode fazer por você',
@@ -65,9 +65,9 @@ const ui = {
       benefitsText: 'Cada benefício traz o nível de evidência científica, os chás indicados e os cuidados.',
       brewEyebrow: 'Preparo',
       brewTitle: 'Dois números fazem uma boa xícara',
-      brewText: 'Temperatura da água e tempo de infusão. Escolha o chá e a Botanora calcula a dose e cronometra para você.',
+      brewText: 'Temperatura da água e tempo de infusão. Escolha o chá e a Botânora calcula a dose e cronometra para você.',
       brewCta: 'Abrir o guia de preparo',
-      shopEyebrow: 'Biblioteca Botanora',
+      shopEyebrow: 'Biblioteca Botânora',
       shopTitle: 'Guias em PDF para ir mais fundo',
       shopText: 'Cadernos ilustrados, prontos para ler no celular ou imprimir.',
       shopCta: 'Ver todos os guias',
@@ -76,7 +76,7 @@ const ui = {
       quizCta: 'Fazer o quiz'
     },
     guide: {
-      title: 'Tipos de chá: guia completo | Botanora',
+      title: 'Tipos de chá: guia completo | Botânora',
       description: 'Branco, verde, matcha, oolong, preto, pu-erh, erva-mate, rooibos e ervas: processo, sabor, cafeína e preparo.',
       eyebrow: 'Guia', h1: 'Os tipos de chá',
       lead: 'Quase todo chá verdadeiro vem de uma única planta, a Camellia sinensis. O que separa um branco de um preto é o que acontece depois da colheita. As tisanas (ervas, flores, rooibos, mate) são outro universo.',
@@ -87,7 +87,7 @@ const ui = {
       brewThis: 'Preparar este chá', related: 'Guia relacionado'
     },
     benefits: {
-      title: 'Benefícios do chá com base em evidência | Botanora',
+      title: 'Benefícios do chá com base em evidência | Botânora',
       description: 'Foco, sono, digestão, antioxidantes, hidratação e pausa: o que cada chá faz, com nível de evidência e cuidados.',
       eyebrow: 'Central de benefícios', h1: 'Como o chá faz bem',
       lead: 'Sem promessas milagrosas. Cada benefício abaixo traz o nível de evidência, os chás indicados, um ritual simples e os cuidados.',
@@ -103,10 +103,10 @@ const ui = {
       filterAll: 'Todos'
     },
     brewing: {
-      title: 'Guia de preparo e timer de chá | Botanora',
+      title: 'Guia de preparo e timer de chá | Botânora',
       description: 'Calculadora de dose, temperatura ideal e timer de infusão para cada tipo de chá.',
       eyebrow: 'Preparo', h1: 'Prepare no ponto certo',
-      lead: 'Escolha o chá e o volume. A Botanora calcula a dose, indica a temperatura e cronometra a infusão.',
+      lead: 'Escolha o chá e o volume. A Botânora calcula a dose, indica a temperatura e cronometra a infusão.',
       choose: 'Escolha o chá', volume: 'Volume de água', strength: 'Intensidade',
       strengths: ['Suave', 'Equilibrado', 'Intenso'],
       dose: 'Dose', water: 'Água', steep: 'Infusão', grams: 'g de folhas', spoons: 'colheres de chá',
@@ -128,16 +128,16 @@ const ui = {
       notify: 'Notificar quando terminar'
     },
     quiz: {
-      title: 'Qual chá é para você? Quiz | Botanora',
+      title: 'Qual chá é para você? Quiz | Botânora',
       description: 'Responda quatro perguntas e descubra o chá que combina com sua rotina.',
       eyebrow: 'Quiz', h1: 'Qual chá é para você?', lead: 'Quatro perguntas. Uma recomendação feita para a sua rotina.',
       step: 'Pergunta', of: 'de', back: 'Voltar', result: 'Seu chá é', again: 'Refazer o quiz',
       seeGuide: 'Ver no guia', benefit: 'Benefício relacionado', product: 'Guia recomendado', brew: 'Como preparar'
     },
     shop: {
-      title: 'Guias em PDF sobre chá | Botanora',
+      title: 'Guias em PDF sobre chá | Botânora',
       description: 'Dez guias ilustrados sobre chás: receitas, tipos, preparo, ervas, blends e harmonização.',
-      eyebrow: 'Biblioteca Botanora', h1: 'Guias em PDF',
+      eyebrow: 'Biblioteca Botânora', h1: 'Guias em PDF',
       lead: 'Cadernos ilustrados para ler no celular, no tablet ou imprimir. Pagamento único, download imediato após a confirmação.',
       available: 'Disponível', soon: 'Em breve', pages: 'páginas', buy: 'Comprar', details: 'Ver detalhes',
       waitlist: 'Avise-me no lançamento', waitlistDone: 'Combinado! Avisaremos você.',
@@ -155,7 +155,7 @@ const ui = {
       preview: { open: 'Ler uma prévia', eyebrow: 'Prévia gratuita', title: 'Folheie antes de comprar', text: '{n} páginas de amostra do guia, do jeito que você vai receber. Toque numa página para ler em tamanho grande.', page: 'Página {p} de {t}', of: 'de', close: 'Fechar', prev: 'Página anterior', next: 'Próxima página', buy: 'Quero o guia completo', langNote: 'Prévia em português. O guia também está disponível em inglês.' }
     },
     order: {
-      title: 'Seu pedido | Botanora', h1: 'Pedido', pending: 'Aguardando pagamento', paid: 'Pagamento confirmado', cancelled: 'Pedido cancelado',
+      title: 'Seu pedido | Botânora', h1: 'Pedido', pending: 'Aguardando pagamento', paid: 'Pagamento confirmado', cancelled: 'Pedido cancelado',
       pixTitle: 'Pague com PIX', pixText: 'Abra o app do seu banco, escolha PIX e escaneie o código ou use o "copia e cola".',
       copy: 'Copiar código PIX', copied: 'Copiado!', amount: 'Valor', waiting: 'Esta página atualiza sozinha quando o pagamento for confirmado.',
       download: 'Baixar o PDF', keep: 'Guarde o link desta página: é por ele que você baixa o seu guia novamente.',
@@ -163,9 +163,9 @@ const ui = {
       mp: 'Pagar com Mercado Pago', notFound: 'Pedido não encontrado.', library: 'Abrir minha biblioteca', otherLang: 'Baixar em inglês', refunded: 'Pedido reembolsado'
     },
     privacy: {
-      title: 'Privacidade | Botanora', h1: 'Privacidade',
+      title: 'Privacidade | Botânora', h1: 'Privacidade',
       body: [
-        'A Botanora não usa ferramentas de publicidade. Cookies de medição de terceiros só são ativados se você aceitar no aviso de cookies.',
+        'A Botânora não usa ferramentas de publicidade. Cookies de medição de terceiros só são ativados se você aceitar no aviso de cookies.',
         'Se você aceitar, usamos o Google Analytics (estatísticas de visitas) e o Microsoft Clarity (mapas de calor e gravações anônimas de navegação, sem o que você digita em formulários) para entender como o site é usado e melhorá-lo. Você pode mudar a escolha a qualquer momento em "Preferências de cookies", no rodapé.',
         'Para medir o uso do site, registramos a página visitada, a origem da visita, o tipo de dispositivo e um identificador anônimo gerado a partir do seu IP e navegador combinados com um código que muda todos os dias. O IP não é armazenado.',
         'Quando você compra um guia, entra numa lista de espera ou assina a newsletter, guardamos nome e e-mail apenas para entregar o que você pediu. Você pode pedir a exclusão a qualquer momento pelo e-mail de contato.',
@@ -173,30 +173,30 @@ const ui = {
       ]
     },
     gear: {
-      title: 'Utensílios recomendados para chá | Botanora', description: 'Bules, infusores, prensas e organizadores que usamos e recomendamos para preparar chá em casa.',
+      title: 'Utensílios recomendados para chá | Botânora', description: 'Bules, infusores, prensas e organizadores que usamos e recomendamos para preparar chá em casa.',
       eyebrow: 'Recomendações', h1: 'Utensílios que fazem diferença', lead: 'Uma seleção curta de itens para preparar, servir e organizar seus chás. Escolhemos pelo uso, não pelo preço.',
       homeTitle: 'Para preparar melhor', homeText: 'Os utensílios que recomendamos para a sua bancada de chá.', all: 'Ver todos os utensílios',
       cats: { all: 'Todos', preparo: 'Preparo', servir: 'Servir', organizacao: 'Organização', outros: 'Outros' },
-      stores: { ml: 'Mercado Livre', amazon: 'Amazon' }, cta: 'Ver no', disclosure: 'Alguns links são de afiliado: se você comprar por eles, a Botanora pode receber uma comissão, sem custo extra para você. Preços e estoque são definidos pela loja.',
+      stores: { ml: 'Mercado Livre', amazon: 'Amazon' }, cta: 'Ver no', disclosure: 'Alguns links são de afiliado: se você comprar por eles, a Botânora pode receber uma comissão, sem custo extra para você. Preços e estoque são definidos pela loja.',
       brewTitle: 'Utensílios para este preparo'
     },
     receive: {
-      title: 'Receber meus guias | Botanora', h1: 'Receba seus guias',
-      lead: 'Comprou um guia Botanora? Informe o e-mail usado na compra e acesse sua biblioteca para baixar os PDFs no idioma que preferir.',
+      title: 'Receber meus guias | Botânora', h1: 'Receba seus guias',
+      lead: 'Comprou um guia Botânora? Informe o e-mail usado na compra e acesse sua biblioteca para baixar os PDFs no idioma que preferir.',
       email: 'E-mail da compra', code: 'Código do pedido', codeHint: 'Está no e-mail de confirmação da compra (ex.: o número do pedido na Cakto).',
-      codeOptional: 'opcional se você recebe e-mails da Botanora',
+      codeOptional: 'opcional se você recebe e-mails da Botânora',
       submit: 'Acessar meus guias', sent: 'Pronto! Se houver compras neste e-mail, enviamos agora o link da sua biblioteca. Confira também o spam.',
       needCode: 'Informe também o código do pedido para liberar o acesso.', notFound: 'Não encontramos uma compra paga com esses dados. Confira o e-mail e o código do pedido.',
-      steps: [['Compre o guia', 'Na loja Botanora ou pelo checkout da Cakto.'], ['Receba o acesso', 'Um link chega no seu e-mail logo após a confirmação.'], ['Escolha e baixe', 'Na biblioteca, escolha o guia e o idioma do PDF.']],
+      steps: [['Compre o guia', 'Na loja Botânora ou pelo checkout da Cakto.'], ['Receba o acesso', 'Um link chega no seu e-mail logo após a confirmação.'], ['Escolha e baixe', 'Na biblioteca, escolha o guia e o idioma do PDF.']],
       help: 'Precisa de ajuda? Escreva para'
     },
     library: {
-      title: 'Minha biblioteca | Botanora', h1: 'Sua biblioteca', lead: 'Escolha o guia e o idioma do PDF. Você pode baixar quantas vezes precisar dentro do limite do pedido.',
+      title: 'Minha biblioteca | Botânora', h1: 'Sua biblioteca', lead: 'Escolha o guia e o idioma do PDF. Você pode baixar quantas vezes precisar dentro do limite do pedido.',
       choose: 'Idioma do PDF', download: 'Baixar PDF', pt: 'Português', en: 'English', soon: 'Em produção',
       onlyOne: 'Disponível apenas em', expired: 'Este link expirou ou é inválido. Peça um novo abaixo.',
       empty: 'Nenhum guia pago encontrado para este e-mail.', purchased: 'Comprado em', left: 'downloads restantes', more: 'Ver outros guias'
     },
-    notFound: { title: 'Página não encontrada | Botanora', h1: 'Esta folha não está aqui', text: 'A página que você procurou não existe ou mudou de lugar.', cta: 'Voltar ao início' },
+    notFound: { title: 'Página não encontrada | Botânora', h1: 'Esta folha não está aqui', text: 'A página que você procurou não existe ou mudou de lugar.', cta: 'Voltar ao início' },
     currency: 'BRL', from: 'por'
   },
   en: {
@@ -221,7 +221,7 @@ const ui = {
       placeholder: 'you@email.com', button: 'Subscribe', ok: "Done! You're on the list.", err: "That didn't work. Check the email."
     },
     home: {
-      title: 'Botanora | Tea, benefits and brewing guides',
+      title: 'Botânora | Tea, benefits and brewing guides',
       description: 'A tea hub: types, evidence-based benefits, a brewing guide with timer, and PDF guides.',
       eyebrow: 'The tea hub',
       h1a: 'Everything a single leaf', h1b: 'can do for you',
@@ -236,9 +236,9 @@ const ui = {
       benefitsText: 'Every benefit shows the level of scientific evidence, the teas to reach for and the cautions.',
       brewEyebrow: 'Brewing',
       brewTitle: 'Two numbers make a good cup',
-      brewText: 'Water temperature and steep time. Pick your tea and Botanora works out the dose and times it for you.',
+      brewText: 'Water temperature and steep time. Pick your tea and Botânora works out the dose and times it for you.',
       brewCta: 'Open the brewing guide',
-      shopEyebrow: 'The Botanora library',
+      shopEyebrow: 'The Botânora library',
       shopTitle: 'PDF guides to go deeper',
       shopText: 'Illustrated handbooks, ready to read on your phone or print.',
       shopCta: 'See all guides',
@@ -247,7 +247,7 @@ const ui = {
       quizCta: 'Take the quiz'
     },
     guide: {
-      title: 'Types of tea: the complete guide | Botanora',
+      title: 'Types of tea: the complete guide | Botânora',
       description: 'White, green, matcha, oolong, black, pu-erh, yerba mate, rooibos and herbs: process, flavour, caffeine and brewing.',
       eyebrow: 'Guide', h1: 'The types of tea',
       lead: 'Almost every true tea comes from a single plant, Camellia sinensis. What separates a white from a black is what happens after harvest. Tisanes (herbs, flowers, rooibos, mate) are another world.',
@@ -258,7 +258,7 @@ const ui = {
       brewThis: 'Brew this tea', related: 'Related guide'
     },
     benefits: {
-      title: 'Evidence-based benefits of tea | Botanora',
+      title: 'Evidence-based benefits of tea | Botânora',
       description: 'Focus, sleep, digestion, antioxidants, hydration and calm: what each tea does, with evidence level and cautions.',
       eyebrow: 'Benefits hub', h1: 'How tea does you good',
       lead: 'No miracle claims. Each benefit below shows the level of evidence, the teas to reach for, a simple ritual and the cautions.',
@@ -274,10 +274,10 @@ const ui = {
       filterAll: 'All'
     },
     brewing: {
-      title: 'Tea brewing guide and timer | Botanora',
+      title: 'Tea brewing guide and timer | Botânora',
       description: 'Dose calculator, ideal temperature and steeping timer for every type of tea.',
       eyebrow: 'Brewing', h1: 'Brew it just right',
-      lead: 'Pick your tea and volume. Botanora works out the dose, shows the temperature and times the steep.',
+      lead: 'Pick your tea and volume. Botânora works out the dose, shows the temperature and times the steep.',
       choose: 'Choose your tea', volume: 'Water volume', strength: 'Strength',
       strengths: ['Light', 'Balanced', 'Strong'],
       dose: 'Dose', water: 'Water', steep: 'Steep', grams: 'g of leaf', spoons: 'teaspoons',
@@ -299,16 +299,16 @@ const ui = {
       notify: 'Notify me when done'
     },
     quiz: {
-      title: 'Which tea is for you? Quiz | Botanora',
+      title: 'Which tea is for you? Quiz | Botânora',
       description: 'Answer four questions and find the tea that fits your routine.',
       eyebrow: 'Quiz', h1: 'Which tea is for you?', lead: 'Four questions. One recommendation built around your routine.',
       step: 'Question', of: 'of', back: 'Back', result: 'Your tea is', again: 'Retake the quiz',
       seeGuide: 'See it in the guide', benefit: 'Related benefit', product: 'Recommended guide', brew: 'How to brew'
     },
     shop: {
-      title: 'Tea PDF guides | Botanora',
+      title: 'Tea PDF guides | Botânora',
       description: 'Ten illustrated tea guides: recipes, tea types, brewing, herbs, blending and pairing.',
-      eyebrow: 'The Botanora library', h1: 'PDF guides',
+      eyebrow: 'The Botânora library', h1: 'PDF guides',
       lead: 'Illustrated handbooks to read on your phone, tablet or in print. One-time payment, instant download once payment is confirmed.',
       available: 'Available', soon: 'Coming soon', pages: 'pages', buy: 'Buy', details: 'View details',
       waitlist: 'Notify me at launch', waitlistDone: "Great! We'll let you know.",
@@ -326,7 +326,7 @@ const ui = {
       preview: { open: 'Read a preview', eyebrow: 'Free preview', title: 'Look inside before you buy', text: '{n} sample pages from the guide, exactly as you will receive it. Tap a page to read it full size.', page: 'Page {p} of {t}', of: 'of', close: 'Close', prev: 'Previous page', next: 'Next page', buy: 'Get the full guide', langNote: 'Preview in English. The guide is also available in Portuguese.' }
     },
     order: {
-      title: 'Your order | Botanora', h1: 'Order', pending: 'Awaiting payment', paid: 'Payment confirmed', cancelled: 'Order cancelled',
+      title: 'Your order | Botânora', h1: 'Order', pending: 'Awaiting payment', paid: 'Payment confirmed', cancelled: 'Order cancelled',
       pixTitle: 'Pay with PIX', pixText: 'Open your banking app, choose PIX and scan the code or use "copy and paste".',
       copy: 'Copy PIX code', copied: 'Copied!', amount: 'Amount', waiting: 'This page updates automatically once payment is confirmed.',
       download: 'Download the PDF', keep: 'Keep this page\'s link: you can use it to download your guide again.',
@@ -334,9 +334,9 @@ const ui = {
       mp: 'Pay with Mercado Pago', notFound: 'Order not found.', library: 'Open my library', otherLang: 'Download in Portuguese', refunded: 'Order refunded'
     },
     privacy: {
-      title: 'Privacy | Botanora', h1: 'Privacy',
+      title: 'Privacy | Botânora', h1: 'Privacy',
       body: [
-        'Botanora uses no advertising tools. Third-party measurement cookies are only enabled if you accept them in the cookie notice.',
+        'Botânora uses no advertising tools. Third-party measurement cookies are only enabled if you accept them in the cookie notice.',
         'If you accept, we use Google Analytics (visit statistics) and Microsoft Clarity (heatmaps and anonymous session recordings, without what you type into forms) to understand how the site is used and improve it. You can change your choice at any time under "Cookie preferences" in the footer.',
         'To measure site usage we record the page visited, the referrer, the device type and an anonymous identifier derived from your IP and browser combined with a code that changes every day. Your IP is never stored.',
         'When you buy a guide, join a waitlist or subscribe to the newsletter, we keep your name and email only to deliver what you asked for. You can request deletion at any time via the contact email.',
@@ -344,30 +344,30 @@ const ui = {
       ]
     },
     gear: {
-      title: 'Recommended tea gear | Botanora', description: 'Teapots, infusers, presses and organisers we use and recommend for brewing tea at home.',
+      title: 'Recommended tea gear | Botânora', description: 'Teapots, infusers, presses and organisers we use and recommend for brewing tea at home.',
       eyebrow: 'Recommendations', h1: 'Gear that makes a difference', lead: 'A short selection of items to brew, serve and organise your tea. Chosen for use, not price.',
       homeTitle: 'Brew better', homeText: 'The gear we recommend for your tea corner.', all: 'See all gear',
       cats: { all: 'All', preparo: 'Brewing', servir: 'Serving', organizacao: 'Storage', outros: 'Other' },
-      stores: { ml: 'Mercado Livre', amazon: 'Amazon' }, cta: 'View on', disclosure: 'Some links are affiliate links: if you buy through them, Botanora may earn a commission at no extra cost to you. Prices and stock are set by the store.',
+      stores: { ml: 'Mercado Livre', amazon: 'Amazon' }, cta: 'View on', disclosure: 'Some links are affiliate links: if you buy through them, Botânora may earn a commission at no extra cost to you. Prices and stock are set by the store.',
       brewTitle: 'Gear for this brew'
     },
     receive: {
-      title: 'Get my guides | Botanora', h1: 'Get your guides',
-      lead: 'Bought a Botanora guide? Enter the email you used at checkout and open your library to download the PDFs in your preferred language.',
+      title: 'Get my guides | Botânora', h1: 'Get your guides',
+      lead: 'Bought a Botânora guide? Enter the email you used at checkout and open your library to download the PDFs in your preferred language.',
       email: 'Purchase email', code: 'Order code', codeHint: 'It is in your purchase confirmation email (e.g. the Cakto order number).',
-      codeOptional: 'optional if you receive Botanora emails',
+      codeOptional: 'optional if you receive Botânora emails',
       submit: 'Access my guides', sent: "Done! If this email has purchases, we've just sent your library link. Check your spam folder too.",
       needCode: 'Please also enter your order code to unlock access.', notFound: "We couldn't find a paid purchase with these details. Check the email and order code.",
-      steps: [['Buy the guide', 'In the Botanora shop or through Cakto checkout.'], ['Get access', 'A link arrives in your inbox right after payment.'], ['Choose and download', 'In your library, pick the guide and the PDF language.']],
+      steps: [['Buy the guide', 'In the Botânora shop or through Cakto checkout.'], ['Get access', 'A link arrives in your inbox right after payment.'], ['Choose and download', 'In your library, pick the guide and the PDF language.']],
       help: 'Need help? Write to'
     },
     library: {
-      title: 'My library | Botanora', h1: 'Your library', lead: 'Pick a guide and the PDF language. You can download as often as you need within your order limit.',
+      title: 'My library | Botânora', h1: 'Your library', lead: 'Pick a guide and the PDF language. You can download as often as you need within your order limit.',
       choose: 'PDF language', download: 'Download PDF', pt: 'Português', en: 'English', soon: 'In production',
       onlyOne: 'Available only in', expired: 'This link has expired or is invalid. Request a new one below.',
       empty: 'No paid guides found for this email.', purchased: 'Purchased on', left: 'downloads left', more: 'See other guides'
     },
-    notFound: { title: 'Page not found | Botanora', h1: 'This leaf is not here', text: 'The page you were looking for does not exist or has moved.', cta: 'Back to home' },
+    notFound: { title: 'Page not found | Botânora', h1: 'This leaf is not here', text: 'The page you were looking for does not exist or has moved.', cta: 'Back to home' },
     currency: 'BRL', from: 'for'
   }
 };

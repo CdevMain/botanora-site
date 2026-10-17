@@ -16,7 +16,7 @@ import catalog  # noqa: E402
 
 OUT = os.path.join(ROOT, 'public', 'assets', 'img', 'previews')
 WIDTH = 900
-LABEL = {'pt': 'PRÉVIA · BOTANORA', 'en': 'PREVIEW · BOTANORA'}
+LABEL = {'pt': 'PRÉVIA · BOTÂNORA', 'en': 'PREVIEW · BOTÂNORA'}
 
 
 def pick(pages):

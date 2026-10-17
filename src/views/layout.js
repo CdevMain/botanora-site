@@ -11,7 +11,7 @@ function layout({ lang, key, paths, title, description, body, bodyClass = '', js
   const nav = ['guide', 'benefits', 'brewing', 'recipes', 'gear', 'quiz', 'shop'];
   const canonical = config.siteUrl + paths[lang];
   const ld = [{
-    '@context': 'https://schema.org', '@type': 'Organization', name: 'Botanora', url: config.siteUrl,
+    '@context': 'https://schema.org', '@type': 'Organization', name: 'Botânora', alternateName: 'Botanora', url: config.siteUrl,
     logo: config.siteUrl + '/assets/img/og.png', email: config.contactEmail
   }];
   if (jsonLd) Array.isArray(jsonLd) ? ld.push(...jsonLd) : ld.push(jsonLd);
@@ -32,7 +32,7 @@ ${config.googleVerification ? `<meta name="google-site-verification" content="${
 ${config.bingVerification ? `<meta name="msvalidate.01" content="${esc(config.bingVerification)}">` : ''}
 <meta name="robots" content="${noindex ? 'noindex' : 'index, follow, max-image-preview:large, max-snippet:-1'}">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Botanora">
+<meta property="og:site_name" content="Botânora">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${esc(canonical)}">
@@ -53,7 +53,7 @@ ${config.bingVerification ? `<meta name="msvalidate.01" content="${esc(config.bi
 <a class="skip" href="#main">${esc(t.skip)}</a>
 <header class="site-header" id="top">
   <div class="wrap header-inner">
-    <a class="brand" href="${url(lang, 'home')}" aria-label="Botanora, ${esc(t.tagline)}">${logo()}</a>
+    <a class="brand" href="${url(lang, 'home')}" aria-label="Botânora, ${esc(t.tagline)}">${logo()}</a>
     <nav class="main-nav" id="main-nav" aria-label="Principal">
       <ul>
         ${nav.map(k => `<li><a href="${url(lang, k)}"${k === key ? ' aria-current="page"' : ''}>${esc(t.nav[k])}</a></li>`).join('')}
@@ -76,7 +76,7 @@ ${body}
   ${sprig({ cls: 'nl-sprig', width: 420, height: 260, leaves: 7, seed: 7 })}
   <div class="wrap nl-inner">
     <div>
-      <p class="eyebrow">Botanora</p>
+      <p class="eyebrow">Botânora</p>
       <h2 id="nl-title" class="h2">${esc(t.newsletter.title)}</h2>
       <p class="muted-light">${esc(t.newsletter.text)}</p>
     </div>
@@ -110,7 +110,7 @@ ${body}
   </div>
   <div class="wrap footer-base">
     <p class="tiny">${esc(t.footer.disclaimer)}</p>
-    <p class="tiny">© ${new Date().getFullYear()} Botanora. ${esc(t.footer.rights)}</p>
+    <p class="tiny">© ${new Date().getFullYear()} Botânora. ${esc(t.footer.rights)}</p>
   </div>
 </footer>
 ${config.gaId || config.clarityId ? `<div class="consent" role="dialog" aria-live="polite" aria-label="${esc(t.consent.label)}" hidden data-consent>

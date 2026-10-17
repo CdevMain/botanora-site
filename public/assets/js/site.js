@@ -1,4 +1,4 @@
-/* Botanora: interações do site. Sem dependências. */
+/* Botânora: interações do site. Sem dependências. */
 (function () {
   'use strict';
   document.documentElement.classList.add('js');
@@ -232,7 +232,7 @@
       status.textContent = status.dataset.done; card.classList.add('is-done');
       track('timer_done', { tea: current.id });
       try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); [0, .35, .7].forEach(d => { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = 880; o.connect(g); g.connect(ctx.destination); g.gain.setValueAtTime(.0001, ctx.currentTime + d); g.gain.exponentialRampToValueAtTime(.2, ctx.currentTime + d + .02); g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + d + .3); o.start(ctx.currentTime + d); o.stop(ctx.currentTime + d + .32); }); } catch (_) {}
-      if ($('[data-notify]').checked && 'Notification' in window && Notification.permission === 'granted') new Notification('Botanora', { body: current.name + ': ' + status.dataset.done });
+      if ($('[data-notify]').checked && 'Notification' in window && Notification.permission === 'granted') new Notification('Botânora', { body: current.name + ': ' + status.dataset.done });
       document.title = '✓ ' + document.title.replace(/^✓ /, '');
     }
     startBtn.addEventListener('click', () => {

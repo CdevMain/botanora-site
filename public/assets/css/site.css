@@ -8,7 +8,7 @@
 @font-face { font-family: 'Jost'; font-style: normal; font-weight: 400; font-display: swap; src: url(/assets/fonts/jost-latin-400-normal.woff2) format('woff2'); }
 @font-face { font-family: 'Jost'; font-style: normal; font-weight: 500; font-display: swap; src: url(/assets/fonts/jost-latin-500-normal.woff2) format('woff2'); }
 
-/* Botanora: design system
+/* Botânora: design system
    Noite profunda + ouro em traço fino + papel creme. EB Garamond (editorial) + Jost (geométrica espaçada). */
 
 :root {

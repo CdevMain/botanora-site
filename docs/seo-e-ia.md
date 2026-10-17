@@ -1,4 +1,4 @@
-# Botanora: plano para aparecer no Google e ser recomendado por IAs
+# Botânora: plano para aparecer no Google e ser recomendado por IAs
 
 ## O que já está no site
 
@@ -30,7 +30,7 @@
 3. **Responder no Reddit e Quora.** Perguntas como "how to make matcha without lumps" ou "melhor chá para dormir" aparecem em toda IA. Responda com conteúdo útil e o link da página específica, sem spam.
 4. **Vídeos curtos (Reels, Shorts, TikTok).** Uma receita em 30 segundos com o link na bio. O YouTube é o segundo maior buscador e aparece nas respostas do Google.
 5. **Parcerias com lojas de chá e empórios.** Peça para linkarem as páginas de chá como "como preparar". Links de sites do mesmo assunto são o fator externo mais forte.
-6. **Perfil da Botanora nas redes** (Instagram, Pinterest, YouTube): depois de criar, coloque os links no schema `sameAs` (posso fazer). Ajuda Google e IAs a reconhecerem a marca como entidade.
+6. **Perfil da Botânora nas redes** (Instagram, Pinterest, YouTube): depois de criar, coloque os links no schema `sameAs` (posso fazer). Ajuda Google e IAs a reconhecerem a marca como entidade.
 7. **Atualizar as páginas de chá a cada 3 a 6 meses** com uma pergunta nova ou dado novo. Data de atualização recente pesa nas respostas de IA.
 8. **Termos para mirar primeiro** (concorrência menor, intenção clara): "temperatura da água para chá verde", "como fazer chá gelado", "como fazer matcha sem batedor", "como montar chimarrão", "chá para dormir sem cafeína", "receita de chipa", "scones receita", "brigadeiro de matcha".
 
@@ -39,7 +39,7 @@
 - Search Console: impressões e cliques por página e por termo.
 - Bing Webmaster Tools: relatório de desempenho em IA (citações no Copilot).
 - Google Analytics e Clarity (com consentimento): de onde vem o tráfego e o que as pessoas fazem nas páginas de receita.
-- Teste manual mensal: pergunte ao ChatGPT, Perplexity e Gemini "qual a temperatura certa para chá verde" e "receita de chipa" e veja se a Botanora aparece.
+- Teste manual mensal: pergunte ao ChatGPT, Perplexity e Gemini "qual a temperatura certa para chá verde" e "receita de chipa" e veja se a Botânora aparece.
 
 ## Expectativa realista
 

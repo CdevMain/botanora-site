@@ -96,7 +96,7 @@ const benefits = [
       en: 'Research on breaks and rituals shows reduced perceived stress. L-theanine has preliminary studies on relaxation without drowsiness.'
     },
     teas: ['oolong', 'verde', 'ervas'],
-    ritual: { pt: 'Use o timer da Botanora e fique com a xícara durante toda a infusão.', en: 'Use the Botanora timer and stay with your cup for the whole steep.' },
+    ritual: { pt: 'Use o timer da Botânora e fique com a xícara durante toda a infusão.', en: 'Use the Botânora timer and stay with your cup for the whole steep.' },
     caution: { pt: 'Chá complementa, não substitui, cuidado profissional em saúde mental.', en: 'Tea complements, never replaces, professional mental-health care.' }
   }
 ];

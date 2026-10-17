@@ -1,5 +1,5 @@
 'use strict';
-// Botanora: servidor HTTP sem dependências externas (Node 18+).
+// Botânora: servidor HTTP sem dependências externas (Node 18+).
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -196,7 +196,7 @@ const AI_BOTS = ['OAI-SearchBot', 'ChatGPT-User', 'GPTBot', 'ClaudeBot', 'Claude
 const PRIVATE_PATHS = ['/admin', '/api/', '/download/', '/pt/pedido/', '/en/order/', '/pt/biblioteca', '/en/library', '/r/'];
 function robotsTxt() {
   const block = ua => `User-agent: ${ua}\nAllow: /\n${PRIVATE_PATHS.map(p => `Disallow: ${p}`).join('\n')}\n`;
-  return ['# Botanora: conteúdo aberto para buscadores e assistentes de IA.', '# Resumo para IAs: ' + config.siteUrl + '/llms.txt', '', block('*'), ...AI_BOTS.map(block), `Sitemap: ${config.siteUrl}/sitemap.xml`, ''].join('\n');
+  return ['# Botânora: conteúdo aberto para buscadores e assistentes de IA.', '# Resumo para IAs: ' + config.siteUrl + '/llms.txt', '', block('*'), ...AI_BOTS.map(block), `Sitemap: ${config.siteUrl}/sitemap.xml`, ''].join('\n');
 }
 
 // Versão Markdown das páginas de conteúdo: mesma URL + .md
@@ -667,6 +667,6 @@ setTimeout(indexNowPing, 15000);
 setInterval(indexNowPing, 6 * 3600 * 1000).unref();
 
 server.listen(config.port, config.host, () => {
-  console.log(`\n  Botanora rodando em http://localhost:${config.port}`);
+  console.log(`\n  Botânora rodando em http://localhost:${config.port}`);
   console.log(`  Painel: http://localhost:${config.port}/admin  (usuário: ${config.adminUser})\n`);
 });

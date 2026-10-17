@@ -1,4 +1,4 @@
-/* Botanora: painel administrativo */
+/* Botânora: painel administrativo */
 (function () {
   'use strict';
   const $ = (s, el = document) => el.querySelector(s);

@@ -7,22 +7,22 @@ const enabled = () => !!(config.mail.resendKey && config.mail.from);
 
 const T = {
   pt: {
-    subject: 'Seus guias Botanora estão prontos',
+    subject: 'Seus guias Botânora estão prontos',
     hello: n => `Olá${n ? ', ' + n.split(' ')[0] : ''}!`,
-    body: 'Obrigado pela compra. Seus guias em PDF estão na sua biblioteca Botanora. Lá você escolhe o guia e o idioma (português ou inglês) e faz o download.',
+    body: 'Obrigado pela compra. Seus guias em PDF estão na sua biblioteca Botânora. Lá você escolhe o guia e o idioma (português ou inglês) e faz o download.',
     cta: 'Abrir minha biblioteca',
     list: 'Seus guias',
     keep: 'Guarde este e-mail: o link vale por 1 ano. Se ele expirar, peça um novo em',
-    foot: 'Botanora · Chás e botânicos'
+    foot: 'Botânora · Chás e botânicos'
   },
   en: {
-    subject: 'Your Botanora guides are ready',
+    subject: 'Your Botânora guides are ready',
     hello: n => `Hi${n ? ' ' + n.split(' ')[0] : ''}!`,
-    body: 'Thank you for your purchase. Your PDF guides are waiting in your Botanora library. Pick a guide and a language (English or Portuguese) and download it.',
+    body: 'Thank you for your purchase. Your PDF guides are waiting in your Botânora library. Pick a guide and a language (English or Portuguese) and download it.',
     cta: 'Open my library',
     list: 'Your guides',
     keep: 'Keep this email: the link is valid for 1 year. If it expires, request a new one at',
-    foot: 'Botanora · Tea and botanicals'
+    foot: 'Botânora · Tea and botanicals'
   }
 };
 
@@ -33,7 +33,7 @@ function accessEmail({ lang, name, link, receiveUrl, titles }) {
   const html = `<!doctype html><html><body style="margin:0;background:#f4efe4;font-family:Georgia,'Times New Roman',serif;color:#16212a">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4efe4;padding:32px 12px"><tr><td align="center">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#111a21;color:#f4efe4">
-<tr><td style="padding:36px 40px 8px;text-align:center"><img src="${config.siteUrl}/assets/img/icon-192.png" width="56" height="56" alt="Botanora" style="border:0"><p style="font-family:Arial,sans-serif;letter-spacing:6px;font-size:13px;color:#d6b44c;margin:14px 0 0">BOTANORA</p></td></tr>
+<tr><td style="padding:36px 40px 8px;text-align:center"><img src="${config.siteUrl}/assets/img/icon-192.png" width="56" height="56" alt="Botânora" style="border:0"><p style="font-family:Arial,sans-serif;letter-spacing:6px;font-size:13px;color:#d6b44c;margin:14px 0 0">BOTÂNORA</p></td></tr>
 <tr><td style="padding:24px 40px 8px"><h1 style="font-weight:normal;font-size:28px;margin:0 0 14px">${esc(t.hello(name))}</h1>
 <p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d9d3c6;margin:0 0 22px">${esc(t.body)}</p>
 ${titles.length ? `<p style="font-family:Arial,sans-serif;font-size:11px;letter-spacing:3px;color:#d6b44c;margin:0 0 8px">${esc(t.list.toUpperCase())}</p><ul style="margin:0 0 26px;padding-left:18px;font-size:18px">${titles.map(x => `<li style="margin:4px 0">${esc(x)}</li>`).join('')}</ul>` : ''}

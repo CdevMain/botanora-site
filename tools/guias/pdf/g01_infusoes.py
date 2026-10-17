@@ -445,7 +445,7 @@ def build_pages():
           'how': [(('Leia a técnica', 'Read the technique'), ('As páginas de temperatura e tempo valem para tudo. Dez minutos de leitura poupam muitas xícaras amargas.', 'The temperature and timing pages apply to everything. Ten minutes of reading saves many bitter cups.')),
                   (('Prepare as bases', 'Make the bases'), ('Xarope especiado e mel de gengibre duram semanas e aceleram o dia a dia.', 'Spiced syrup and ginger honey keep for weeks and speed up everyday brewing.')),
                   (('Ajuste ao paladar', 'Adjust to taste'), ('Mel e tempo de infusão são sugestões. Prove antes de adoçar.', 'Honey and steep times are suggestions. Taste before sweetening.'))],
-          'colophon': ('© Botanora. Caderno de receitas · edição da casa. Uso pessoal; é proibida a redistribuição. Hibisco costuma ser desaconselhado na gestação; mel não deve ser oferecido a menores de 1 ano. Em caso de condição de saúde ou uso de medicamentos, confirme com um profissional.', '© Botanora. House recipe book. For personal use; redistribution is prohibited. Hibiscus is usually not advised in pregnancy; honey should not be given to children under 1 year. If you have a health condition or take medication, check with a professional.')},
+          'colophon': ('© Botânora. Caderno de receitas · edição da casa. Uso pessoal; é proibida a redistribuição. Hibisco costuma ser desaconselhado na gestação; mel não deve ser oferecido a menores de 1 ano. Em caso de condição de saúde ou uso de medicamentos, confirme com um profissional.', '© Botânora. House recipe book. For personal use; redistribution is prohibited. Hibiscus is usually not advised in pregnancy; honey should not be given to children under 1 year. If you have a health condition or take medication, check with a professional.')},
          {'type': 'toc'},
          {'type': 'text', 'toc': ('A despensa', 'The pantry'), 'toc_key': '0', 'chapter': ('Capítulo zero', 'Chapter zero'), 'eyebrow': ('Capítulo zero', 'Chapter zero'), 'heading': ('A despensa', 'The pantry'),
           'lead': ('Dezoito ingredientes, cada um com um papel. Conhecer o comportamento de cada um na água é a base de todas as receitas.', 'Eighteen ingredients, each with a role. Knowing how each behaves in water is the foundation of every recipe.'), 'body': pantry},
@@ -514,10 +514,10 @@ OTHERS = [(1, L('Infusões Autorais', 'Signature Infusions')), (2, L('Atlas do C
 
 def closing_page(n):
     return {'type': 'closing', 'heading': L('Obrigado por preparar com a gente', 'Thank you for brewing with us'),
-            'body': [L('A coleção Botanora tem dez guias, cada um dedicado a um jeito de viver o chá. Continue a explorar:', 'The Botanora collection has ten guides, each devoted to one way of living with tea. Keep exploring:')],
+            'body': [L('A coleção Botânora tem dez guias, cada um dedicado a um jeito de viver o chá. Continue a explorar:', 'The Botânora collection has ten guides, each devoted to one way of living with tea. Keep exploring:')],
             'others': [o for o in OTHERS if o[0] != n],
-            'legal': L('© Botanora. Este guia é para uso pessoal; é proibida a reprodução ou redistribuição sem autorização. O conteúdo é educativo e não substitui orientação médica ou nutricional.',
-                       '© Botanora. This guide is for personal use; reproduction or redistribution without permission is prohibited. The content is educational and does not replace medical or nutritional advice.')}
+            'legal': L('© Botânora. Este guia é para uso pessoal; é proibida a reprodução ou redistribuição sem autorização. O conteúdo é educativo e não substitui orientação médica ou nutricional.',
+                       '© Botânora. This guide is for personal use; reproduction or redistribution without permission is prohibited. The content is educational and does not replace medical or nutritional advice.')}
 
 
 GUIDE = Guide('infusoes-de-autor', 1, L('Infusões Autorais', 'Signature Infusions'), L('40 chás e infusões em estilo barista, feitos com a sua despensa', '40 barista-style teas and infusions made from your pantry'), build_pages)

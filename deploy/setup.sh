@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Botanora: instalação na VPS (Ubuntu + Nginx). Rode como root, uma única vez:
+# Botânora: instalação na VPS (Ubuntu + Nginx). Rode como root, uma única vez:
 #   sudo bash deploy/setup.sh
 # Pré-requisitos: DNS do botanora.cdev.com.br apontando para esta VPS e o código em /var/www/botanora.
 set -euo pipefail
