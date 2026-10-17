@@ -129,6 +129,13 @@ strong { font-weight: 500; }
 .main-nav ul a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform .3s var(--ease); }
 .main-nav ul a:hover, .main-nav ul a[aria-current] { color: var(--gold); }
 .main-nav ul a:hover::after, .main-nav ul a[aria-current]::after { transform: scaleX(1); }
+.my-guides { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; color: var(--gold); border: 1px solid var(--gold-line); padding: 7px 12px; white-space: nowrap; transition: border-color .25s, background .25s; }
+.my-guides:hover, .my-guides[aria-current] { border-color: var(--gold); background: rgba(214, 180, 76, .08); }
+.my-guides .ico-sm { width: 16px; height: 16px; }
+.site-header .brand { flex-shrink: 0; }
+.hero-ctas { position: relative; z-index: 2; }
+@media (max-width: 1060px) and (min-width: 901px) { .my-guides { display: none; } }
+.hero-ctas .hero-mine { flex-basis: 100%; gap: 8px; margin: 6px 0 0; }
 .lang-switch { display: inline-flex; gap: 6px; font-size: 12px; letter-spacing: .18em; text-decoration: none; border: 1px solid var(--gold-line); padding: 8px 12px; color: rgba(244, 239, 228, .55); }
 .lang-switch .lang-cur { color: var(--gold); }
 .lang-switch:hover { border-color: var(--gold); color: var(--paper); }
@@ -596,6 +603,8 @@ body.menu-open { overflow: hidden; }
   .main-nav.is-open ul li:nth-child(2) { animation-delay: .04s; } .main-nav.is-open ul li:nth-child(3) { animation-delay: .08s; }
   .main-nav.is-open ul li:nth-child(4) { animation-delay: .12s; } .main-nav.is-open ul li:nth-child(5) { animation-delay: .16s; }
   .menu-extra { display: grid; gap: 14px; margin-top: 28px; }
+  .my-guides { display: none; }
+  .menu-extra .btn { gap: 10px; }
   .menu-extra .btn { width: 100%; }
   .lang-switch { margin-top: 18px; padding: 12px 16px; font-size: 13px; }
   .menu-btn { margin-right: -10px; }
@@ -847,6 +856,10 @@ html.pv-lock { overflow: hidden; }
 
 /* menu com 7 itens: não quebra linha em telas médias */
 .main-nav ul a { white-space: nowrap; }
+@media (max-width: 1480px) and (min-width: 901px) {
+  .my-guides span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .my-guides { padding: 7px 10px; }
+}
 @media (max-width: 1280px) and (min-width: 1001px) {
   .main-nav { gap: 24px; }
   .main-nav ul { gap: 20px; }

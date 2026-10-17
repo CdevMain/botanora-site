@@ -41,7 +41,7 @@
     history.replaceState(null, '', '#' + b.dataset.tab);
     if (b.dataset.tab === 'audience') loadAudience();
     if (b.dataset.tab === 'products') loadProducts();
-    if (b.dataset.tab === 'sales') loadOrders();
+    if (b.dataset.tab === 'sales') { loadOrders(); renderTestBuy(); }
     if (b.dataset.tab === 'integrations') loadIntegrations();
     if (b.dataset.tab === 'gear') loadAff();
   }));
@@ -178,7 +178,45 @@
   async function loadOrders() {
     orders = await api('/api/admin/orders');
     renderOrders();
+    $('#clear-tests').hidden = !orders.some(o => o.test);
   }
+  $('#clear-tests').addEventListener('click', async () => {
+    if (!confirm('Apagar todas as compras de teste? Os e-mails de teste perdem o acesso à biblioteca.')) return;
+    const r = await api('/api/admin/test-purchase', { method: 'DELETE' });
+    toast(r.removed + ' compra(s) de teste apagada(s).'); loadOrders();
+  });
+
+  // ---------- compra de teste ----------
+  async function renderTestBuy() {
+    if (!products.length) products = await api('/api/admin/products');
+    $('#test-buy').innerHTML = `<div class="aff-fields">
+        <label class="span2">E-mail *<input name="email" type="email" required placeholder="voce@gmail.com"></label>
+        <label>Nome<input name="name" value="Teste"></label>
+        <label>Idioma do e-mail${sel('lang', { pt: 'Português', en: 'English' }, 'pt')}</label>
+        <label>Celular (4 últimos dígitos)<input name="phone4" inputmode="numeric" maxlength="4" placeholder="ex.: 8765"></label>
+      </div>
+      <p class="sub-h">Guias liberados</p>
+      <div class="test-guides">${products.map((p, i) => `<label class="toggle"><input type="checkbox" name="g" value="${esc(p.slug)}"${i === 0 ? ' checked' : ''}> ${esc(p.title.pt)}</label>`).join('')}
+        <label class="toggle"><input type="checkbox" data-all> <b>Todos</b></label></div>
+      <div class="pe-files"><label class="toggle"><input type="checkbox" name="sendMail" checked> Enviar o e-mail de acesso (como numa compra real)</label><button class="btn primary" type="submit">Simular compra</button></div>
+      <p class="hint" id="test-result"></p>`;
+  }
+  $('#test-buy').addEventListener('change', e => { if (e.target.matches('[data-all]')) $$('#test-buy [name=g]').forEach(c => { c.checked = e.target.checked; }); });
+  $('#test-buy').addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = e.target, btn = $('button[type=submit]', f);
+    const productsSel = $$('[name=g]', f).filter(c => c.checked).map(c => c.value);
+    if (!productsSel.length) return toast('Escolha ao menos um guia.', true);
+    btn.disabled = true;
+    try {
+      const r = await api('/api/admin/test-purchase', { method: 'POST', body: JSON.stringify({ email: f.email.value, name: f.name.value, lang: f.lang.value, phone4: f.phone4.value, products: productsSel, sendMail: f.sendMail.checked }) });
+      const mailTxt = { sent: 'E-mail de acesso enviado.', off: 'E-mail não enviado (opção desmarcada).', disabled: 'E-mail não enviado: a Resend não está configurada no .env.' }[r.mail] || ('Falha no e-mail: ' + r.mail);
+      $('#test-result').innerHTML = `Compra de teste criada (${r.released.length} guia${r.released.length > 1 ? 's' : ''}). ${esc(mailTxt)} Para entrar como cliente: <a href="${esc(r.receive)}" target="_blank" rel="noopener">abrir Receber meus guias</a> (de preferência numa janela anônima).`;
+      toast('Compra de teste criada.');
+      loadOrders(); loadStats();
+    } catch (err) { toast(err.error === 'email' ? 'Confira o e-mail.' : 'Não deu certo: ' + err.message, true); }
+    finally { btn.disabled = false; }
+  });
   function renderOrders() {
     const f = $('#order-filter').value;
     const list = orders.filter(o => !f || o.status === f);
@@ -186,7 +224,7 @@
       <td data-l="Pedido"><code>${esc(o.id)}</code>${o.refId ? `<br><span class="muted">Cakto ${esc(o.refId)}</span>` : ''}</td><td data-l="Data">${dt(o.createdAt)}</td>
       <td data-l="Cliente">${esc(o.name)}<br><span class="muted">${esc(o.email)}</span></td>
       <td data-l="Guia">${esc(o.title)}</td><td data-l="PDF"><span class="lang-tag">${esc((o.pdfLang || 'pt').toUpperCase())}</span></td><td class="num" data-l="Valor">${brl(o.amount)}</td>
-      <td data-l="Origem">${providerName[o.provider] || o.provider}${o.method === 'manual' ? ' <span class="muted">(manual)</span>' : ''}</td>
+      <td data-l="Origem">${o.test ? '<span class="pill pill-pending">Teste</span>' : (providerName[o.provider] || o.provider)}${o.method === 'manual' ? ' <span class="muted">(manual)</span>' : ''}</td>
       <td data-l="Status"><span class="pill pill-${o.status}">${statusName[o.status] || o.status}</span></td><td class="num" data-l="Downloads">${o.downloads}</td>
       <td><div class="row-actions">
         ${o.status === 'pending' ? `<button class="btn-sm primary" data-pay="${o.id}">Confirmar pagamento</button><button class="btn-sm" data-cancel="${o.id}">Cancelar</button>` : ''}
@@ -392,6 +430,39 @@
     const tab = $(`.tabs button[data-tab="${h}"]`);
     if (tab) tab.click();
   });
-  setInterval(() => { if (document.visibilityState === 'visible') api('/api/admin/stats?days=1').then(s => { $('#realtime').textContent = s.realtime; }).catch(() => {}); }, 30000);
+  // ---------- ao vivo ----------
+  // O servidor avisa quando chega visita, venda, inscrição ou download; o painel recarrega o que está na tela.
+  const liveEl = $('#live-sync');
+  const current = () => ($('.tabs button[aria-selected="true"]') || {}).dataset?.tab || 'overview';
+  let busy = false, again = false, lastKinds = new Set();
+  async function refresh() {
+    if (document.visibilityState !== 'visible') { again = true; return; }
+    if (busy) { again = true; return; }
+    busy = true;
+    try {
+      const tab = current();
+      if (tab === 'overview' || tab === 'sales' || lastKinds.has('ev')) await loadStats();
+      if (tab === 'sales' && lastKinds.has('db')) await loadOrders();
+      if (tab === 'audience' && lastKinds.has('db')) await loadAudience();
+      lastKinds = new Set();
+      liveEl.textContent = 'Ao vivo · ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      liveEl.classList.add('flash'); setTimeout(() => liveEl.classList.remove('flash'), 900);
+    } catch (_) {} finally { busy = false; if (again) { again = false; setTimeout(refresh, 500); } }
+  }
+  let es = null, fallback = null;
+  function connect() {
+    if (!('EventSource' in window)) { fallback = setInterval(() => { lastKinds = new Set(['ev', 'db']); refresh(); }, 20000); return; }
+    es = new EventSource('/api/admin/stream');
+    es.addEventListener('change', e => { try { JSON.parse(e.data).forEach(k => lastKinds.add(k)); } catch (_) {} refresh(); });
+    es.onopen = () => { liveEl.classList.remove('off'); if (fallback) { clearInterval(fallback); fallback = null; } };
+    es.onerror = () => {
+      liveEl.classList.add('off'); liveEl.textContent = 'Reconectando…';
+      if (!fallback) fallback = setInterval(() => { lastKinds = new Set(['ev', 'db']); refresh(); }, 30000);
+    };
+  }
+  connect();
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && again) { again = false; refresh(); } });
+  // "agora no site" muda com o tempo mesmo sem eventos novos (quem sai deixa de contar)
+  setInterval(() => { if (document.visibilityState === 'visible') api('/api/admin/stats?days=1').then(s => { $('#realtime').textContent = s.realtime; }).catch(() => {}); }, 60000);
   let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (stats) { lineChart($('#chart-traffic'), stats.series, ['visitors', 'pv'], s => `<b>${nf.format(s.visitors)}</b> visitantes · ${nf.format(s.pv)} visualizações`); barChart($('#chart-revenue'), stats.series, 'revenue', brl); } }, 200); });
 })();

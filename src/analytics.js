@@ -3,6 +3,8 @@
 // O IP nunca é gravado; o sal muda todo dia, então não há rastreio entre dias.
 const crypto = require('crypto');
 const store = require('./store');
+// Compras de teste (criadas no painel) não entram nos números
+const realOrders = () => store.db.orders.filter(o => !o.test);
 
 const BOT_RE = /bot|crawl|spider|slurp|facebookexternalhit|preview|monitor|curl|wget|python|axios|node-fetch|headless|lighthouse|pingdom|uptime/i;
 
@@ -111,8 +113,8 @@ function summarize(from, to) {
   const nVisits = visits.size;
   const bounces = [...visits.values()].filter(n => n === 1).length;
   const engageVals = [...engageByVisit.values()];
-  const orders = store.db.orders.filter(o => o.createdAt >= from && o.createdAt < to);
-  const paid = store.db.orders.filter(o => o.status === 'paid' && o.paidAt >= from && o.paidAt < to);
+  const orders = realOrders().filter(o => o.createdAt >= from && o.createdAt < to);
+  const paid = realOrders().filter(o => o.status === 'paid' && o.paidAt >= from && o.paidAt < to);
   const revenue = paid.reduce((s, o) => s + o.amount, 0);
   return {
     ev, pv, visits: nVisits,
@@ -142,7 +144,7 @@ function stats(days = 30) {
   }
   const idx = new Map(series.map((x, i) => [x.day, i]));
   for (const e of cur.pv) { const i = idx.get(dayKey(e.t)); if (i !== undefined) { series[i].pv++; series[i].visitors.add(e.v); } }
-  for (const o of store.db.orders) {
+  for (const o of realOrders()) {
     if (o.status === 'paid' && o.paidAt >= from) { const i = idx.get(dayKey(o.paidAt)); if (i !== undefined) { series[i].revenue += o.amount; series[i].orders++; } }
   }
 
@@ -161,7 +163,7 @@ function stats(days = 30) {
   for (const e of cur.pv) { const m = e.path.match(PRODUCT_PATH); if (m) productViews.set(m[1], (productViews.get(m[1]) || 0) + 1); }
   const checkouts = cur.ev.filter(e => e.type === 'ev' && e.name === 'checkout');
   const products = store.db.products.map(p => {
-    const paid = store.db.orders.filter(o => o.product === p.slug && o.status === 'paid' && o.paidAt >= from);
+    const paid = realOrders().filter(o => o.product === p.slug && o.status === 'paid' && o.paidAt >= from);
     return {
       slug: p.slug, title: p.title.pt, status: p.status, price: p.price,
       views: productViews.get(p.slug) || 0,
@@ -225,8 +227,8 @@ function stats(days = 30) {
     totals: {
       subscribers: store.db.subscribers.length,
       waitlist: store.db.waitlist.length,
-      orders: store.db.orders.length,
-      revenue: store.db.orders.filter(o => o.status === 'paid').reduce((s, o) => s + o.amount, 0),
+      orders: realOrders().length,
+      revenue: realOrders().filter(o => o.status === 'paid').reduce((s, o) => s + o.amount, 0),
       events: store.events.length
     }
   };

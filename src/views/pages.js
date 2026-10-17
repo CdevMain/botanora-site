@@ -100,6 +100,7 @@ function home(lang, products) {
     <div class="hero-ctas reveal">
       <a class="btn btn-gold" href="${url(lang, 'quiz')}">${esc(h.ctaQuiz)}</a>
       <a class="btn btn-ghost" href="${url(lang, 'guide')}">${esc(h.ctaGuide)}</a>
+      <a class="link-arrow hero-mine" href="${url(lang, 'library')}">${icon('book', 'ico-sm')} ${esc(h.ctaMine)} ${icon('arrow', 'ico-sm')}</a>
     </div>
     <dl class="hero-stats reveal">
       ${h.stats.map(([n, l]) => `<div><dt>${n}</dt><dd>${esc(l)}</dd></div>`).join('')}

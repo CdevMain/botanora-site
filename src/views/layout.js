@@ -60,8 +60,9 @@ ${config.bingVerification ? `<meta name="msvalidate.01" content="${esc(config.bi
       </ul>
       <div class="menu-extra">
         <a class="btn btn-gold" href="${url(lang, 'shop')}">${esc(t.nav.shop)}</a>
-        <a class="btn btn-ghost" href="${url(lang, 'receive')}">${esc(t.footer.receive)}</a>
+        <a class="btn btn-ghost" href="${url(lang, 'library')}">${icon('book', 'ico-sm')} ${esc(t.nav.myGuides)}</a>
       </div>
+      <a class="my-guides" href="${url(lang, 'library')}" title="${esc(t.nav.myGuides)}"${key === 'library' || key === 'receive' ? ' aria-current="page"' : ''}>${icon('book', 'ico-sm')}<span>${esc(t.nav.myGuides)}</span></a>
       <a class="lang-switch" href="${esc(paths[other])}" hreflang="${other}" data-event="lang_switch" lang="${other === 'pt' ? 'pt-BR' : 'en'}">
         <span class="lang-cur">${t.langShort}</span><span class="lang-sep">/</span><span>${esc(ui[other].langShort)}</span>
       </a>

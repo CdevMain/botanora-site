@@ -30,7 +30,7 @@ const ui = {
   pt: {
     locale: 'pt-BR', htmlLang: 'pt-BR', other: 'en', otherLabel: 'English', langShort: 'PT',
     tagline: 'Chás e botânicos',
-    nav: { guide: 'Tipos de chá', benefits: 'Benefícios', brewing: 'Preparo', recipes: 'Receitas', gear: 'Utensílios', quiz: 'Quiz', faq: 'Perguntas', shop: 'Guias em PDF' },
+    nav: { guide: 'Tipos de chá', benefits: 'Benefícios', brewing: 'Preparo', recipes: 'Receitas', gear: 'Utensílios', quiz: 'Quiz', faq: 'Perguntas', shop: 'Guias em PDF', myGuides: 'Meus guias' },
     skip: 'Pular para o conteúdo',
     menu: 'Menu',
     footer: {
@@ -54,7 +54,7 @@ const ui = {
       eyebrow: 'Central do chá',
       h1a: 'Tudo o que uma folha', h1b: 'pode fazer por você',
       lead: 'Entenda os tipos de chá, prepare cada um no ponto certo e descubra o que a ciência realmente diz sobre seus benefícios.',
-      ctaQuiz: 'Descobrir meu chá', ctaGuide: 'Explorar os tipos',
+      ctaQuiz: 'Descobrir meu chá', ctaGuide: 'Explorar os tipos', ctaMine: 'Já comprei: ver meus guias',
       stats: [['9', 'estilos de chá e tisanas'], ['6', 'benefícios com evidência'], ['10', 'guias em PDF']],
       spectrumEyebrow: 'Uma planta, muitos chás',
       spectrumTitle: 'O que muda é a oxidação',
@@ -205,7 +205,7 @@ const ui = {
   en: {
     locale: 'en-US', htmlLang: 'en', other: 'pt', otherLabel: 'Português', langShort: 'EN',
     tagline: 'Tea and botanicals',
-    nav: { guide: 'Types of tea', benefits: 'Benefits', brewing: 'Brewing', recipes: 'Recipes', gear: 'Gear', quiz: 'Quiz', faq: 'Questions', shop: 'PDF guides' },
+    nav: { guide: 'Types of tea', benefits: 'Benefits', brewing: 'Brewing', recipes: 'Recipes', gear: 'Gear', quiz: 'Quiz', faq: 'Questions', shop: 'PDF guides', myGuides: 'My guides' },
     skip: 'Skip to content',
     menu: 'Menu',
     footer: {
@@ -229,7 +229,7 @@ const ui = {
       eyebrow: 'The tea hub',
       h1a: 'Everything a single leaf', h1b: 'can do for you',
       lead: 'Understand the types of tea, brew each one just right and find out what the science really says about the benefits.',
-      ctaQuiz: 'Find my tea', ctaGuide: 'Explore the types',
+      ctaQuiz: 'Find my tea', ctaGuide: 'Explore the types', ctaMine: 'Already bought? See my guides',
       stats: [['9', 'tea styles and tisanes'], ['6', 'evidence-rated benefits'], ['10', 'PDF guides']],
       spectrumEyebrow: 'One plant, many teas',
       spectrumTitle: 'Oxidation makes the difference',

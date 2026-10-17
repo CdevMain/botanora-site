@@ -483,6 +483,46 @@ async function apiAdmin(req, res, pathname, ip, query) {
     return json(req, res, 200, { ok: true }, { 'Set-Cookie': auth.cookieHeader('', false) });
   }
   if (pathname === '/api/admin/stats') return json(req, res, 200, analytics.stats(query.get('days')));
+
+  // Painel ao vivo: o navegador fica escutando e recarrega os números quando algo muda
+  if (pathname === '/api/admin/stream') {
+    res.writeHead(200, Object.assign({}, SECURITY_HEADERS, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-store', Connection: 'keep-alive', 'X-Accel-Buffering': 'no' }));
+    res.write('retry: 5000\n\n');
+    let pending = new Set(), timer = null;
+    const flush = () => { timer = null; res.write(`event: change\ndata: ${JSON.stringify([...pending])}\n\n`); pending = new Set(); };
+    const onChange = kind => { pending.add(kind); if (!timer) timer = setTimeout(flush, 1500); };
+    const ping = setInterval(() => res.write(': ping\n\n'), 25000);
+    store.changes.on('change', onChange);
+    req.on('close', () => { store.changes.off('change', onChange); clearInterval(ping); clearTimeout(timer); });
+    return;
+  }
+
+  // Compra de teste: libera guias para um e-mail como se tivesse acabado de comprar na Cakto
+  if (pathname === '/api/admin/test-purchase' && req.method === 'POST') {
+    const b = await readJson(req);
+    const email = String(b.email || '').trim().toLowerCase();
+    if (!EMAIL_RE.test(email)) return json(req, res, 400, { error: 'email' });
+    const slugs = Array.isArray(b.products) ? b.products.map(String) : [];
+    const list = store.db.products.filter(p => slugs.includes(p.slug));
+    if (!list.length) return json(req, res, 400, { error: 'products' });
+    const lang = LANGS.includes(b.lang) ? b.lang : 'pt';
+    const ext = 'TESTE-' + Date.now().toString(36).toUpperCase();
+    for (const p of list) store.createExternalOrder({ product: p, name: String(b.name || 'Teste').slice(0, 80), email, amount: 0, pdfLang: lang, provider: 'teste', externalId: ext, refId: ext, method: 'teste', phone4: String(b.phone4 || '').replace(/\D/g, '').slice(-4), test: true });
+    let mail = 'off';
+    if (b.sendMail) {
+      if (!mailer.enabled()) mail = 'disabled';
+      else { try { await sendAccess(email, lang, 72); mail = 'sent'; } catch (e) { mail = 'error: ' + e.message; } }
+    }
+    return json(req, res, 200, { ok: true, released: list.map(p => p.slug), mail, receive: config.siteUrl + url(lang, 'receive') + '?email=' + encodeURIComponent(email) });
+  }
+  if (pathname === '/api/admin/test-purchase' && req.method === 'DELETE') {
+    const before = store.db.orders.length;
+    const gone = store.db.orders.filter(o => o.test).map(o => o.email);
+    store.db.orders = store.db.orders.filter(o => !o.test);
+    for (const e of new Set(gone)) if (!store.paidOrdersFor(e).length) access.endAllSessions(e);
+    store.save();
+    return json(req, res, 200, { removed: before - store.db.orders.length });
+  }
   if (pathname === '/api/admin/orders') {
     return json(req, res, 200, store.db.orders.slice().reverse().slice(0, 500).map(o => ({ ...o, token: undefined, devices: access.devicesFor(o.email) })));
   }

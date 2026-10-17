@@ -4,6 +4,10 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { EventEmitter } = require('events');
+// Avisa o painel (ao vivo) quando algo muda: 'db' = pedidos, produtos, inscritos; 'ev' = visitas e eventos
+const changes = new EventEmitter();
+changes.setMaxListeners(50);
 const config = require('./config');
 const { seedProducts } = require('./content/products');
 const { seedAffiliates } = require('./content/affiliates');
@@ -77,6 +81,7 @@ if ((db.meta.guidesV || 0) < GUIDES_V) {
 
 let saveTimer = null;
 function save() {
+  changes.emit('change', 'db');
   clearTimeout(saveTimer);
   saveTimer = setTimeout(flush, 150);
 }
@@ -98,6 +103,7 @@ const eventStream = fs.createWriteStream(EVENTS_FILE, { flags: 'a' });
 function addEvent(ev) {
   events.push(ev);
   eventStream.write(JSON.stringify(ev) + '\n');
+  changes.emit('change', 'ev');
 }
 
 // ---------- helpers ----------
@@ -125,13 +131,13 @@ function resolveFile(p, lang) {
 }
 
 // Pedido vindo de plataforma externa (Cakto), já pago
-function createExternalOrder({ product, name, email, amount, pdfLang, provider, externalId, refId, method, phone4 }) {
+function createExternalOrder({ product, name, email, amount, pdfLang, provider, externalId, refId, method, phone4, test }) {
   const dup = db.orders.find(o => o.provider === provider && o.externalId === externalId && o.product === product.slug);
   if (dup) return { order: dup, created: false };
   const order = {
     id: newOrderId(), token: id(16), product: product.slug, title: product.title.pt,
     amount, name: name || '', email: email.toLowerCase(), lang: pdfLang, pdfLang,
-    status: 'pending', provider, externalId, refId: refId || '', method: method || '', phone4: phone4 || '',
+    status: 'pending', provider, externalId, refId: refId || '', method: method || '', phone4: phone4 || '', test: !!test,
     downloads: 0, createdAt: now(), paidAt: null
   };
   db.orders.push(order);
@@ -176,6 +182,6 @@ process.on('SIGINT', () => { flush(); process.exit(0); });
 process.on('SIGTERM', () => { flush(); process.exit(0); });
 
 module.exports = {
-  db, events, addEvent, save, flush, getProduct, createExternalOrder, findOrder, markPaid,
+  db, events, addEvent, save, flush, changes, getProduct, createExternalOrder, findOrder, markPaid,
   paidOrdersFor, addSubscriber, addWaitlist, pdfPath, fileLangs, hasFile, resolveFile, PDF_DIR, UPLOAD_DIR, LANGS
 };

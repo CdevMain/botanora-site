@@ -60,6 +60,7 @@ function appPage() {
     </div>
     <div class="toolbar-right">
       <span class="live" title="Visitantes com atividade nos últimos 5 minutos"><i></i><b id="realtime">0</b> agora no site</span>
+      <span class="live-sync" id="live-sync" title="O painel atualiza sozinho quando chega uma visita, venda ou inscrição">Ao vivo</span>
       <div class="range" role="group" aria-label="Período">
         <button data-days="1">Hoje</button><button data-days="7">7 dias</button><button data-days="30" class="on">30 dias</button><button data-days="90">90 dias</button><button data-days="365">12 meses</button>
       </div>
@@ -96,10 +97,16 @@ function appPage() {
       <div class="chart" id="chart-revenue"></div>
     </div>
     <div class="card">
+      <div class="card-head"><h2>Simular compra (teste)</h2><span class="pill pill-pending">Não entra nos números</span></div>
+      <p class="hint">Libera guias para um e-mail como se ele tivesse acabado de comprar na Cakto. Serve para testar a página Receber meus guias, o código por e-mail, a biblioteca e o download. A compra aparece na lista com a etiqueta Teste e fica fora da receita e das vendas.</p>
+      <form id="test-buy" class="aff-form"></form>
+    </div>
+    <div class="card">
       <div class="card-head"><h2>Pedidos</h2>
         <div class="head-actions">
           <span class="select"><select id="order-filter" aria-label="Filtrar pedidos"><option value="">Todos</option><option value="pending">Pendentes</option><option value="paid">Pagos</option><option value="cancelled">Cancelados</option><option value="refunded">Reembolsados</option></select></span>
           <a class="btn-sm" href="/api/admin/export/orders.csv">Exportar CSV</a>
+          <button class="btn-sm" id="clear-tests" type="button" hidden>Apagar compras de teste</button>
         </div>
       </div>
       <div class="table-wrap"><table class="table" id="orders"></table></div>
