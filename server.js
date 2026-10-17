@@ -10,7 +10,6 @@ const config = require('./src/config');
 const store = require('./src/store');
 const analytics = require('./src/analytics');
 const auth = require('./src/auth');
-const payments = require('./src/payments');
 const access = require('./src/access');
 const mailer = require('./src/mailer');
 const { LANGS, routes, url, ui } = require('./src/i18n');
@@ -42,7 +41,7 @@ const SECURITY_HEADERS = {
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'X-Frame-Options': 'DENY',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-  'Content-Security-Policy': "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.clarity.ms https://*.clarity.ms; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; frame-ancestors 'none'; form-action 'self' https://www.mercadopago.com.br; base-uri 'self'"
+  'Content-Security-Policy': "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.clarity.ms https://*.clarity.ms; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; frame-ancestors 'none'; form-action 'self'; base-uri 'self'"
 };
 
 if (config.siteUrl.startsWith('https://')) SECURITY_HEADERS['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains';
@@ -114,7 +113,7 @@ async function sendAccess(email, lang, hours = 72) {
   const mail = mailer.accessEmail({ lang, name, titles, link: config.siteUrl + entryUrl(email, lang, hours), hours, receiveUrl: config.siteUrl + url(lang, 'receive') });
   return mailer.send({ to: email, ...mail });
 }
-function sendAccessLater(email, lang) { sendAccess(email, lang).catch(e => console.error('e-mail de acesso:', e.message)); }
+function sendAccessLater(email, lang, hours) { sendAccess(email, lang, hours).catch(e => console.error('e-mail de acesso:', e.message)); }
 
 function streamPdf(req, res, file, name) {
   const stat = fs.statSync(file);
@@ -189,13 +188,6 @@ function renderPublic(req, res, lang, rest, ip, query) {
   else if (key === 'shop' && sub) {
     const p = store.getProduct(sub);
     if (p && p.status !== 'hidden') html = pages.product(lang, p, products);
-  } else if (key === 'order' && sub) {
-    const o = store.findOrder(sub);
-    if (o && query.get('t') === o.token) {
-      const p = store.getProduct(o.product);
-      const extra = { pix: o.provider === 'pix' ? payments.pixPayload({ amountCents: o.amount, txid: o.id }) : null, mpUrl: o.mpUrl || null };
-      return send(req, res, 200, pages.order(lang, o, p, extra), undefined, { 'Cache-Control': 'no-store', 'Referrer-Policy': 'same-origin' });
-    }
   }
 
   if (!html) { html = pages.notFound(lang); status = 404; }
@@ -209,7 +201,7 @@ function renderPublic(req, res, lang, rest, ip, query) {
 // ---------- busca e IAs ----------
 // Robôs de busca e de IA são bem-vindos nas páginas públicas (ChatGPT, Claude, Perplexity, Gemini, Copilot, Apple).
 const AI_BOTS = ['OAI-SearchBot', 'ChatGPT-User', 'GPTBot', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended', 'Bingbot', 'DuckAssistBot', 'meta-externalagent', 'CCBot'];
-const PRIVATE_PATHS = ['/admin', '/api/', '/download/', '/pt/pedido/', '/en/order/', '/pt/biblioteca', '/en/library', '/r/'];
+const PRIVATE_PATHS = ['/admin', '/api/', '/pt/biblioteca', '/en/library', '/r/'];
 function robotsTxt() {
   const block = ua => `User-agent: ${ua}\nAllow: /\n${PRIVATE_PATHS.map(p => `Disallow: ${p}`).join('\n')}\n`;
   return ['# Botânora: conteúdo aberto para buscadores e assistentes de IA.', '# Resumo para IAs: ' + config.siteUrl + '/llms.txt', '', block('*'), ...AI_BOTS.map(block), `Sitemap: ${config.siteUrl}/sitemap.xml`, ''].join('\n');
@@ -270,7 +262,7 @@ async function apiPublic(req, res, pathname, ip, query) {
   if (pathname === '/api/event' && req.method === 'POST') {
     if (!rateLimit(ip, 'event', 120, 60000)) return json(req, res, 429, { error: 'rate' });
     const b = await readJson(req, 4096);
-    const allowed = ['quiz_start', 'quiz_complete', 'timer_start', 'timer_done', 'lang_switch', 'download', 'cta', 'preview_open', 'preview_page'];
+    const allowed = ['quiz_start', 'quiz_complete', 'timer_start', 'timer_done', 'lang_switch', 'download', 'cta', 'preview_open', 'preview_page', 'preview_zoom', 'checkout'];
     if (b.type === 'engage') analytics.trackEngage(req, ip, b.path, b.ms);
     else if (allowed.includes(b.name)) {
       const props = {};
@@ -295,55 +287,6 @@ async function apiPublic(req, res, pathname, ip, query) {
     const p = store.getProduct(b.product);
     if (!p || !EMAIL_RE.test(b.email || '')) return json(req, res, 400, { error: 'invalid' });
     store.addWaitlist(b.email.trim(), p.slug, LANGS.includes(b.lang) ? b.lang : 'pt');
-    return json(req, res, 200, { ok: true });
-  }
-
-  if (pathname === '/api/checkout' && req.method === 'POST') {
-    if (!rateLimit(ip, 'checkout', 8, 600000)) return json(req, res, 429, { error: 'rate' });
-    const b = await readJson(req);
-    const p = store.getProduct(b.product);
-    const lang = LANGS.includes(b.lang) ? b.lang : 'pt';
-    const name = String(b.name || '').trim().slice(0, 80);
-    const email = String(b.email || '').trim().slice(0, 120);
-    if (!p || p.status !== 'available' || !name || !EMAIL_RE.test(email) || !b.consent) return json(req, res, 400, { error: 'invalid' });
-    const order = store.createOrder({ product: p, name, email, lang, pdfLang: LANGS.includes(b.pdfLang) ? b.pdfLang : lang });
-    analytics.trackEvent(req, ip, 'checkout', { product: p.slug, path: b.path || '' });
-    const orderUrl = url(lang, 'order', order.id) + '?t=' + order.token;
-    if (order.provider === 'mercadopago') {
-      try {
-        order.mpUrl = await payments.mpCreatePreference(order, p);
-        store.save();
-        return json(req, res, 200, { redirect: order.mpUrl });
-      } catch (e) {
-        console.error(e.message);
-        order.provider = 'pix'; store.save();
-      }
-    }
-    return json(req, res, 200, { redirect: orderUrl });
-  }
-
-  const st = pathname.match(/^\/api\/order\/([A-Z0-9]+)\/status$/);
-  if (st && req.method === 'GET') {
-    const o = store.findOrder(st[1]);
-    if (!o || query.get('t') !== o.token) return json(req, res, 404, { error: 'not found' });
-    return json(req, res, 200, { status: o.status });
-  }
-
-  if (pathname === '/api/webhooks/mercadopago' && req.method === 'POST') {
-    const b = await readJson(req, 32 * 1024).catch(() => ({}));
-    const dataId = (b.data && b.data.id) || query.get('data.id') || query.get('id');
-    const type = b.type || query.get('type') || query.get('topic');
-    if (type === 'payment' && dataId && config.mercadoPago.accessToken) {
-      if (!payments.mpVerifySignature(req, dataId)) return json(req, res, 401, { error: 'signature' });
-      try {
-        const pay = await payments.mpGetPayment(dataId);
-        const o = store.findOrder(pay.external_reference);
-        if (o && pay.status === 'approved' && Math.round(pay.transaction_amount * 100) >= o.amount) {
-          store.markPaid(o, { paymentId: String(pay.id), method: pay.payment_type_id });
-          sendAccessLater(o.email, o.pdfLang);
-        }
-      } catch (e) { console.error('webhook:', e.message); }
-    }
     return json(req, res, 200, { ok: true });
   }
 
@@ -375,15 +318,6 @@ async function apiPublic(req, res, pathname, ip, query) {
     const email = access.consumeLink(f.get('t') || '');
     if (!email) return redirect(res, url(lang, 'library') + '?m=expired', 303);
     res.writeHead(303, Object.assign({ Location: url(lang, 'library'), 'Set-Cookie': access.cookieHeader(access.createSession(email, req)) }, libHeaders(), SECURITY_HEADERS));
-    return res.end();
-  }
-  // Da página do pedido (PIX/Mercado Pago) para a biblioteca, provando o pedido pago
-  if (pathname === '/api/library/order' && req.method === 'POST') {
-    const f = new URLSearchParams((await readBody(req, 4096)).toString('utf8'));
-    const lang = LANGS.includes(f.get('lang')) ? f.get('lang') : 'pt';
-    const o = store.findOrder(String(f.get('id') || ''));
-    if (!o || o.status !== 'paid' || !o.token || f.get('t') !== o.token) return redirect(res, url(lang, 'library') + '?m=expired', 303);
-    res.writeHead(303, Object.assign({ Location: url(lang, 'library'), 'Set-Cookie': access.cookieHeader(access.createSession(o.email, req)) }, libHeaders(), SECURITY_HEADERS));
     return res.end();
   }
   // Sair deste aparelho
@@ -441,10 +375,19 @@ function caktoVerify(req, raw, body) {
   return got && crypto.timingSafeEqual(a, b2) ? null : 'secret inválido';
 }
 // Lê "id" ou "id:en" configurados no admin
+// IDs de oferta tirados do link de checkout (pay.cakto.com.br/<oferta>, às vezes com sufixo _123)
+function checkoutIds(p) {
+  const out = [];
+  for (const l of LANGS) {
+    const m = String((p.checkout || {})[l] || '').match(/pay\.cakto\.com\.br\/([A-Za-z0-9_-]+)/);
+    if (m) { out.push(m[1] + ':' + l); if (m[1].includes('_')) out.push(m[1].split('_')[0] + ':' + l); }
+  }
+  return out;
+}
 function caktoMatches(ids) {
   const out = [];
   for (const p of store.db.products) {
-    for (const entry of p.cakto || []) {
+    for (const entry of [...(p.cakto || []), ...checkoutIds(p)]) {
       const [cid, l] = String(entry).split(':').map(x => x.trim());
       if (cid && ids.includes(cid)) { out.push({ p, lang: LANGS.includes(l) ? l : null }); break; }
     }
@@ -461,6 +404,14 @@ async function caktoWebhook(req, res) {
   const d = body.data || {};
   const prod = d.product || {}, offer = d.offer || {}, cust = d.customer || {};
   const ids = [prod.id, prod.short_id, offer.id].filter(Boolean).map(String);
+  // Order bumps / combos: se vierem itens extras no mesmo evento, libera cada guia também
+  for (const k of ['orderBumps', 'order_bumps', 'bumps', 'items', 'products', 'offers']) {
+    if (Array.isArray(d[k])) for (const it of d[k].slice(0, 20)) {
+      if (!it || typeof it !== 'object') continue;
+      const ip = it.product || {}, io = it.offer || {};
+      for (const v of [it.id, it.short_id, it.offer_id, it.product_id, ip.id, ip.short_id, io.id]) if (v) ids.push(String(v));
+    }
+  }
   const base = { event, product: prod.name || '', productId: prod.id || '', shortId: prod.short_id || '', offerId: offer.id || '', offerName: offer.name || '', email: cust.email || '', ref: d.refId || d.id || '' };
 
   if (event === 'purchase_approved') {
@@ -497,18 +448,6 @@ async function caktoWebhook(req, res) {
   return json(req, res, 200, { ok: true });
 }
 
-// ---------- download protegido ----------
-function download(req, res, orderId, query, ip) {
-  const o = store.findOrder(orderId);
-  if (!o || query.get('t') !== o.token || o.status !== 'paid') return send(req, res, 403, 'Acesso negado', 'text/plain; charset=utf-8');
-  const p = store.getProduct(o.product);
-  const f = p && store.resolveFile(p, query.get('lang') || o.pdfLang);
-  if (!f) return send(req, res, 404, 'Arquivo indisponível', 'text/plain; charset=utf-8');
-  if (o.downloads >= config.maxDownloads) return send(req, res, 429, 'Limite de downloads atingido. Fale com ' + config.contactEmail, 'text/plain; charset=utf-8');
-  o.downloads++; store.save();
-  analytics.trackEvent(req, ip, 'download', { product: p.slug, lang: f.lang, path: '/download' });
-  return streamPdf(req, res, f.path, `botanora-${path.basename(f.path)}`);
-}
 
 // ---------- API admin ----------
 function toCsv(rows, cols) {
@@ -580,6 +519,12 @@ async function apiAdmin(req, res, pathname, ip, query) {
       if (Number.isFinite(b.price) && b.price >= 100 && b.price <= 1000000) p.price = Math.round(b.price);
       if (Number.isFinite(b.pages) && b.pages > 0 && b.pages < 2000) p.pages = Math.round(b.pages);
       if (typeof b.cakto === 'string') p.cakto = b.cakto.split(/[\s,;]+/).map(x => x.trim()).filter(Boolean).slice(0, 20).map(x => x.slice(0, 80));
+      // Link do checkout da Cakto por idioma (só https)
+      if (b.checkout && typeof b.checkout === 'object') for (const l of LANGS) if (typeof b.checkout[l] === 'string') {
+        const v = b.checkout[l].trim();
+        if (!v) p.checkout[l] = '';
+        else if (/^https:\/\/[^\s"'<>]+$/.test(v) && v.length < 400) p.checkout[l] = v;
+      }
       for (const f of ['title', 'subtitle', 'description']) {
         if (b[f] && typeof b[f] === 'object') for (const l of LANGS) if (typeof b[f][l] === 'string' && b[f][l].trim()) p[f][l] = b[f][l].trim().slice(0, f === 'description' ? 1200 : 140);
       }
@@ -693,9 +638,6 @@ const server = http.createServer(async (req, res) => {
       if (!fs.existsSync(f)) return send(req, res, 404, 'Not found', 'text/plain');
       return send(req, res, 200, fs.readFileSync(f), MIME[path.extname(f)], { 'Cache-Control': 'public, max-age=86400' });
     }
-
-    const dl = pathname.match(/^\/download\/([A-Z0-9]+)$/);
-    if (dl) return download(req, res, dl[1], u.searchParams, ip);
 
     if (pathname === '/admin' || pathname === '/admin/') {
       return send(req, res, 200, adminView.page(auth.isAuthed(req)), undefined, { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' });

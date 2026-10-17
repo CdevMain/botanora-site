@@ -23,7 +23,7 @@ src/config.js             leitura do .env
 src/store.js              banco em arquivo (data/db.json) + eventos (data/events.ndjson)
 src/analytics.js          métricas sem cookies e agregação para o painel
 src/auth.js               login do painel (sessão HttpOnly, bloqueio após 5 tentativas)
-src/payments.js           PIX copia e cola (BR Code) e Mercado Pago Checkout Pro
+src/access.js             acesso do cliente: link de uso único e sessão por aparelho
 src/i18n.js               textos da interface e rotas em PT/EN
 src/content/              conteúdo editorial: chás, benefícios, quiz e os 10 guias
 src/views/                páginas renderizadas no servidor (SEO, hreflang, JSON-LD)
@@ -47,9 +47,8 @@ data/                     criado automaticamente: banco, eventos e PDFs (fora do
 
 ## Vendas
 
-- **PIX (padrão):** preencha `PIX_KEY` no `.env`. O pedido mostra QR Code e "copia e cola" com o valor. Quando o pagamento cair, confirme em **Painel → Vendas → Confirmar pagamento**; a página do cliente atualiza sozinha e libera o download.
-- **Mercado Pago (automático):** preencha `MP_ACCESS_TOKEN` (e `MP_WEBHOOK_SECRET`). A compra redireciona ao Mercado Pago e o webhook `/api/webhooks/mercadopago` confirma o pagamento sozinho. `SITE_URL` precisa ser o endereço público (https) do site.
-- O PDF fica fora da pasta pública e só é entregue pelo link do pedido pago (limite de `MAX_DOWNLOADS`).
+- **Toda venda acontece na Cakto.** Em **Painel → Produtos**, cole em cada guia o link do checkout da Cakto (PT e, se houver, EN). O botão Comprar da página do guia leva para esse link. Guia sem link mostra a lista de espera.
+- O PDF fica fora da pasta pública e só é entregue pela biblioteca, no aparelho conectado (limite de `MAX_DOWNLOADS` por pedido).
 - Sem a Resend configurada o site não envia e-mails: o cliente entra com e-mail + código do pedido, e o painel tem "Gerar link de acesso" (uso único, vale 3 dias).
 
 ## Cakto + entrega por e-mail

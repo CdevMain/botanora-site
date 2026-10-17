@@ -10,7 +10,6 @@ const routes = {
   brewing: { pt: 'preparo', en: 'brewing' },
   quiz: { pt: 'quiz', en: 'quiz' },
   shop: { pt: 'loja', en: 'shop' },
-  order: { pt: 'pedido', en: 'order' },
   privacy: { pt: 'privacidade', en: 'privacy' },
   receive: { pt: 'receber', en: 'receive' },
   gear: { pt: 'utensilios', en: 'gear' },
@@ -141,7 +140,7 @@ const ui = {
       lead: 'Cadernos ilustrados para ler no celular, no tablet ou imprimir. Pagamento único, download imediato após a confirmação.',
       available: 'Disponível', soon: 'Em breve', pages: 'páginas', buy: 'Comprar', details: 'Ver detalhes',
       waitlist: 'Avise-me no lançamento', waitlistDone: 'Combinado! Avisaremos você.',
-      perks: [['Download imediato', 'Após a confirmação do pagamento'], ['Leia em qualquer tela', 'PDF otimizado para celular e impressão'], ['Pagamento seguro', 'PIX ou Mercado Pago']],
+      perks: [['Download imediato', 'Após a confirmação do pagamento'], ['Leia em qualquer tela', 'PDF otimizado para celular e impressão'], ['Pagamento seguro', 'Checkout da Cakto, com acesso automático']],
       all: 'Todos os guias'
     },
     product: {
@@ -149,18 +148,11 @@ const ui = {
       checkoutTitle: 'Finalizar compra', name: 'Seu nome', email: 'E-mail para receber o acesso',
       consent: 'Concordo com a política de privacidade e entendo que, por ser um produto digital, o acesso é liberado após a confirmação do pagamento.',
       pdfLang: 'Idioma do PDF', pdfLangHint: 'Na sua biblioteca você também poderá baixar a outra versão, quando disponível.',
-      pay: 'Ir para o pagamento', secure: 'Pagamento processado com segurança. Seus dados não são compartilhados.',
+      pay: 'Comprar o PDF em {l}', payOne: 'Comprar o guia', bothLangs: 'Você recebe o PDF em português e em inglês.', fee: '+ R$ 0,99 de taxa da Cakto, cobrada no checkout.', langNames: { pt: 'português', en: 'inglês' }, secure: 'O pagamento é feito na Cakto, em ambiente seguro. Não temos acesso aos dados do seu cartão.',
+      otherLang: 'Prefere o PDF em {l}? Comprar essa versão', steps: ['Você conclui a compra na Cakto.', 'O acesso chega no e-mail usado na compra.', 'Na biblioteca você baixa o PDF, também em outro aparelho.'],
       soonText: 'Este guia está em produção. Entre na lista e seja avisado no lançamento, com condição especial para a lista.',
       related: 'Você também pode gostar', back: 'Voltar à loja',
       preview: { open: 'Ler uma prévia', eyebrow: 'Prévia gratuita', title: 'Folheie antes de comprar', text: '{n} páginas de amostra do guia, do jeito que você vai receber. Toque numa página para ler em tamanho grande e use o zoom para ver os detalhes.', page: 'Página {p} de {t}', of: 'de', close: 'Fechar', prev: 'Página anterior', next: 'Próxima página', buy: 'Quero o guia completo', zoom: 'Zoom', zoomIn: 'Aumentar zoom', zoomOut: 'Diminuir zoom', zoomReset: 'Voltar ao tamanho normal', zoomHint: 'Dê dois cliques (ou toque duas vezes) na página para ampliar. Com zoom, arraste para mover. No celular, use dois dedos.', langNote: 'Prévia em português. O guia também está disponível em inglês.' }
-    },
-    order: {
-      title: 'Seu pedido | Botânora', h1: 'Pedido', pending: 'Aguardando pagamento', paid: 'Pagamento confirmado', cancelled: 'Pedido cancelado',
-      pixTitle: 'Pague com PIX', pixText: 'Abra o app do seu banco, escolha PIX e escaneie o código ou use o "copia e cola".',
-      copy: 'Copiar código PIX', copied: 'Copiado!', amount: 'Valor', waiting: 'Esta página atualiza sozinha quando o pagamento for confirmado.',
-      download: 'Baixar o PDF', keep: 'Guarde o link desta página: é por ele que você baixa o seu guia novamente.',
-      downloads: 'downloads restantes', noPix: 'O pagamento está sendo configurado. Entraremos em contato pelo e-mail informado.',
-      mp: 'Pagar com Mercado Pago', notFound: 'Pedido não encontrado.', library: 'Abrir minha biblioteca', otherLang: 'Baixar em inglês', refunded: 'Pedido reembolsado'
     },
     privacy: {
       title: 'Privacidade | Botânora', h1: 'Privacidade',
@@ -169,7 +161,7 @@ const ui = {
         'Se você aceitar, usamos o Google Analytics (estatísticas de visitas) e o Microsoft Clarity (mapas de calor e gravações anônimas de navegação, sem o que você digita em formulários) para entender como o site é usado e melhorá-lo. Você pode mudar a escolha a qualquer momento em "Preferências de cookies", no rodapé.',
         'Para medir o uso do site, registramos a página visitada, a origem da visita, o tipo de dispositivo e um identificador anônimo gerado a partir do seu IP e navegador combinados com um código que muda todos os dias. O IP não é armazenado.',
         'Quando você compra um guia, entra numa lista de espera ou assina a newsletter, guardamos nome e e-mail apenas para entregar o que você pediu. Você pode pedir a exclusão a qualquer momento pelo e-mail de contato.',
-        'Pagamentos são processados pelo seu banco (PIX) ou pelo Mercado Pago. Não temos acesso aos dados do seu cartão.'
+        'Os pagamentos são processados pela Cakto. Não temos acesso aos dados do seu cartão.'
       ]
     },
     gear: {
@@ -187,7 +179,7 @@ const ui = {
       codeOptional: 'opcional se você recebe e-mails da Botânora',
       submit: 'Acessar meus guias', sent: 'Pronto! Se houver compras neste e-mail, enviamos agora um link para entrar. Ele vale por 24 horas e funciona uma vez. Confira também o spam.',
       needCode: 'Informe também o código do pedido para liberar o acesso.', notFound: 'Não encontramos uma compra paga com esses dados. Confira o e-mail e o código do pedido.',
-      steps: [['Compre o guia', 'Na loja Botânora ou pelo checkout da Cakto.'], ['Receba o acesso', 'Um link chega no seu e-mail logo após a confirmação.'], ['Escolha e baixe', 'Na biblioteca, escolha o guia e o idioma do PDF.']],
+      steps: [['Compre o guia', 'Na página do guia, pelo checkout da Cakto.'], ['Receba o acesso', 'Um link chega no seu e-mail logo após a confirmação.'], ['Escolha e baixe', 'Na biblioteca, escolha o guia e o idioma do PDF.']],
       help: 'Precisa de ajuda? Escreva para'
     },
     library: {
@@ -317,7 +309,7 @@ const ui = {
       lead: 'Illustrated handbooks to read on your phone, tablet or in print. One-time payment, instant download once payment is confirmed.',
       available: 'Available', soon: 'Coming soon', pages: 'pages', buy: 'Buy', details: 'View details',
       waitlist: 'Notify me at launch', waitlistDone: "Great! We'll let you know.",
-      perks: [['Instant download', 'Once payment is confirmed'], ['Read on any screen', 'PDF optimised for mobile and print'], ['Secure payment', 'PIX or Mercado Pago']],
+      perks: [['Instant download', 'Once payment is confirmed'], ['Read on any screen', 'PDF optimised for mobile and print'], ['Secure payment', 'Cakto checkout, with automatic access']],
       all: 'All guides'
     },
     product: {
@@ -325,18 +317,11 @@ const ui = {
       checkoutTitle: 'Checkout', name: 'Your name', email: 'Email to receive access',
       consent: 'I agree to the privacy policy and understand that, as a digital product, access is granted once payment is confirmed.',
       pdfLang: 'PDF language', pdfLangHint: 'Your library will also let you download the other version when available.',
-      pay: 'Continue to payment', secure: 'Payment processed securely. Your data is never shared.',
+      pay: 'Buy the PDF in {l}', payOne: 'Buy the guide', bothLangs: 'You get the PDF in both English and Portuguese.', fee: '+ R$0.99 Cakto fee, charged at checkout.', langNames: { pt: 'Portuguese', en: 'English' }, secure: 'Payment is handled by Cakto in a secure environment. We never see your card details.',
+      otherLang: 'Prefer the PDF in {l}? Buy that version', steps: ['You complete your purchase on Cakto.', 'Access arrives at the email used at checkout.', 'Download the PDF from your library, on any device.'],
       soonText: 'This guide is in production. Join the list to hear at launch, with a special offer for the list.',
       related: 'You may also like', back: 'Back to the shop',
       preview: { open: 'Read a preview', eyebrow: 'Free preview', title: 'Look inside before you buy', text: '{n} sample pages from the guide, exactly as you will receive it. Tap a page to read it full size and zoom in to see the details.', page: 'Page {p} of {t}', of: 'of', close: 'Close', prev: 'Previous page', next: 'Next page', buy: 'Get the full guide', zoom: 'Zoom', zoomIn: 'Zoom in', zoomOut: 'Zoom out', zoomReset: 'Back to normal size', zoomHint: 'Double-click (or double-tap) the page to zoom in. When zoomed, drag to move around. On a phone, pinch with two fingers.', langNote: 'Preview in English. The guide is also available in Portuguese.' }
-    },
-    order: {
-      title: 'Your order | Botânora', h1: 'Order', pending: 'Awaiting payment', paid: 'Payment confirmed', cancelled: 'Order cancelled',
-      pixTitle: 'Pay with PIX', pixText: 'Open your banking app, choose PIX and scan the code or use "copy and paste".',
-      copy: 'Copy PIX code', copied: 'Copied!', amount: 'Amount', waiting: 'This page updates automatically once payment is confirmed.',
-      download: 'Download the PDF', keep: 'Keep this page\'s link: you can use it to download your guide again.',
-      downloads: 'downloads left', noPix: 'Payment is being set up. We will contact you at the email provided.',
-      mp: 'Pay with Mercado Pago', notFound: 'Order not found.', library: 'Open my library', otherLang: 'Download in Portuguese', refunded: 'Order refunded'
     },
     privacy: {
       title: 'Privacy | Botânora', h1: 'Privacy',
@@ -345,7 +330,7 @@ const ui = {
         'If you accept, we use Google Analytics (visit statistics) and Microsoft Clarity (heatmaps and anonymous session recordings, without what you type into forms) to understand how the site is used and improve it. You can change your choice at any time under "Cookie preferences" in the footer.',
         'To measure site usage we record the page visited, the referrer, the device type and an anonymous identifier derived from your IP and browser combined with a code that changes every day. Your IP is never stored.',
         'When you buy a guide, join a waitlist or subscribe to the newsletter, we keep your name and email only to deliver what you asked for. You can request deletion at any time via the contact email.',
-        'Payments are processed by your bank (PIX) or by Mercado Pago. We never see your card details.'
+        'Payments are processed by Cakto. We never see your card details.'
       ]
     },
     gear: {
@@ -363,7 +348,7 @@ const ui = {
       codeOptional: 'optional if you receive Botânora emails',
       submit: 'Access my guides', sent: "Done! If this email has purchases, we've just sent you a sign-in link. It is valid for 24 hours and works once. Check your spam folder too.",
       needCode: 'Please also enter your order code to unlock access.', notFound: "We couldn't find a paid purchase with these details. Check the email and order code.",
-      steps: [['Buy the guide', 'In the Botânora shop or through Cakto checkout.'], ['Get access', 'A link arrives in your inbox right after payment.'], ['Choose and download', 'In your library, pick the guide and the PDF language.']],
+      steps: [['Buy the guide', 'On the guide page, through Cakto checkout.'], ['Get access', 'A link arrives in your inbox right after payment.'], ['Choose and download', 'In your library, pick the guide and the PDF language.']],
       help: 'Need help? Write to'
     },
     library: {

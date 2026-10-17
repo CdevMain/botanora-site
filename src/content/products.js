@@ -131,4 +131,20 @@ const seedProducts = [
   }
 ];
 
+// Checkout de cada guia na Cakto (pay.cakto.com.br/<id da oferta>). Um link por guia:
+// a biblioteca libera o PDF nas duas línguas, então não há oferta separada em inglês.
+const CHECKOUT = {
+  'infusoes-de-autor': 'https://pay.cakto.com.br/dw6ovas_1204491',
+  'atlas-do-cha': 'https://pay.cakto.com.br/5ssfeja',
+  'ritual-da-noite': 'https://pay.cakto.com.br/hrew6c6',
+  'foco-e-energia': 'https://pay.cakto.com.br/gy6o7dv',
+  'chas-gelados': 'https://pay.cakto.com.br/3ef3dja',
+  'matcha-em-casa': 'https://pay.cakto.com.br/65gsymb',
+  'ervas-do-quintal': 'https://pay.cakto.com.br/5jjuwx4',
+  'blends-autorais': 'https://pay.cakto.com.br/8njqro2',
+  'cha-e-mesa': 'https://pay.cakto.com.br/cmgoiku',
+  'erva-mate': 'https://pay.cakto.com.br/4gtqc7d'
+};
+for (const p of seedProducts) p.checkout = { pt: CHECKOUT[p.slug] || '', en: '' };
+
 module.exports = { seedProducts };

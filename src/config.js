@@ -38,12 +38,6 @@ const config = {
   adminPassword: env.ADMIN_PASSWORD || '',
   sessionSecret: env.SESSION_SECRET || crypto.randomBytes(24).toString('hex'),
   contactEmail: env.CONTACT_EMAIL || 'contato@botanora.com.br',
-  pix: {
-    key: env.PIX_KEY || '',
-    name: env.PIX_MERCHANT_NAME || 'BOTANORA',
-    city: env.PIX_MERCHANT_CITY || 'GUAIBA'
-  },
-  mercadoPago: { accessToken: env.MP_ACCESS_TOKEN || '', webhookSecret: env.MP_WEBHOOK_SECRET || '' },
   maxDownloads: Number(env.MAX_DOWNLOADS || 10),
   maxDevices: Number(env.MAX_DEVICES || 5),
   accessDays: Number(env.ACCESS_DAYS || 365),

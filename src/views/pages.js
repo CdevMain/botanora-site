@@ -471,7 +471,7 @@ ${pageHero({ eyebrow: s.eyebrow, h1: s.h1, lead: s.lead })}
 // ---------------- PRODUTO ----------------
 function product(lang, p, products) {
   const t = ui[lang], s = t.shop, pr = t.product;
-  const soon = p.status !== 'available';
+  const soon = p.status !== 'available' || !hasCheckout(p); // sem link da Cakto, mostra a lista de espera
   const pv = previewFor(p.slug, lang);
   const related = visible(products).filter(x => x.slug !== p.slug).sort((a, b) => (a.status === 'available' ? -1 : 1) - (b.status === 'available' ? -1 : 1)).slice(0, 3);
   const body = `
@@ -511,23 +511,7 @@ ${freeRecipes(lang, p)}
         <button class="btn btn-dark" type="submit">${esc(s.waitlist)}</button>
         <p class="form-msg" role="status" data-ok="${esc(s.waitlistDone)}" data-err="${esc(t.newsletter.err)}"></p>
       </form>`
-      : `<h2 class="h3">${esc(pr.checkoutTitle)}</h2>
-      <form class="stack-form" data-form="checkout" data-product="${esc(p.slug)}" novalidate>
-        <label for="co-name">${esc(pr.name)}</label>
-        <input id="co-name" name="name" required autocomplete="name" maxlength="80">
-        <label for="co-email">${esc(pr.email)}</label>
-        <input id="co-email" type="email" name="email" required autocomplete="email" maxlength="120">
-        <fieldset class="lang-pick">
-          <legend>${esc(pr.pdfLang)}</legend>
-          <div class="segmented segmented-sm">${store.LANGS.map(l => { const ok = store.fileLangs(p).includes(l); return `<label><input type="radio" name="pdfLang" value="${l}"${l === (store.fileLangs(p).includes(lang) ? lang : store.fileLangs(p)[0]) ? ' checked' : ''}${ok ? '' : ' disabled'}><span>${l === 'pt' ? 'Português' : 'English'}${ok ? '' : ` <small>· ${esc(s.soon)}</small>`}</span></label>`; }).join('')}</div>
-          <p class="tiny muted">${esc(pr.pdfLangHint)}</p>
-        </fieldset>
-        <label class="check"><input type="checkbox" name="consent" required> <span>${esc(pr.consent)}</span></label>
-        <div class="buy-total"><span>${esc(p.title[lang])}</span><strong>${money(p.price, lang)}</strong></div>
-        <button class="btn btn-dark btn-block" type="submit">${icon('lock', 'ico-sm')} ${esc(pr.pay)}</button>
-        <p class="form-msg" role="status" data-err="${esc(t.newsletter.err)}"></p>
-        <p class="tiny muted">${esc(pr.secure)}</p>
-      </form>`}
+      : buyBox(lang, p)}
     </div>
   </div>
 </section>
@@ -552,54 +536,22 @@ ${related.length ? `<section class="section band-paper-2">
   });
 }
 
-// ---------------- PEDIDO ----------------
-function order(lang, o, p, extra) {
-  const t = ui[lang], od = t.order;
-  const left = Math.max(0, config.maxDownloads - o.downloads);
-  const statusTxt = od[o.status] || o.status;
-  let content = '';
-  if (o.status === 'paid') {
-    const langs = p ? store.fileLangs(p) : [];
-    const main = langs.includes(o.pdfLang) ? o.pdfLang : langs[0];
-    const other = langs.find(l => l !== main);
-    content = `<div class="order-paid">
-      ${icon('check', 'ico-xl')}
-      <h2 class="h3">${esc(od.paid)}</h2>
-      ${main ? `<a class="btn btn-gold" href="/download/${esc(o.id)}?t=${esc(o.token)}&amp;lang=${main}" data-event="download">${icon('download', 'ico-sm')} ${esc(od.download)} · ${main.toUpperCase()}</a>
-      ${other ? `<a class="link-arrow" href="/download/${esc(o.id)}?t=${esc(o.token)}&amp;lang=${other}" data-event="download">${other === 'en' ? 'Download in English' : 'Baixar em português'} ${icon('arrow', 'ico-sm')}</a>` : ''}
-      <p class="tiny muted-light">${left} ${esc(od.downloads)}</p>` : ''}
-      <form method="post" action="/api/library/order"><input type="hidden" name="id" value="${esc(o.id)}"><input type="hidden" name="t" value="${esc(o.token)}"><input type="hidden" name="lang" value="${lang}"><button class="btn btn-ghost btn-sm" type="submit">${esc(od.library)}</button></form>
-      <p class="muted-light">${esc(od.keep)}</p>
-    </div>`;
-  } else if (o.status === 'pending') {
-    if (extra.mpUrl) {
-      content = `<div class="order-pay"><a class="btn btn-gold" href="${esc(extra.mpUrl)}">${esc(od.mp)}</a><p class="muted-light">${esc(od.waiting)}</p></div>`;
-    } else if (extra.pix) {
-      content = `<div class="order-pay">
-        <h2 class="h3">${esc(od.pixTitle)}</h2>
-        <p class="muted-light">${esc(od.pixText)}</p>
-        <div class="pix-qr" data-qr="${esc(extra.pix)}"></div>
-        <div class="pix-copy"><input readonly value="${esc(extra.pix)}" aria-label="PIX"><button class="btn btn-gold btn-sm" data-copy data-copied="${esc(od.copied)}">${esc(od.copy)}</button></div>
-        <p class="muted-light">${esc(od.waiting)}</p>
-      </div>`;
-    } else {
-      content = `<div class="order-pay"><p class="muted-light">${esc(od.noPix)}</p></div>`;
-    }
-  }
-  const body = `
-<section class="band-night order-section">
-  <div class="wrap order-wrap" data-order="${esc(o.id)}" data-token="${esc(o.token)}" data-status="${esc(o.status)}">
-    <p class="eyebrow">${esc(od.h1)} ${esc(o.id)}</p>
-    <h1 class="display display-md">${esc(p ? p.title[lang] : o.title)}</h1>
-    <div class="order-summary">
-      <span class="badge ${o.status === 'paid' ? 'badge-ok' : 'badge-soon'}">${esc(statusTxt)}</span>
-      <span>${esc(od.amount)}: <strong>${money(o.amount, lang)}</strong></span>
-    </div>
-    ${content}
-  </div>
-</section>`;
-  const paths = { pt: url('pt', 'order', o.id) + '?t=' + o.token, en: url('en', 'order', o.id) + '?t=' + o.token };
-  return layout({ lang, key: 'shop', paths, title: od.title, description: od.title, body, dark: true, noindex: true, bodyClass: 'page-order' });
+// Compra pela Cakto: um botão por idioma com link de checkout cadastrado no painel
+const hasCheckout = p => store.LANGS.some(l => p.checkout && p.checkout[l]);
+function buyBox(lang, p) {
+  const pr = ui[lang].product;
+  const links = store.LANGS.filter(l => p.checkout && p.checkout[l]);
+  const main = links.includes(lang) ? lang : links[0];
+  const other = links.find(l => l !== main);
+  const name = l => pr.langNames[l];
+  return `<h2 class="h3">${esc(pr.checkoutTitle)}</h2>
+      <div class="buy-total"><span>${esc(p.title[lang])}</span><strong>${money(p.price, lang)}</strong></div>
+      <p class="buy-fee tiny muted">${esc(pr.fee)}</p>
+      <a class="btn btn-dark btn-block" href="${esc(p.checkout[main])}" rel="noopener" data-event="checkout" data-product="${esc(p.slug)}">${icon('lock', 'ico-sm')} ${esc(other ? pr.pay.replace('{l}', name(main)) : pr.payOne)}</a>
+      ${!other && store.fileLangs(p).length > 1 ? `<p class="tiny muted buy-langs">${esc(pr.bothLangs)}</p>` : ''}
+      ${other ? `<a class="link-arrow buy-other" href="${esc(p.checkout[other])}" rel="noopener" data-event="checkout" data-product="${esc(p.slug)}">${esc(pr.otherLang.replace('{l}', name(other)))} ${icon('arrow', 'ico-sm')}</a>` : ''}
+      <ul class="buy-steps tiny muted">${pr.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      <p class="tiny muted">${esc(pr.secure)}</p>`;
 }
 
 // ---------------- UTENSÍLIOS (afiliados) ----------------
@@ -728,4 +680,4 @@ function notFound(lang) {
   return layout({ lang, key: '', paths: pathsFor('home'), title: t.title, description: t.text, body, dark: true, noindex: true });
 }
 
-module.exports = { home, guide, benefitsPage, brewing, gear, quizPage, shop, product, order, receive, library, privacy, notFound, libraryEnter };
+module.exports = { home, guide, benefitsPage, brewing, gear, quizPage, shop, product, receive, library, privacy, notFound, libraryEnter };

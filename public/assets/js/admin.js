@@ -172,7 +172,7 @@
     $('#product-perf').innerHTML = `<thead><tr><th>Guia</th><th>Status</th><th class="num">Visualizações</th><th class="num">Iniciaram compra</th><th class="num">Vendas</th><th class="num">Conversão</th><th class="num">Receita</th><th class="num">Lista de espera</th></tr></thead><tbody>${stats.products.slice().sort((a, b) => b.revenue - a.revenue || b.waitlist - a.waitlist).map(p => `<tr><td data-l="Guia">${esc(p.title)}</td><td data-l="Status"><span class="pill pill-${p.status}">${statusName[p.status]}</span></td><td class="num" data-l="Visualizações">${nf.format(p.views)}</td><td class="num" data-l="Iniciaram compra">${nf.format(p.checkouts)}</td><td class="num" data-l="Vendas">${nf.format(p.paid)}</td><td class="num" data-l="Conversão">${p.views ? pct(p.paid / p.views) : '-'}</td><td class="num" data-l="Receita">${brl(p.revenue)}</td><td class="num" data-l="Lista de espera">${nf.format(p.waitlist)}${p.waitlistPeriod ? ` <span class="muted">(+${p.waitlistPeriod})</span>` : ''}</td></tr>`).join('')}</tbody>`;
   }
   const statusName = { available: 'Disponível', coming_soon: 'Em breve', hidden: 'Oculto', paid: 'Pago', pending: 'Pendente', cancelled: 'Cancelado', refunded: 'Reembolsado' };
-  const providerName = { mercadopago: 'Mercado Pago', pix: 'PIX', cakto: 'Cakto' };
+  const providerName = { cakto: 'Cakto' };
 
   // ---------- pedidos ----------
   async function loadOrders() {
@@ -245,6 +245,8 @@
           <label>Preço (R$)<input name="price" type="number" min="1" step="0.01" value="${(p.price / 100).toFixed(2)}"></label>
           <label>Status<span class="select"><select name="status">${['available', 'coming_soon', 'hidden'].map(s => `<option value="${s}"${p.status === s ? ' selected' : ''}>${statusName[s]}</option>`).join('')}</select></span></label>
           <label>Páginas<input name="pages" type="number" min="1" value="${p.pages}"></label>
+          <label class="pe-cakto">Link do checkout na Cakto · PT <small>o botão Comprar leva para cá; sem link, o guia mostra a lista de espera</small><input name="checkoutPt" type="url" value="${esc((p.checkout || {}).pt || '')}" placeholder="https://pay.cakto.com.br/..."></label>
+          <label class="pe-cakto">Link do checkout na Cakto · EN <small>opcional, oferta da versão em inglês</small><input name="checkoutEn" type="url" value="${esc((p.checkout || {}).en || '')}" placeholder="https://pay.cakto.com.br/..."></label>
           <label class="pe-cakto">IDs na Cakto <small>produto ou oferta · use <code>id:en</code> para entregar em inglês</small><input name="cakto" value="${esc((p.cakto || []).join(', '))}" placeholder="ex.: 8f2a1c, oferta-en:en"></label>
         </div>
         <div class="pe-files">${fileBtn(p, 'pt')}${fileBtn(p, 'en')}<button class="btn primary" type="submit">Salvar</button></div>
@@ -270,7 +272,7 @@
         const r = await fetch(`/api/admin/products/${slug}/pdf?lang=${l}`, { method: 'POST', headers: { 'Content-Type': 'application/pdf' }, body: file });
         if (!r.ok) throw new Error((await r.json()).error === 'notpdf' ? 'O arquivo não é um PDF válido.' : 'Falha no envio do PDF.');
       }
-      await api('/api/admin/products/' + slug, { method: 'PUT', body: JSON.stringify({ price: Math.round(parseFloat(f.price.value) * 100), pages: Number(f.pages.value), status: f.status.value, cakto: f.cakto.value }) });
+      await api('/api/admin/products/' + slug, { method: 'PUT', body: JSON.stringify({ price: Math.round(parseFloat(f.price.value) * 100), pages: Number(f.pages.value), status: f.status.value, cakto: f.cakto.value, checkout: { pt: f.checkoutPt.value, en: f.checkoutEn.value } }) });
       toast('Guia atualizado.');
       loadProducts(); loadStats();
     } catch (err) {

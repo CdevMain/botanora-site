@@ -304,34 +304,6 @@
     step();
   }
 
-  // ---------- pedido ----------
-  const ord = $('[data-order]');
-  if (ord) {
-    const qr = $('[data-qr]');
-    if (qr) {
-      const s = document.createElement('script');
-      s.src = '/assets/js/vendor/qrcode.js';
-      s.onload = () => { const q = window.qrcode(0, 'M'); q.addData(qr.dataset.qr); q.make(); qr.innerHTML = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true }); };
-      document.head.appendChild(s);
-    }
-    const copy = $('[data-copy]');
-    if (copy) copy.addEventListener('click', async () => {
-      const inp = $('.pix-copy input');
-      try { await navigator.clipboard.writeText(inp.value); } catch (_) { inp.select(); document.execCommand('copy'); }
-      const t = copy.textContent; copy.textContent = copy.dataset.copied; setTimeout(() => { copy.textContent = t; }, 2000);
-    });
-    if (ord.dataset.status === 'pending') {
-      const poll = async () => {
-        try {
-          const r = await fetch(`/api/order/${ord.dataset.order}/status?t=${ord.dataset.token}`, { cache: 'no-store' });
-          const j = await r.json();
-          if (j.status && j.status !== 'pending') return location.reload();
-        } catch (_) {}
-        setTimeout(poll, 8000);
-      };
-      setTimeout(poll, 8000);
-    }
-  }
   // ---------- prévia do guia (com zoom) ----------
   const pvDlg = $('[data-preview]');
   if (pvDlg) {

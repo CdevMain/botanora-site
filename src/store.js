@@ -31,6 +31,11 @@ for (const p of db.products) {
   if (p.file) { if (!p.files.pt) p.files.pt = p.file; delete p.file; }
   if (typeof p.cover === 'string') delete p.cover;
   if (!Array.isArray(p.cakto)) p.cakto = [];
+  // Link do checkout da Cakto por idioma (a compra acontece na Cakto)
+  if (!p.checkout || typeof p.checkout !== 'object') p.checkout = { pt: '', en: '' };
+  // Preenche o link da Cakto que vem do catálogo, sem apagar o que foi editado no painel
+  const seedCk = (seedProducts.find(x => x.slug === p.slug) || {}).checkout;
+  if (seedCk && !p.checkout.pt && !p.checkout.en) p.checkout = { ...seedCk };
 }
 for (const o of db.orders) { if (!o.pdfLang) o.pdfLang = o.lang || 'pt'; if (o.email) o.email = o.email.toLowerCase(); }
 db.products.sort((a, b) => a.order - b.order);
@@ -119,26 +124,6 @@ function resolveFile(p, lang) {
   return use ? { lang: use, path: pdfPath(p.files[use]) } : null;
 }
 
-function createOrder({ product, name, email, lang, pdfLang }) {
-  const order = {
-    id: newOrderId(),
-    token: id(16),
-    product: product.slug,
-    title: product.title.pt,
-    amount: product.price,
-    name, email: email.toLowerCase(), lang,
-    pdfLang: LANGS.includes(pdfLang) ? pdfLang : lang,
-    status: 'pending',
-    provider: config.mercadoPago.accessToken ? 'mercadopago' : 'pix',
-    downloads: 0,
-    createdAt: now(),
-    paidAt: null
-  };
-  db.orders.push(order);
-  save();
-  return order;
-}
-
 // Pedido vindo de plataforma externa (Cakto), já pago
 function createExternalOrder({ product, name, email, amount, pdfLang, provider, externalId, refId, method }) {
   const dup = db.orders.find(o => o.provider === provider && o.externalId === externalId && o.product === product.slug);
@@ -191,6 +176,6 @@ process.on('SIGINT', () => { flush(); process.exit(0); });
 process.on('SIGTERM', () => { flush(); process.exit(0); });
 
 module.exports = {
-  db, events, addEvent, save, flush, getProduct, createOrder, createExternalOrder, findOrder, markPaid,
+  db, events, addEvent, save, flush, getProduct, createExternalOrder, findOrder, markPaid,
   paidOrdersFor, addSubscriber, addWaitlist, pdfPath, fileLangs, hasFile, resolveFile, PDF_DIR, UPLOAD_DIR, LANGS
 };
