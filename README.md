@@ -42,15 +42,15 @@ data/                     criado automaticamente: banco, eventos e PDFs (fora do
 | `/pt/preparo` | `/en/brewing` | Calculadora de dose + timer com aviso sonoro e notificação |
 | `/pt/quiz` | `/en/quiz` | "Qual chá é para você?" com recomendação de guia |
 | `/pt/loja` | `/en/shop` | Os 10 guias em PDF, compra ou lista de espera |
-| `/pt/receber` | `/en/receive` | Página de receber: e-mail + código do pedido → biblioteca |
-| `/pt/biblioteca` | `/en/library` | Biblioteca do cliente: escolhe o guia e o idioma do PDF |
+| `/pt/receber` | `/en/receive` | Página de receber: e-mail (recebe um link de uso único) ou e-mail + código do pedido → biblioteca |
+| `/pt/biblioteca` | `/en/library` | Biblioteca do cliente: só abre no aparelho conectado; escolhe o guia e o idioma do PDF |
 
 ## Vendas
 
 - **PIX (padrão):** preencha `PIX_KEY` no `.env`. O pedido mostra QR Code e "copia e cola" com o valor. Quando o pagamento cair, confirme em **Painel → Vendas → Confirmar pagamento**; a página do cliente atualiza sozinha e libera o download.
 - **Mercado Pago (automático):** preencha `MP_ACCESS_TOKEN` (e `MP_WEBHOOK_SECRET`). A compra redireciona ao Mercado Pago e o webhook `/api/webhooks/mercadopago` confirma o pagamento sozinho. `SITE_URL` precisa ser o endereço público (https) do site.
 - O PDF fica fora da pasta pública e só é entregue pelo link do pedido pago (limite de `MAX_DOWNLOADS`).
-- Sem a Resend configurada o site não envia e-mails: o cliente usa a página do pedido ou a página de receber, e o painel tem "Copiar link da biblioteca".
+- Sem a Resend configurada o site não envia e-mails: o cliente entra com e-mail + código do pedido, e o painel tem "Gerar link de acesso" (uso único, vale 3 dias).
 
 ## Cakto + entrega por e-mail
 
@@ -78,6 +78,13 @@ Cada página de produto mostra 6 páginas de amostra do guia (capa, abertura, su
 ## Busca (Google) e IAs
 
 Páginas de chá (`/pt/guia/<chá>`), 20 receitas grátis (`/pt/receitas`), perguntas frequentes (`/pt/perguntas`), dados estruturados, `sitemap.xml`, `robots.txt` aberto para IAs, `/llms.txt`, versão Markdown de cada página (`.md` no fim da URL) e IndexNow automático. O plano completo, com o passo a passo do Search Console e ideias para crescer, está em `docs/seo-e-ia.md`. As receitas públicas saem dos guias com `python3 tools/guias/pdf/export_receitas.py`.
+
+## Acesso do cliente (sem senha e sem link aberto)
+
+- **Link de entrada de uso único:** chega por e-mail (24 h quando pedido na página de receber, 3 dias após a compra). Abre uma página com o botão "Entrar neste aparelho"; só o clique gasta o link, então leitores de e-mail que abrem links sozinhos não estragam o acesso. Guardamos apenas o hash do link.
+- **Aparelho conectado:** depois de entrar, o aparelho recebe um cookie seguro (HttpOnly) que dura `ACCESS_DAYS`. A biblioteca e os downloads só funcionam com ele; o endereço da biblioteca sozinho não abre nada.
+- **Outro aparelho:** a pessoa vai em Receber meus guias e pede um link novo, que chega no e-mail da compra. Sem e-mail configurado, entra com e-mail + código do pedido da Cakto.
+- **Limites:** até `MAX_DEVICES` aparelhos por e-mail (o mais antigo sai) e `MAX_DOWNLOADS` por pedido. O cliente pode sair de um ou de todos os aparelhos; no painel, "Desconectar aparelhos" faz o mesmo.
 
 ## Criar um guia novo
 

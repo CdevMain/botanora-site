@@ -100,14 +100,18 @@ function preferredLang(req) {
 }
 
 // Link da biblioteca e e-mail de acesso
-function libraryUrl(email, lang) { return url(lang, 'library') + '?t=' + access.signAccess(email); }
-async function sendAccess(email, lang) {
+// Link de entrada de uso único (o cliente confirma num botão e o aparelho fica conectado)
+const ENTER = { pt: 'entrar', en: 'enter' };
+function entryUrl(email, lang, hours) { return url(lang, 'library', ENTER[lang]) + '?t=' + access.issueLink(email, hours); }
+// same-origin: o navegador envia a origem nos formulários (com no-referrer ela vira "null" e a checagem de origem recusa)
+const libHeaders = extra => Object.assign({ 'Cache-Control': 'no-store', 'Referrer-Policy': 'same-origin', 'X-Robots-Tag': 'noindex' }, extra);
+async function sendAccess(email, lang, hours = 72) {
   if (!mailer.enabled()) return { skipped: true };
   const orders = store.paidOrdersFor(email);
   if (!orders.length) return { skipped: true };
   const titles = [...new Set(orders.map(o => { const p = store.getProduct(o.product); return p ? p.title[lang] : o.title; }))];
   const name = (orders.find(o => o.name) || {}).name || '';
-  const mail = mailer.accessEmail({ lang, name, titles, link: config.siteUrl + libraryUrl(email, lang), receiveUrl: config.siteUrl + url(lang, 'receive') });
+  const mail = mailer.accessEmail({ lang, name, titles, link: config.siteUrl + entryUrl(email, lang, hours), hours, receiveUrl: config.siteUrl + url(lang, 'receive') });
   return mailer.send({ to: email, ...mail });
 }
 function sendAccessLater(email, lang) { sendAccess(email, lang).catch(e => console.error('e-mail de acesso:', e.message)); }
@@ -165,9 +169,21 @@ function renderPublic(req, res, lang, rest, ip, query) {
   else if (key === 'gear' && !sub) html = pages.gear(lang);
   else if (key === 'receive' && !sub) html = pages.receive(lang, { email: (query.get('email') || '').slice(0, 120) });
   else if (key === 'library' && !sub) {
-    const acc = access.verifyAccess(query.get('t') || '');
-    const out = acc ? pages.library(lang, acc.email, query.get('t')) : pages.receive(lang, { expired: true });
-    return send(req, res, 200, out, undefined, { 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer', 'X-Robots-Tag': 'noindex' });
+    // A biblioteca só abre com a sessão deste aparelho (cookie), nunca por link
+    const email = access.sessionEmail(req);
+    if (query.get('t')) return redirect(res, url(lang, 'library', ENTER[lang]) + '?t=' + encodeURIComponent(query.get('t')));
+    const out = email ? pages.library(lang, email, access.devicesFor(email)) : pages.receive(lang, { notice: query.get('m') || '' });
+    return send(req, res, 200, out, undefined, libHeaders());
+  }
+  else if (key === 'library' && sub === ENTER[lang]) {
+    // Página de confirmação: o link só é gasto quando a pessoa clica no botão
+    // (leitores de e-mail que abrem links sozinhos não consomem o acesso)
+    const t = query.get('t') || '';
+    const p = access.peekLink(t);
+    const current = access.sessionEmail(req);
+    if (p.state === 'ok' && current === p.email) return redirect(res, url(lang, 'library'));
+    const out = p.state === 'ok' ? pages.libraryEnter(lang, t, p.email) : pages.receive(lang, { notice: p.state === 'used' ? 'used' : 'expired', email: p.email || '' });
+    return send(req, res, 200, out, undefined, libHeaders());
   }
   else if (key === 'shop' && !sub) html = pages.shop(lang, products);
   else if (key === 'shop' && sub) {
@@ -178,7 +194,7 @@ function renderPublic(req, res, lang, rest, ip, query) {
     if (o && query.get('t') === o.token) {
       const p = store.getProduct(o.product);
       const extra = { pix: o.provider === 'pix' ? payments.pixPayload({ amountCents: o.amount, txid: o.id }) : null, mpUrl: o.mpUrl || null };
-      return send(req, res, 200, pages.order(lang, o, p, extra), undefined, { 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' });
+      return send(req, res, 200, pages.order(lang, o, p, extra), undefined, { 'Cache-Control': 'no-store', 'Referrer-Policy': 'same-origin' });
     }
   }
 
@@ -342,18 +358,50 @@ async function apiPublic(req, res, pathname, ip, query) {
     const orders = store.paidOrdersFor(email);
     if (code) {
       const ok = orders.some(o => [o.id, o.refId, o.externalId].filter(Boolean).map(x => String(x).toUpperCase()).includes(code));
-      return ok ? json(req, res, 200, { redirect: libraryUrl(email, lang) }) : json(req, res, 404, { error: 'notfound' });
+      if (!ok) return json(req, res, 404, { error: 'notfound' });
+      const tok = access.createSession(email, req);
+      return json(req, res, 200, { redirect: url(lang, 'library') }, { 'Set-Cookie': access.cookieHeader(tok) });
     }
-    if (mailer.enabled()) { if (orders.length) sendAccessLater(email, lang); return json(req, res, 200, { sent: true }); }
+    // Só com o e-mail: mandamos um link de uso único para a caixa de entrada da compra.
+    // A resposta é sempre a mesma, para não revelar quem comprou.
+    if (mailer.enabled()) { if (orders.length && rateLimit(email, 'accessmail', 3, 3600000)) sendAccessLater(email, lang, 24); return json(req, res, 200, { sent: true }); }
     return json(req, res, 200, { needCode: true });
   }
 
-  // Download pela biblioteca (link de acesso + guia + idioma)
+  // Entrar neste aparelho (botão da página de confirmação do link)
+  if (pathname === '/api/library/enter' && req.method === 'POST') {
+    const f = new URLSearchParams((await readBody(req, 4096)).toString('utf8'));
+    const lang = LANGS.includes(f.get('lang')) ? f.get('lang') : 'pt';
+    const email = access.consumeLink(f.get('t') || '');
+    if (!email) return redirect(res, url(lang, 'library') + '?m=expired', 303);
+    res.writeHead(303, Object.assign({ Location: url(lang, 'library'), 'Set-Cookie': access.cookieHeader(access.createSession(email, req)) }, libHeaders(), SECURITY_HEADERS));
+    return res.end();
+  }
+  // Da página do pedido (PIX/Mercado Pago) para a biblioteca, provando o pedido pago
+  if (pathname === '/api/library/order' && req.method === 'POST') {
+    const f = new URLSearchParams((await readBody(req, 4096)).toString('utf8'));
+    const lang = LANGS.includes(f.get('lang')) ? f.get('lang') : 'pt';
+    const o = store.findOrder(String(f.get('id') || ''));
+    if (!o || o.status !== 'paid' || !o.token || f.get('t') !== o.token) return redirect(res, url(lang, 'library') + '?m=expired', 303);
+    res.writeHead(303, Object.assign({ Location: url(lang, 'library'), 'Set-Cookie': access.cookieHeader(access.createSession(o.email, req)) }, libHeaders(), SECURITY_HEADERS));
+    return res.end();
+  }
+  // Sair deste aparelho
+  if (pathname === '/api/library/logout' && req.method === 'POST') {
+    const f = new URLSearchParams((await readBody(req, 1024)).toString('utf8'));
+    const lang = LANGS.includes(f.get('lang')) ? f.get('lang') : 'pt';
+    const email = access.sessionEmail(req);
+    if (f.get('all') === '1' && email) access.endAllSessions(email); else access.endSession(req);
+    res.writeHead(303, Object.assign({ Location: url(lang, 'library') + '?m=out', 'Set-Cookie': access.cookieHeader('') }, libHeaders(), SECURITY_HEADERS));
+    return res.end();
+  }
+
+  // Download pela biblioteca (sessão do aparelho + guia + idioma)
   if (pathname === '/api/library/download' && req.method === 'GET') {
-    const acc = access.verifyAccess(query.get('t') || '');
-    if (!acc) return send(req, res, 403, 'Link expirado. Peça um novo em ' + config.siteUrl + '/receber', 'text/plain; charset=utf-8');
+    const email = access.sessionEmail(req);
+    if (!email) return redirect(res, url(LANGS.includes(query.get('ui')) ? query.get('ui') : 'pt', 'library') + '?m=login');
     const slug = query.get('slug');
-    const orders = store.paidOrdersFor(acc.email).filter(o => o.product === slug);
+    const orders = store.paidOrdersFor(email).filter(o => o.product === slug);
     const p = store.getProduct(slug);
     const o = orders.find(x => x.downloads < config.maxDownloads);
     if (!p || !orders.length) return send(req, res, 404, 'Guia não encontrado', 'text/plain; charset=utf-8');
@@ -486,7 +534,7 @@ async function apiAdmin(req, res, pathname, ip, query) {
   }
   if (pathname === '/api/admin/stats') return json(req, res, 200, analytics.stats(query.get('days')));
   if (pathname === '/api/admin/orders') {
-    return json(req, res, 200, store.db.orders.slice().reverse().slice(0, 500).map(o => ({ ...o, token: undefined, link: o.provider === 'cakto' ? libraryUrl(o.email, o.pdfLang) : url(o.lang, 'order', o.id) + '?t=' + o.token, library: libraryUrl(o.email, o.pdfLang) })));
+    return json(req, res, 200, store.db.orders.slice().reverse().slice(0, 500).map(o => ({ ...o, token: undefined, devices: access.devicesFor(o.email) })));
   }
   if (pathname === '/api/admin/audience') {
     return json(req, res, 200, { subscribers: store.db.subscribers.slice().reverse(), waitlist: store.db.waitlist.slice().reverse() });
@@ -508,9 +556,12 @@ async function apiAdmin(req, res, pathname, ip, query) {
     const b = await readJson(req);
     if (b.status === 'paid') { store.markPaid(o, { method: 'manual' }); sendAccessLater(o.email, o.pdfLang); }
     if (b.resend) {
-      try { const r = await sendAccess(o.email, o.pdfLang); return json(req, res, 200, { ok: true, sent: !r.skipped, link: config.siteUrl + libraryUrl(o.email, o.pdfLang) }); }
+      try { const r = await sendAccess(o.email, o.pdfLang, 72); return json(req, res, 200, { ok: true, sent: !r.skipped, link: r.skipped ? config.siteUrl + entryUrl(o.email, o.pdfLang, 72) : null }); }
       catch (e) { return json(req, res, 502, { error: e.message }); }
     }
+    // Link de entrada de uso único para mandar ao cliente manualmente (WhatsApp, e-mail próprio)
+    if (b.makeLink) return json(req, res, 200, { link: config.siteUrl + entryUrl(o.email, o.pdfLang, 72) });
+    if (b.logoutAll) return json(req, res, 200, { ended: access.endAllSessions(o.email) });
     else if (b.status === 'cancelled' || b.status === 'pending') { o.status = b.status; o.paidAt = null; store.save(); }
     if (b.resetDownloads) { o.downloads = 0; store.save(); }
     return json(req, res, 200, { ok: true });

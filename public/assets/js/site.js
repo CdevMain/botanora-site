@@ -332,16 +332,57 @@
       setTimeout(poll, 8000);
     }
   }
-  // ---------- prévia do guia ----------
+  // ---------- prévia do guia (com zoom) ----------
   const pvDlg = $('[data-preview]');
   if (pvDlg) {
     const D = JSON.parse($('.pv-data', pvDlg).textContent);
-    const img = $('.pv-img', pvDlg), count = $('.pv-count', pvDlg);
-    let cur = 0, seen = new Set(), lastFocus = null;
+    const img = $('.pv-img', pvDlg), view = $('.pv-view', pvDlg), count = $('.pv-count', pvDlg), level = $('.pv-zlevel', pvDlg);
+    const STEPS = [1, 1.5, 2, 3, 4], MAX = 4;
+    let cur = 0, seen = new Set(), lastFocus = null, z = 1, base = null, zoomTracked = false;
     const preload = i => { if (D.items[i]) { const im = new Image(); im.src = D.items[i].src; } };
+
+    // Volta ao tamanho normal (a imagem se ajusta à tela pelo CSS)
+    function resetZoom() {
+      z = 1; base = null;
+      pvDlg.classList.remove('pv-zoomed');
+      view.style.width = view.style.height = '';
+      img.style.width = img.style.height = '';
+      view.scrollLeft = view.scrollTop = 0;
+      level.textContent = '100%';
+    }
+    // Amplia mantendo parado o ponto (cx, cy) da tela, como num leitor de PDF
+    function setZoom(nz, cx, cy) {
+      nz = Math.min(MAX, Math.max(1, Math.round(nz * 100) / 100));
+      if (nz === z) return;
+      if (nz === 1) return resetZoom();
+      if (!base) {
+        const r = img.getBoundingClientRect();
+        base = { w: r.width, h: r.height };
+        view.style.width = base.w + 'px'; view.style.height = base.h + 'px';
+        pvDlg.classList.add('pv-zoomed');
+        const it = D.items[cur];
+        if (it.hd && img.dataset.hd !== it.hd) { img.dataset.hd = it.hd; const hi = new Image(); hi.onload = () => { if (D.items[cur] === it) img.src = it.hd; }; hi.src = it.hd; }
+      }
+      const vr = view.getBoundingClientRect();
+      const px = (cx == null ? vr.width / 2 : cx - vr.left), py = (cy == null ? vr.height / 2 : cy - vr.top);
+      const fx = (view.scrollLeft + px) / (base.w * z), fy = (view.scrollTop + py) / (base.h * z);
+      z = nz;
+      img.style.width = base.w * z + 'px'; img.style.height = base.h * z + 'px';
+      view.scrollLeft = fx * base.w * z - px; view.scrollTop = fy * base.h * z - py;
+      level.textContent = Math.round(z * 100) + '%';
+      if (!zoomTracked) { zoomTracked = true; track('preview_zoom', { slug: D.slug }); }
+    }
+    const stepZoom = (dir, cx, cy) => {
+      if (dir === 0) return resetZoom();
+      const next = dir > 0 ? STEPS.find(s => s > z + 0.01) : [...STEPS].reverse().find(s => s < z - 0.01);
+      setZoom(next || (dir > 0 ? MAX : 1), cx, cy);
+    };
+
     function show(i) {
+      resetZoom();
       cur = (i + D.items.length) % D.items.length;
       const it = D.items[cur];
+      delete img.dataset.hd;
       img.src = it.src;
       img.alt = D.label.replace('{p}', it.page).replace('{t}', D.pages);
       count.textContent = `${cur + 1} / ${D.items.length} · ${img.alt}`;
@@ -359,23 +400,74 @@
       if (pvDlg.close) pvDlg.close(); else pvDlg.removeAttribute('open');
     }
     pvDlg.addEventListener('close', () => {
+      resetZoom();
       document.documentElement.classList.remove('pv-lock');
       if (lastFocus) lastFocus.focus();
     });
+    window.addEventListener('resize', () => { if (z > 1) resetZoom(); });
     $$('[data-preview-open]').forEach(b => b.addEventListener('click', () => open(+b.dataset.previewOpen || 0)));
     $$('[data-preview-step]', pvDlg).forEach(b => b.addEventListener('click', () => show(cur + +b.dataset.previewStep)));
     $$('[data-preview-close]', pvDlg).forEach(b => b.addEventListener('click', close));
+    $$('[data-zoom]', pvDlg).forEach(b => b.addEventListener('click', () => stepZoom(+b.dataset.zoom)));
     pvDlg.addEventListener('click', e => { if (e.target === pvDlg) close(); });
     pvDlg.addEventListener('keydown', e => {
-      if (e.key === 'ArrowRight') { e.preventDefault(); show(cur + 1); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); show(cur - 1); }
+      if (e.key === 'ArrowRight' && z === 1) { e.preventDefault(); show(cur + 1); }
+      if (e.key === 'ArrowLeft' && z === 1) { e.preventDefault(); show(cur - 1); }
+      if (e.key === '+' || e.key === '=') { e.preventDefault(); stepZoom(1); }
+      if (e.key === '-') { e.preventDefault(); stepZoom(-1); }
+      if (e.key === '0') { e.preventDefault(); resetZoom(); }
     });
-    let x0 = null;
-    img.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
-    img.addEventListener('touchend', e => {
-      if (x0 === null) return;
-      const dx = e.changedTouches[0].clientX - x0; x0 = null;
-      if (Math.abs(dx) > 40) show(cur + (dx < 0 ? 1 : -1));
+    // Duplo clique / duplo toque: alterna entre normal e 2,5x no ponto tocado
+    let lastType = 'mouse';
+    img.addEventListener('dblclick', e => { e.preventDefault(); if (lastType === 'touch') return; z > 1 ? resetZoom() : setZoom(2.5, e.clientX, e.clientY); });
+    // Ctrl + roda do mouse (ou pinça no trackpad) amplia
+    view.addEventListener('wheel', e => {
+      if (!e.ctrlKey) { if (z > 1) { e.preventDefault(); view.scrollLeft += e.deltaX; view.scrollTop += e.deltaY; } return; }
+      e.preventDefault();
+      setZoom(z * Math.exp(-e.deltaY * 0.01), e.clientX, e.clientY);
+    }, { passive: false });
+
+    // Ponteiros: arrastar para mover (com zoom), pinça com dois dedos, deslizar para trocar de página
+    const pts = new Map();
+    let drag = null, pinch = null, swipeX = null, lastTap = 0;
+    view.addEventListener('pointerdown', e => {
+      lastType = e.pointerType;
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pts.size === 2) {
+        const [a, b] = [...pts.values()];
+        pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), z };
+        drag = null; swipeX = null;
+      } else if (pts.size === 1) {
+        if (e.pointerType === 'touch') {
+          const now = Date.now();
+          if (now - lastTap < 300) { z > 1 ? resetZoom() : setZoom(2.5, e.clientX, e.clientY); lastTap = 0; return; }
+          lastTap = now;
+        }
+        if (z > 1) { drag = { x: e.clientX, y: e.clientY, sl: view.scrollLeft, st: view.scrollTop }; view.setPointerCapture(e.pointerId); view.classList.add('pv-grabbing'); }
+        else swipeX = e.clientX;
+      }
     });
+    view.addEventListener('pointermove', e => {
+      if (!pts.has(e.pointerId)) return;
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pinch && pts.size === 2) {
+        const [a, b] = [...pts.values()];
+        setZoom(pinch.z * Math.hypot(a.x - b.x, a.y - b.y) / pinch.d, (a.x + b.x) / 2, (a.y + b.y) / 2);
+      } else if (drag) {
+        view.scrollLeft = drag.sl - (e.clientX - drag.x);
+        view.scrollTop = drag.st - (e.clientY - drag.y);
+      }
+    });
+    const up = e => {
+      if (swipeX !== null && pts.size === 1 && z === 1) {
+        const dx = e.clientX - swipeX;
+        if (Math.abs(dx) > 40) show(cur + (dx < 0 ? 1 : -1));
+      }
+      pts.delete(e.pointerId);
+      if (pts.size < 2) pinch = null;
+      if (!pts.size) { drag = null; swipeX = null; view.classList.remove('pv-grabbing'); }
+    };
+    view.addEventListener('pointerup', up);
+    view.addEventListener('pointercancel', up);
   }
 })();

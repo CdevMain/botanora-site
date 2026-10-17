@@ -191,18 +191,28 @@
       <td><div class="row-actions">
         ${o.status === 'pending' ? `<button class="btn-sm primary" data-pay="${o.id}">Confirmar pagamento</button><button class="btn-sm" data-cancel="${o.id}">Cancelar</button>` : ''}
         ${o.status === 'paid' ? `<button class="btn-sm" data-resend="${o.id}">Enviar acesso</button>` : ''}
-        <button class="btn-sm" data-link="${esc(location.origin + o.library)}">Copiar link da biblioteca</button>
+        ${o.status === 'paid' ? `<button class="btn-sm" data-mklink="${o.id}" title="Link de uso único, vale 3 dias">Gerar link de acesso</button>` : ''}
+        ${o.devices ? `<button class="btn-sm" data-logoutall="${o.id}" title="O cliente precisará pedir um link novo para entrar">Desconectar ${o.devices} aparelho${o.devices > 1 ? 's' : ''}</button>` : ''}
       </div></td></tr>`).join('')}</tbody>` : '<tbody><tr><td class="empty">Nenhum pedido ainda.</td></tr></tbody>';
   }
   $('#order-filter').addEventListener('change', renderOrders);
   $('#orders').addEventListener('click', async e => {
     const b = e.target.closest('button'); if (!b) return;
-    if (b.dataset.link) { await navigator.clipboard.writeText(b.dataset.link).catch(() => {}); return toast('Link copiado. O cliente escolhe o guia e o idioma nessa página.'); }
+    if (b.dataset.mklink) {
+      const r = await api('/api/admin/orders/' + b.dataset.mklink, { method: 'POST', body: JSON.stringify({ makeLink: true }) });
+      await navigator.clipboard.writeText(r.link).catch(() => {});
+      return toast('Link copiado. Ele funciona uma vez e vale 3 dias: o aparelho de quem abrir fica conectado.');
+    }
+    if (b.dataset.logoutall) {
+      if (!confirm('Desconectar todos os aparelhos deste cliente? Ele precisará pedir um link novo para entrar.')) return;
+      const r = await api('/api/admin/orders/' + b.dataset.logoutall, { method: 'POST', body: JSON.stringify({ logoutAll: true }) });
+      toast(r.ended + ' aparelho(s) desconectado(s).'); return loadOrders();
+    }
     if (b.dataset.resend) {
       try {
         const r = await api('/api/admin/orders/' + b.dataset.resend, { method: 'POST', body: JSON.stringify({ resend: true }) });
         if (r.sent) toast('E-mail de acesso enviado.');
-        else { await navigator.clipboard.writeText(r.link).catch(() => {}); toast('E-mail não configurado: link da biblioteca copiado.'); }
+        else { await navigator.clipboard.writeText(r.link).catch(() => {}); toast('E-mail não configurado: link de acesso copiado (uso único, vale 3 dias).'); }
       } catch (err) { toast('Falha no envio: ' + err.message, true); }
       return;
     }
@@ -346,14 +356,14 @@
           ${copy(i.webhookUrl)}
         </div>
         <div class="card"><div class="card-head"><h2>2 · Entrega "Acesso por e-mail"</h2></div>
-          <p class="hint">No produto da Cakto, em <b>Entrega → Acesso por e-mail</b>, use o link da página de receber. O cliente informa o e-mail da compra e o código do pedido e abre a biblioteca, onde escolhe o guia e o idioma.</p>
+          <p class="hint">No produto da Cakto, em <b>Entrega → Acesso por e-mail</b>, use o link da página de receber (abaixo). Esse link é o mesmo para todos e não abre nada sozinho: o cliente informa o e-mail da compra e recebe um link de uso único (ou usa o código do pedido da Cakto). Cada aparelho entra uma vez e fica conectado; para outro aparelho, ele pede um novo link. Até 5 aparelhos por e-mail (MAX_DEVICES).</p>
           <p class="sub-h">Português</p>${copy(i.receive.pt)}<p class="sub-h">English</p>${copy(i.receive.en)}
         </div>
         <div class="card"><div class="card-head"><h2>3 · Ligar guias aos produtos</h2></div>
           <p class="hint">Em <b>Produtos</b>, preencha "IDs na Cakto" de cada guia com o ID do produto ou da oferta. Um combo pode liberar vários guias: coloque o mesmo ID em cada um. Para vender a versão em inglês, crie uma oferta separada e use <code>id:en</code>. Vendas sem guia ligado aparecem no registro abaixo com o ID para copiar.</p>
         </div>
         <div class="card"><div class="card-head"><h2>4 · E-mail automático (opcional)</h2>${ok(i.mail)}</div>
-          <p class="hint">Com <code>RESEND_API_KEY</code> e <code>MAIL_FROM</code> no <code>.env</code>, o cliente recebe o link da biblioteca no idioma da compra assim que o pagamento é aprovado, e a página de receber passa a funcionar só com o e-mail.${i.mailFrom ? ` Remetente: <b>${esc(i.mailFrom)}</b>.` : ''}</p>
+          <p class="hint">Com <code>RESEND_API_KEY</code> e <code>MAIL_FROM</code> no <code>.env</code>, o cliente recebe um link de entrada (uso único) no idioma da compra assim que o pagamento é aprovado, e a página de receber passa a funcionar só com o e-mail. Sem isso, a entrada é pelo e-mail + código do pedido da Cakto.${i.mailFrom ? ` Remetente: <b>${esc(i.mailFrom)}</b>.` : ''}</p>
         </div>
       </div>
       <div class="card"><div class="card-head"><h2>Registro de webhooks</h2><button class="btn-sm" id="int-refresh">Atualizar</button></div>

@@ -16,6 +16,7 @@ import catalog  # noqa: E402
 
 OUT = os.path.join(ROOT, 'public', 'assets', 'img', 'previews')
 WIDTH = 900
+HD = 1600  # versão para o zoom do leitor, carregada só quando a pessoa amplia
 LABEL = {'pt': 'PRÉVIA · BOTÂNORA', 'en': 'PREVIEW · BOTÂNORA'}
 
 
@@ -48,12 +49,13 @@ def font(size):
 
 def stamp(im, lang):
     d = ImageDraw.Draw(im, 'RGBA')
-    h = 30
+    k = im.width / WIDTH
+    h = round(30 * k)
     d.rectangle([0, im.height - h, im.width, im.height], fill=(17, 26, 33, 215))
-    f = font(13)
+    f = font(round(13 * k))
     t = LABEL[lang]
     w = d.textlength(t, font=f)
-    d.text(((im.width - w) / 2, im.height - h + 8), t, fill=(214, 180, 76, 255), font=f)
+    d.text(((im.width - w) / 2, im.height - h + round(8 * k)), t, fill=(214, 180, 76, 255), font=f)
     return im
 
 
@@ -77,15 +79,16 @@ def run(only=None):
             files = []
             for k, i in enumerate(chosen, 1):
                 tmp = os.path.join(OUT, f'_tmp')
-                subprocess.run(['pdftoppm', '-r', '110', '-png', '-f', str(i + 1), '-l', str(i + 1), '-singlefile', pdf, tmp], check=True)
-                im = Image.open(tmp + '.png').convert('RGB')
-                im = im.resize((WIDTH, round(im.height * WIDTH / im.width)), Image.LANCZOS)
-                if k > 1:
-                    stamp(im, lang)
-                name = f'{G.slug}-{lang}-{k}.jpg'
-                im.save(os.path.join(OUT, name), quality=80, optimize=True, progressive=True)
+                subprocess.run(['pdftoppm', '-r', '200', '-png', '-f', str(i + 1), '-l', str(i + 1), '-singlefile', pdf, tmp], check=True)
+                src = Image.open(tmp + '.png').convert('RGB')
+                name, hd = f'{G.slug}-{lang}-{k}.jpg', f'{G.slug}-{lang}-{k}-hd.jpg'
+                for w, fn, q in ((WIDTH, name, 80), (HD, hd, 78)):
+                    im = src.resize((w, round(src.height * w / src.width)), Image.LANCZOS)
+                    if k > 1:
+                        stamp(im, lang)
+                    im.save(os.path.join(OUT, fn), quality=q, optimize=True, progressive=True)
                 os.remove(tmp + '.png')
-                files.append({'file': name, 'page': i + 1})
+                files.append({'file': name, 'hd': hd, 'page': i + 1})
             manifest[G.slug][lang] = {'pages': len(pages), 'items': files}
         print(G.slug, [i + 1 for i in chosen])
     json.dump(manifest, open(mpath, 'w'), ensure_ascii=False, indent=1)

@@ -45,6 +45,7 @@ const config = {
   },
   mercadoPago: { accessToken: env.MP_ACCESS_TOKEN || '', webhookSecret: env.MP_WEBHOOK_SECRET || '' },
   maxDownloads: Number(env.MAX_DOWNLOADS || 10),
+  maxDevices: Number(env.MAX_DEVICES || 5),
   accessDays: Number(env.ACCESS_DAYS || 365),
   cakto: { secret: env.CAKTO_WEBHOOK_SECRET || '' },
   mail: { resendKey: env.RESEND_API_KEY || '', from: env.MAIL_FROM || '' },

@@ -8,7 +8,6 @@ const { benefits } = require('../content/benefits');
 const { quiz, quizMap } = require('../content/quiz');
 const config = require('../config');
 const store = require('../store');
-const { signAccess } = require('../access');
 const mailer = require('../mailer');
 const fs = require('fs');
 const path = require('path');
@@ -39,7 +38,7 @@ function freeRecipes(lang, p) {
 
 function previewSection(lang, p, pv) {
   const t = ui[lang].product.preview;
-  const items = pv.items.map(x => ({ src: '/assets/img/previews/' + x.file, page: x.page }));
+  const items = pv.items.map(x => ({ src: '/assets/img/previews/' + x.file, hd: x.hd ? '/assets/img/previews/' + x.hd : null, page: x.page }));
   const both = store.fileLangs(p).length > 1;
   return `<section class="section band-paper-2 preview-band" id="previa">
   <div class="wrap">
@@ -55,12 +54,21 @@ function previewSection(lang, p, pv) {
     </div>
   </div>
   <dialog class="preview-dialog" data-preview aria-label="${esc(t.title)}">
-    <div class="pv-top"><span class="pv-count" aria-live="polite"></span><button type="button" class="pv-close" data-preview-close aria-label="${esc(t.close)}">&times;</button></div>
+    <div class="pv-top"><span class="pv-count" aria-live="polite"></span>
+      <div class="pv-tools">
+        <div class="pv-zoom" role="group" aria-label="${esc(t.zoom)}">
+          <button type="button" class="pv-zbtn" data-zoom="-1" aria-label="${esc(t.zoomOut)}">&minus;</button>
+          <button type="button" class="pv-zbtn pv-zlevel" data-zoom="0" aria-label="${esc(t.zoomReset)}">100%</button>
+          <button type="button" class="pv-zbtn" data-zoom="1" aria-label="${esc(t.zoomIn)}">+</button>
+        </div>
+        <button type="button" class="pv-close" data-preview-close aria-label="${esc(t.close)}">&times;</button>
+      </div></div>
     <div class="pv-stage">
       <button type="button" class="pv-nav pv-prev" data-preview-step="-1" aria-label="${esc(t.prev)}">‹</button>
-      <img class="pv-img" alt="">
+      <div class="pv-view"><img class="pv-img" alt="" draggable="false"></div>
       <button type="button" class="pv-nav pv-next" data-preview-step="1" aria-label="${esc(t.next)}">›</button>
     </div>
+    <p class="pv-hint">${esc(t.zoomHint)}</p>
     <div class="pv-foot">${p.status === 'available' ? `<a class="btn btn-gold btn-sm" href="#comprar" data-preview-close>${esc(t.buy)}</a>` : ''}</div>
     <script type="application/json" class="pv-data">${JSON.stringify({ items, pages: pv.pages, label: t.page, slug: p.slug }).replace(/</g, '\\u003c')}</script>
   </dialog>
@@ -554,14 +562,13 @@ function order(lang, o, p, extra) {
     const langs = p ? store.fileLangs(p) : [];
     const main = langs.includes(o.pdfLang) ? o.pdfLang : langs[0];
     const other = langs.find(l => l !== main);
-    const lib = url(lang, 'library') + '?t=' + signAccess(o.email);
     content = `<div class="order-paid">
       ${icon('check', 'ico-xl')}
       <h2 class="h3">${esc(od.paid)}</h2>
       ${main ? `<a class="btn btn-gold" href="/download/${esc(o.id)}?t=${esc(o.token)}&amp;lang=${main}" data-event="download">${icon('download', 'ico-sm')} ${esc(od.download)} · ${main.toUpperCase()}</a>
       ${other ? `<a class="link-arrow" href="/download/${esc(o.id)}?t=${esc(o.token)}&amp;lang=${other}" data-event="download">${other === 'en' ? 'Download in English' : 'Baixar em português'} ${icon('arrow', 'ico-sm')}</a>` : ''}
       <p class="tiny muted-light">${left} ${esc(od.downloads)}</p>` : ''}
-      <a class="btn btn-ghost btn-sm" href="${lib}">${esc(od.library)}</a>
+      <form method="post" action="/api/library/order"><input type="hidden" name="id" value="${esc(o.id)}"><input type="hidden" name="t" value="${esc(o.token)}"><input type="hidden" name="lang" value="${lang}"><button class="btn btn-ghost btn-sm" type="submit">${esc(od.library)}</button></form>
       <p class="muted-light">${esc(od.keep)}</p>
     </div>`;
   } else if (o.status === 'pending') {
@@ -616,14 +623,15 @@ ${pageHero({ eyebrow: g.eyebrow, h1: g.h1, lead: g.lead })}
 }
 
 // ---------------- RECEBER ----------------
-function receive(lang, { expired = false, email = '' } = {}) {
+function receive(lang, { notice = '', email = '' } = {}) {
   const t = ui[lang], r = t.receive;
+  const note = { expired: t.library.expired, used: t.library.used, out: t.library.out, login: t.library.login }[notice];
   const body = `
 ${pageHero({ eyebrow: 'Botânora', h1: r.h1, lead: r.lead, art: false })}
 <section class="section band-paper">
   <div class="wrap receive-grid">
     <form class="buy-box stack-form" data-form="access" novalidate>
-      ${expired ? `<p class="notice">${esc(t.library.expired)}</p>` : ''}
+      ${note ? `<p class="notice">${esc(note)}</p>` : ''}
       <label for="rc-email">${esc(r.email)}</label>
       <input id="rc-email" type="email" name="email" required autocomplete="email" value="${esc(email)}" placeholder="${esc(t.newsletter.placeholder)}">
       <label for="rc-code">${esc(r.code)}${mailer.enabled() ? ` <span class="opt">(${esc(r.codeOptional)})</span>` : ''}</label>
@@ -641,7 +649,27 @@ ${pageHero({ eyebrow: 'Botânora', h1: r.h1, lead: r.lead, art: false })}
 }
 
 // ---------------- BIBLIOTECA ----------------
-function library(lang, email, token) {
+// Mostra o e-mail sem entregar o endereço inteiro (ex.: ca•••@gmail.com)
+const maskEmail = e => { const [u, d] = String(e).split('@'); return (u.length <= 2 ? u[0] : u.slice(0, 2)) + '•••@' + d; };
+
+// Confirmação do link de entrada: o acesso só é liberado no clique
+function libraryEnter(lang, token, email) {
+  const lb = ui[lang].library;
+  const body = `
+${pageHero({ eyebrow: 'Botânora', h1: lb.enterH1, lead: lb.enterLead.replace('{email}', maskEmail(email)), art: false })}
+<section class="section band-paper">
+  <div class="wrap">
+    <form class="buy-box stack-form enter-box" method="post" action="/api/library/enter">
+      <input type="hidden" name="t" value="${esc(token)}"><input type="hidden" name="lang" value="${lang}">
+      <button class="btn btn-dark btn-block" type="submit">${icon('download', 'ico-sm')} ${esc(lb.enterBtn)}</button>
+      <p class="tiny muted">${esc(lb.enterNote)}</p>
+    </form>
+  </div>
+</section>`;
+  return layout({ lang, key: 'library', paths: pathsFor('library'), title: lb.title, description: lb.lead, body, dark: true, noindex: true });
+}
+
+function library(lang, email, devices = 1) {
   const t = ui[lang], lb = t.library;
   const orders = store.paidOrdersFor(email);
   const bySlug = new Map();
@@ -650,6 +678,15 @@ function library(lang, email, token) {
   const fmtDate = ts => new Date(ts).toLocaleDateString(t.locale);
   const body = `
 ${pageHero({ eyebrow: email, h1: lb.h1, lead: lb.lead, art: false })}
+<section class="section-tight band-paper lib-session">
+  <div class="wrap lib-session-row">
+    <p class="tiny muted">${esc(lb.connected)} ${devices > 1 ? esc(lb.devices.replace('{n}', devices)) : ''}</p>
+    <form method="post" action="/api/library/logout" class="lib-out"><input type="hidden" name="lang" value="${lang}">
+      <button class="link-btn" type="submit">${esc(lb.logout)}</button>
+      ${devices > 1 ? `<button class="link-btn" type="submit" name="all" value="1">${esc(lb.logoutAll)}</button>` : ''}
+    </form>
+  </div>
+</section>
 <section class="section band-paper">
   <div class="wrap">
     ${items.length ? `<div class="library">${items.map(({ o, p }) => {
@@ -663,7 +700,7 @@ ${pageHero({ eyebrow: email, h1: lb.h1, lead: lb.lead, art: false })}
           <p class="muted">${esc(p.subtitle[lang])}</p>
           <p class="tiny muted">${esc(lb.purchased)} ${fmtDate(o.paidAt)} · ${left} ${esc(lb.left)}</p>
           ${langs.length ? `<form class="lib-form" method="get" action="/api/library/download">
-            <input type="hidden" name="t" value="${esc(token)}"><input type="hidden" name="slug" value="${esc(p.slug)}">
+            <input type="hidden" name="ui" value="${lang}"><input type="hidden" name="slug" value="${esc(p.slug)}">
             <fieldset class="lang-pick"><legend>${esc(lb.choose)}</legend>
               <div class="segmented segmented-sm">${store.LANGS.map(l => `<label><input type="radio" name="lang" value="${l}"${l === def ? ' checked' : ''}${langs.includes(l) ? '' : ' disabled'}><span>${esc(lb[l])}${langs.includes(l) ? '' : ` <small>· ${esc(lb.soon)}</small>`}</span></label>`).join('')}</div>
             </fieldset>
@@ -675,8 +712,7 @@ ${pageHero({ eyebrow: email, h1: lb.h1, lead: lb.lead, art: false })}
     <p class="lib-more"><a class="link-arrow" href="${url(lang, 'shop')}">${esc(lb.more)} ${icon('arrow', 'ico-sm')}</a></p>
   </div>
 </section>`;
-  const q = '?t=' + token;
-  return layout({ lang, key: 'library', paths: { pt: url('pt', 'library') + q, en: url('en', 'library') + q }, title: lb.title, description: lb.lead, body, dark: true, noindex: true });
+  return layout({ lang, key: 'library', paths: pathsFor('library'), title: lb.title, description: lb.lead, body, dark: true, noindex: true });
 }
 
 function privacy(lang) {
@@ -692,4 +728,4 @@ function notFound(lang) {
   return layout({ lang, key: '', paths: pathsFor('home'), title: t.title, description: t.text, body, dark: true, noindex: true });
 }
 
-module.exports = { home, guide, benefitsPage, brewing, gear, quizPage, shop, product, order, receive, library, privacy, notFound };
+module.exports = { home, guide, benefitsPage, brewing, gear, quizPage, shop, product, order, receive, library, privacy, notFound, libraryEnter };

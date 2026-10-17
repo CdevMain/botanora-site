@@ -152,7 +152,7 @@ const ui = {
       pay: 'Ir para o pagamento', secure: 'Pagamento processado com segurança. Seus dados não são compartilhados.',
       soonText: 'Este guia está em produção. Entre na lista e seja avisado no lançamento, com condição especial para a lista.',
       related: 'Você também pode gostar', back: 'Voltar à loja',
-      preview: { open: 'Ler uma prévia', eyebrow: 'Prévia gratuita', title: 'Folheie antes de comprar', text: '{n} páginas de amostra do guia, do jeito que você vai receber. Toque numa página para ler em tamanho grande.', page: 'Página {p} de {t}', of: 'de', close: 'Fechar', prev: 'Página anterior', next: 'Próxima página', buy: 'Quero o guia completo', langNote: 'Prévia em português. O guia também está disponível em inglês.' }
+      preview: { open: 'Ler uma prévia', eyebrow: 'Prévia gratuita', title: 'Folheie antes de comprar', text: '{n} páginas de amostra do guia, do jeito que você vai receber. Toque numa página para ler em tamanho grande e use o zoom para ver os detalhes.', page: 'Página {p} de {t}', of: 'de', close: 'Fechar', prev: 'Página anterior', next: 'Próxima página', buy: 'Quero o guia completo', zoom: 'Zoom', zoomIn: 'Aumentar zoom', zoomOut: 'Diminuir zoom', zoomReset: 'Voltar ao tamanho normal', zoomHint: 'Dê dois cliques (ou toque duas vezes) na página para ampliar. Com zoom, arraste para mover. No celular, use dois dedos.', langNote: 'Prévia em português. O guia também está disponível em inglês.' }
     },
     order: {
       title: 'Seu pedido | Botânora', h1: 'Pedido', pending: 'Aguardando pagamento', paid: 'Pagamento confirmado', cancelled: 'Pedido cancelado',
@@ -182,10 +182,10 @@ const ui = {
     },
     receive: {
       title: 'Receber meus guias | Botânora', h1: 'Receba seus guias',
-      lead: 'Comprou um guia Botânora? Informe o e-mail usado na compra e acesse sua biblioteca para baixar os PDFs no idioma que preferir.',
+      lead: 'Comprou um guia Botânora? Informe o e-mail usado na compra para entrar na sua biblioteca e baixar os PDFs no idioma que preferir. Vale para um aparelho novo também: cada aparelho entra uma vez e fica conectado.',
       email: 'E-mail da compra', code: 'Código do pedido', codeHint: 'Está no e-mail de confirmação da compra (ex.: o número do pedido na Cakto).',
       codeOptional: 'opcional se você recebe e-mails da Botânora',
-      submit: 'Acessar meus guias', sent: 'Pronto! Se houver compras neste e-mail, enviamos agora o link da sua biblioteca. Confira também o spam.',
+      submit: 'Acessar meus guias', sent: 'Pronto! Se houver compras neste e-mail, enviamos agora um link para entrar. Ele vale por 24 horas e funciona uma vez. Confira também o spam.',
       needCode: 'Informe também o código do pedido para liberar o acesso.', notFound: 'Não encontramos uma compra paga com esses dados. Confira o e-mail e o código do pedido.',
       steps: [['Compre o guia', 'Na loja Botânora ou pelo checkout da Cakto.'], ['Receba o acesso', 'Um link chega no seu e-mail logo após a confirmação.'], ['Escolha e baixe', 'Na biblioteca, escolha o guia e o idioma do PDF.']],
       help: 'Precisa de ajuda? Escreva para'
@@ -194,6 +194,11 @@ const ui = {
       title: 'Minha biblioteca | Botânora', h1: 'Sua biblioteca', lead: 'Escolha o guia e o idioma do PDF. Você pode baixar quantas vezes precisar dentro do limite do pedido.',
       choose: 'Idioma do PDF', download: 'Baixar PDF', pt: 'Português', en: 'English', soon: 'Em produção',
       onlyOne: 'Disponível apenas em', expired: 'Este link expirou ou é inválido. Peça um novo abaixo.',
+      used: 'Este link já foi usado. Para entrar neste aparelho, peça um link novo abaixo: ele chega no e-mail da compra.',
+      out: 'Você saiu da biblioteca neste aparelho.', login: 'Entre com o e-mail da compra para baixar seus guias.',
+      enterH1: 'Entrar na sua biblioteca', enterLead: 'Acesso para {email}. Confirme para conectar este aparelho e baixar seus guias.',
+      enterBtn: 'Entrar neste aparelho', enterNote: 'Este link funciona uma vez. Depois, este aparelho fica conectado e você volta direto pela página Receber meus guias. Para usar em outro aparelho, peça um novo link por lá.',
+      connected: 'Este aparelho está conectado à sua biblioteca.', devices: '({n} aparelhos conectados)', logout: 'Sair deste aparelho', logoutAll: 'Sair de todos os aparelhos',
       empty: 'Nenhum guia pago encontrado para este e-mail.', purchased: 'Comprado em', left: 'downloads restantes', more: 'Ver outros guias'
     },
     notFound: { title: 'Página não encontrada | Botânora', h1: 'Esta folha não está aqui', text: 'A página que você procurou não existe ou mudou de lugar.', cta: 'Voltar ao início' },
@@ -323,7 +328,7 @@ const ui = {
       pay: 'Continue to payment', secure: 'Payment processed securely. Your data is never shared.',
       soonText: 'This guide is in production. Join the list to hear at launch, with a special offer for the list.',
       related: 'You may also like', back: 'Back to the shop',
-      preview: { open: 'Read a preview', eyebrow: 'Free preview', title: 'Look inside before you buy', text: '{n} sample pages from the guide, exactly as you will receive it. Tap a page to read it full size.', page: 'Page {p} of {t}', of: 'of', close: 'Close', prev: 'Previous page', next: 'Next page', buy: 'Get the full guide', langNote: 'Preview in English. The guide is also available in Portuguese.' }
+      preview: { open: 'Read a preview', eyebrow: 'Free preview', title: 'Look inside before you buy', text: '{n} sample pages from the guide, exactly as you will receive it. Tap a page to read it full size and zoom in to see the details.', page: 'Page {p} of {t}', of: 'of', close: 'Close', prev: 'Previous page', next: 'Next page', buy: 'Get the full guide', zoom: 'Zoom', zoomIn: 'Zoom in', zoomOut: 'Zoom out', zoomReset: 'Back to normal size', zoomHint: 'Double-click (or double-tap) the page to zoom in. When zoomed, drag to move around. On a phone, pinch with two fingers.', langNote: 'Preview in English. The guide is also available in Portuguese.' }
     },
     order: {
       title: 'Your order | Botânora', h1: 'Order', pending: 'Awaiting payment', paid: 'Payment confirmed', cancelled: 'Order cancelled',
@@ -353,10 +358,10 @@ const ui = {
     },
     receive: {
       title: 'Get my guides | Botânora', h1: 'Get your guides',
-      lead: 'Bought a Botânora guide? Enter the email you used at checkout and open your library to download the PDFs in your preferred language.',
+      lead: 'Bought a Botânora guide? Enter the email you used at checkout to open your library and download the PDFs in your preferred language. It works on a new device too: each device signs in once and stays connected.',
       email: 'Purchase email', code: 'Order code', codeHint: 'It is in your purchase confirmation email (e.g. the Cakto order number).',
       codeOptional: 'optional if you receive Botânora emails',
-      submit: 'Access my guides', sent: "Done! If this email has purchases, we've just sent your library link. Check your spam folder too.",
+      submit: 'Access my guides', sent: "Done! If this email has purchases, we've just sent you a sign-in link. It is valid for 24 hours and works once. Check your spam folder too.",
       needCode: 'Please also enter your order code to unlock access.', notFound: "We couldn't find a paid purchase with these details. Check the email and order code.",
       steps: [['Buy the guide', 'In the Botânora shop or through Cakto checkout.'], ['Get access', 'A link arrives in your inbox right after payment.'], ['Choose and download', 'In your library, pick the guide and the PDF language.']],
       help: 'Need help? Write to'
@@ -365,6 +370,11 @@ const ui = {
       title: 'My library | Botânora', h1: 'Your library', lead: 'Pick a guide and the PDF language. You can download as often as you need within your order limit.',
       choose: 'PDF language', download: 'Download PDF', pt: 'Português', en: 'English', soon: 'In production',
       onlyOne: 'Available only in', expired: 'This link has expired or is invalid. Request a new one below.',
+      used: 'This link has already been used. To sign in on this device, request a new link below: it goes to your purchase email.',
+      out: 'You have signed out of the library on this device.', login: 'Sign in with your purchase email to download your guides.',
+      enterH1: 'Sign in to your library', enterLead: 'Access for {email}. Confirm to connect this device and download your guides.',
+      enterBtn: 'Sign in on this device', enterNote: 'This link works once. After that, this device stays connected and you can come straight back through the Get my guides page. To use another device, request a new link there.',
+      connected: 'This device is connected to your library.', devices: '({n} devices connected)', logout: 'Sign out of this device', logoutAll: 'Sign out of all devices',
       empty: 'No paid guides found for this email.', purchased: 'Purchased on', left: 'downloads left', more: 'See other guides'
     },
     notFound: { title: 'Page not found | Botânora', h1: 'This leaf is not here', text: 'The page you were looking for does not exist or has moved.', cta: 'Back to home' },
