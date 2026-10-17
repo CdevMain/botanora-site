@@ -11,6 +11,7 @@ const store = require('./src/store');
 const analytics = require('./src/analytics');
 const auth = require('./src/auth');
 const { icon: svgIcon } = require('./src/views/svg');
+const pantry = require('./src/pantry');
 const affImage = require('./src/affimage');
 const access = require('./src/access');
 const mailer = require('./src/mailer');
@@ -290,6 +291,17 @@ async function apiPublic(req, res, pathname, ip, query) {
     if (!p || !EMAIL_RE.test(b.email || '')) return json(req, res, 400, { error: 'invalid' });
     store.addWaitlist(b.email.trim(), p.slug, LANGS.includes(b.lang) ? b.lang : 'pt');
     return json(req, res, 200, { ok: true });
+  }
+
+  // "Com o que você tem": ingredientes marcados -> melhor receita grátis + chamadas dos guias
+  if (pathname === '/api/pantry' && req.method === 'POST') {
+    if (!rateLimit(ip, 'pantry', 60, 60000)) return json(req, res, 429, { error: 'rate' });
+    const b = await readJson(req, 4096);
+    const lang = LANGS.includes(b.lang) ? b.lang : 'pt';
+    const have = Array.isArray(b.have) ? b.have.slice(0, 60).map(x => String(x).slice(0, 40)) : [];
+    const out = pantry.suggest(have, lang, { products: store.db.products.filter(p => p.status !== 'hidden'), url });
+    if (have.length) analytics.trackEvent(req, ip, 'pantry', { n: String(have.length), best: out.best ? out.best.slug : '', path: b.path || '' });
+    return json(req, res, 200, out);
   }
 
   // Página "Receber": e-mail -> código de 6 dígitos no e-mail -> biblioteca.

@@ -1,6 +1,6 @@
 # Guia interno: o que cada guia Botânora já cobre
 
-Documento interno, gerado automaticamente em 16/10/2026 a partir do código dos guias (`tools/guias/pdf`). Não é vendido nem publicado no site.
+Documento interno, gerado automaticamente em 17/10/2026 a partir do código dos guias (`tools/guias/pdf`). Não é vendido nem publicado no site.
 
 ## Como usar antes de criar um guia novo
 
@@ -580,3 +580,22 @@ Quantas receitas usam cada ingrediente e em quais guias. Útil para achar o que 
 - Panificação e confeitaria com chá: pães, bolos de festa, macarons e cremes.
 - Pu-erh e chás envelhecidos: como guardar, envelhecer e degustar.
 - Calendário do chá: uma receita por semana, acompanhando as estações e as festas brasileiras.
+
+## Receitas de despensa do site (grátis)
+
+14 receitas criadas para a ferramenta "Com o que você tem" da página Receitas. São públicas e não estão em nenhum guia: um guia novo não deve repeti-las.
+
+- **Chá Preto com Laranja e Cravo**: água, chá preto, casca de laranja, sem a parte branca, cravos-da-índia, mel (opcional)
+- **Verde Gelado com Abacaxi e Hortelã**: água a 80 °C, chá verde, abacaxi em cubos, água gelada, hortelã, mel, gelo
+- **Camomila com Laranja e Baunilha**: água fervente, flores de camomila, casca de laranja, extrato de baunilha, mel
+- **Chá de Casca de Abacaxi com Canela e Gengibre**: cascas de abacaxi bem lavadas, água, pau de canela, gengibre, açúcar ou mel
+- **Chá de Canela e Cravo**: água, paus de canela, cravos-da-índia, casca de limão (opcional), mel
+- **Chá com Leite à Inglesa**: água fervente, chá preto, leite, açúcar (opcional)
+- **Mate Gelado com Limão à Carioca**: água, chá-mate tostado, açúcar, limões (suco), gelo
+- **Rooibos Gelado de Laranja**: água fervente, rooibos, suco de laranja, mel, gelo e rodelas de laranja
+- **Limonada Rosa de Hibisco**: água fervente, flor de hibisco seca, açúcar, água gelada, limões (suco), gelo e folhas de hortelã
+- **Capim-cidreira com Maçã e Canela**: água, maçã em lâminas, pau de canela, capim-cidreira, mel
+- **Erva-doce com Laranja**: água fervente, sementes de erva-doce, casca de laranja, mel
+- **Leite Dourado com Chá Preto**: água, gengibre, chá preto, leite (ou bebida vegetal), cúrcuma em pó, canela em pó, pimenta-do-reino, mel
+- **Mingau de Aveia no Rooibos com Banana**: água fervente, rooibos, aveia em flocos, leite, banana madura, canela em pó e mel
+- **Picolé de Chá com Leite Condensado**: água fervente, chá preto, leite, leite condensado, canela em pó

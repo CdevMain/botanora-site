@@ -1,0 +1,2208 @@
+[
+{
+"name": {
+"pt": "Preto Imperial de Especiarias",
+"en": "Imperial Spiced Black"
+},
+"guideNumber": 1,
+"free": true,
+"iced": false,
+"items": [
+"água",
+"chá preto",
+"canela em casca",
+"anis-estrelado",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Preto & Maçã Tostada",
+"en": "Black Tea & Toasted Apple"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"maçã em lâminas finas",
+"canela em pó",
+"água",
+"chá preto",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Toddy do Barista",
+"en": "Barista's Toddy"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"chá preto",
+"gengibre ralado",
+"canela em casca",
+"suco de limão",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Rubi Escuro",
+"en": "Dark Ruby"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"chá preto",
+"flor de hibisco",
+"casca de limão",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Preto Citrino com Capim-Cidreira",
+"en": "Citrus Black with Lemongrass"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"chá preto",
+"capim-cidreira seco",
+"limão (só as raspas)",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Preto Gelado de Limão & Mel",
+"en": "Iced Black with Lime & Honey"
+},
+"guideNumber": 1,
+"free": false,
+"iced": true,
+"items": [
+"chá preto",
+"água fervente",
+"mel",
+"suco de limão",
+"gelo",
+"limão"
+]
+},
+{
+"name": {
+"pt": "Anisado Duplo",
+"en": "Double Anise"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"chá preto",
+"chá de erva-doce",
+"anis-estrelado",
+"mel (opcional)"
+]
+},
+{
+"name": {
+"pt": "Torta de Maçã no Bule",
+"en": "Apple Pie in a Pot"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"rooibos moon",
+"maçã em cubos",
+"canela em casca",
+"canela em pó",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Rooibos Âmbar",
+"en": "Amber Rooibos"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"mel",
+"água",
+"rooibos moon",
+"casca de limão"
+]
+},
+{
+"name": {
+"pt": "Crepúsculo",
+"en": "Dusk"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água fervente",
+"rooibos moon",
+"rosehip, hibiscus & cherry",
+"mel",
+"maçã"
+]
+},
+{
+"name": {
+"pt": "Brasa",
+"en": "Ember"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"rooibos moon",
+"gengibre",
+"mel",
+"canela em pó"
+]
+},
+{
+"name": {
+"pt": "Rooibos Estrelado",
+"en": "Starry Rooibos"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"rooibos moon",
+"chá de erva-doce",
+"anis-estrelado",
+"mel (opcional)"
+]
+},
+{
+"name": {
+"pt": "Cold Brew de Rooibos & Maçã",
+"en": "Rooibos & Apple Cold Brew"
+},
+"guideNumber": 1,
+"free": false,
+"iced": true,
+"items": [
+"rooibos moon",
+"água fria filtrada",
+"maçã em lâminas",
+"canela em casca",
+"mel",
+"gelo"
+]
+},
+{
+"name": {
+"pt": "Lua Cheia",
+"en": "Full Moon"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"rooibos moon",
+"flores de camomila",
+"mel",
+"raspas de limão"
+]
+},
+{
+"name": {
+"pt": "Camomila Dourada",
+"en": "Golden Chamomile"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"flores de camomila",
+"mel",
+"limão (só as raspas)"
+]
+},
+{
+"name": {
+"pt": "Pomar ao Entardecer",
+"en": "Orchard at Sunset"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"maçã em lâminas",
+"flores de camomila",
+"canela em pó",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Brisa",
+"en": "Breeze"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"capim-cidreira seco",
+"gengibre",
+"mel",
+"limão"
+]
+},
+{
+"name": {
+"pt": "Jardim Fresco",
+"en": "Fresh Garden"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água fervente",
+"capim-cidreira seco",
+"chá de hortelã",
+"mel",
+"casca de limão"
+]
+},
+{
+"name": {
+"pt": "Trio Sereno",
+"en": "Serene Trio"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"flores de camomila",
+"capim-cidreira seco",
+"chá de erva-doce",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Camomila & Limão Tostado",
+"en": "Chamomile & Charred Lime"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"camomile & lemongrass",
+"limão",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Digestivo do Chef",
+"en": "Chef's Digestif"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"chá de hortelã",
+"chá de erva-doce",
+"anis-estrelado",
+"mel (opcional)"
+]
+},
+{
+"name": {
+"pt": "Hibisco Quente Especiado",
+"en": "Spiced Hot Hibiscus"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"flor de hibisco",
+"maçã em lâminas",
+"canela em casca",
+"anis-estrelado",
+"casca de limão",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Sorrel Caribenho",
+"en": "Caribbean Sorrel"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"flor de hibisco",
+"gengibre ralado",
+"canela em casca",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Rosehip Cherry & Maçã Caramelizada",
+"en": "Rosehip Cherry & Caramelised Apple"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"rosehip, hibiscus & cherry",
+"maçã em cubos pequenos",
+"mel",
+"canela em pó"
+]
+},
+{
+"name": {
+"pt": "Rubi Mentolado",
+"en": "Minted Ruby"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água fervente",
+"chá de hibisco",
+"chá de hortelã",
+"mel",
+"limão"
+]
+},
+{
+"name": {
+"pt": "Água Fresca de Hibisco",
+"en": "Hibiscus Agua Fresca"
+},
+"guideNumber": 1,
+"free": true,
+"iced": true,
+"items": [
+"flor de hibisco",
+"água fervente",
+"água gelada",
+"mel",
+"limão (suco)",
+"gelo e lâminas de maçã"
+]
+},
+{
+"name": {
+"pt": "Rosa do Deserto",
+"en": "Desert Rose"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água fervente",
+"flor de hibisco",
+"capim-cidreira seco",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Rosé da Tarde",
+"en": "Afternoon Rosé"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"rosehip, hibiscus & cherry",
+"flores de camomila",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Elixir de Gengibre, Limão & Mel",
+"en": "Ginger, Lime & Honey Elixir"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"gengibre ralado",
+"limão (suco)",
+"mel",
+"limão"
+]
+},
+{
+"name": {
+"pt": "Cidra Quente sem Álcool",
+"en": "Alcohol-free Hot Cider"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"maçã em cubos",
+"canela em casca",
+"anis-estrelado",
+"casca de limão",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Tisana das Estrelas",
+"en": "Star Tisane"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"anis-estrelado",
+"canela em casca",
+"casca de limão",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Fogo & Gelo",
+"en": "Fire & Ice"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"gengibre",
+"chá de hortelã",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Tônico Gelado de Gengibre",
+"en": "Iced Ginger Tonic"
+},
+"guideNumber": 1,
+"free": false,
+"iced": true,
+"items": [
+"água",
+"gengibre ralado",
+"mel",
+"limão (suco)",
+"água gelada",
+"gelo"
+]
+},
+{
+"name": {
+"pt": "Pomar Cítrico",
+"en": "Citrus Orchard"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"maçã em lâminas",
+"gengibre",
+"capim-cidreira seco",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Chai de Panela",
+"en": "Stovetop Chai"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"chá preto",
+"canela em casca",
+"anis-estrelado",
+"gengibre ralado",
+"leite integral",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Teh Tarik do Sul",
+"en": "Southern Teh Tarik"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"chá preto",
+"água fervente",
+"leite integral",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Rooibos Moon Latte",
+"en": "Rooibos Moon Latte"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água",
+"rooibos moon",
+"leite integral",
+"mel",
+"canela em pó"
+]
+},
+{
+"name": {
+"pt": "Leite Lunar de Camomila",
+"en": "Chamomile Moon Milk"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"leite integral",
+"água",
+"flores de camomila",
+"anis-estrelado (opcional)",
+"mel",
+"canela em pó"
+]
+},
+{
+"name": {
+"pt": "Névoa de Capim-Cidreira",
+"en": "Lemongrass Fog"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"água fervente",
+"chá preto",
+"capim-cidreira seco",
+"leite integral",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Torta de Maçã Cremosa",
+"en": "Creamy Apple Pie"
+},
+"guideNumber": 1,
+"free": false,
+"iced": false,
+"items": [
+"maçã em cubos pequenos",
+"mel",
+"água",
+"canela em casca",
+"rooibos moon",
+"leite integral",
+"canela em pó"
+]
+},
+{
+"name": {
+"pt": "Bai Mu Dan na Gaiwan",
+"en": "Bai Mu Dan in a Gaiwan"
+},
+"guideNumber": 2,
+"free": false,
+"iced": false,
+"items": [
+"Bai Mu Dan",
+"água a 85 °C, por rodada"
+]
+},
+{
+"name": {
+"pt": "Shou Mei Cozido",
+"en": "Simmered Shou Mei"
+},
+"guideNumber": 2,
+"free": false,
+"iced": false,
+"items": [
+"Shou Mei ou branco envelhecido",
+"água",
+"tâmaras secas (opcional)"
+]
+},
+{
+"name": {
+"pt": "Long Jing no Copo",
+"en": "Long Jing in a Glass"
+},
+"guideNumber": 2,
+"free": true,
+"iced": false,
+"items": [
+"Long Jing (Poço do Dragão)",
+"água a 80 °C"
+]
+},
+{
+"name": {
+"pt": "Sencha no Kyusu",
+"en": "Sencha in a Kyusu"
+},
+"guideNumber": 2,
+"free": false,
+"iced": false,
+"items": [
+"sencha",
+"água a 70 °C"
+]
+},
+{
+"name": {
+"pt": "Chá Amarelo na Gaiwan",
+"en": "Yellow Tea in a Gaiwan"
+},
+"guideNumber": 2,
+"free": false,
+"iced": false,
+"items": [
+"chá amarelo (Huoshan Huangya, Junshan Yinzhen)",
+"água a 80 °C, por rodada"
+]
+},
+{
+"name": {
+"pt": "Tie Guan Yin Gongfu",
+"en": "Gongfu Tie Guan Yin"
+},
+"guideNumber": 2,
+"free": false,
+"iced": false,
+"items": [
+"Tie Guan Yin",
+"água a 95 °C, por rodada"
+]
+},
+{
+"name": {
+"pt": "Bubble Tea Caseiro",
+"en": "Homemade Bubble Tea"
+},
+"guideNumber": 2,
+"free": true,
+"iced": true,
+"items": [
+"oolong tostado ou Assam",
+"água fervente",
+"pérolas de tapioca",
+"açúcar mascavo",
+"leite"
+]
+},
+{
+"name": {
+"pt": "Darjeeling de Primavera",
+"en": "Spring Darjeeling"
+},
+"guideNumber": 2,
+"free": false,
+"iced": false,
+"items": [
+"Darjeeling first flush",
+"água a 90 °C"
+]
+},
+{
+"name": {
+"pt": "Po Cha: Chá Tibetano com Manteiga",
+"en": "Po Cha: Tibetan Butter Tea"
+},
+"guideNumber": 2,
+"free": false,
+"iced": false,
+"items": [
+"pu-erh shou ou outro chá escuro prensado",
+"água",
+"manteiga sem sal",
+"leite",
+"sal"
+]
+},
+{
+"name": {
+"pt": "London Fog",
+"en": "London Fog"
+},
+"guideNumber": 2,
+"free": false,
+"iced": false,
+"items": [
+"Earl Grey",
+"água fervente",
+"leite",
+"xarope de baunilha ou mel"
+]
+},
+{
+"name": {
+"pt": "Pu-erh com Casca de Tangerina",
+"en": "Pu-erh with Tangerine Peel"
+},
+"guideNumber": 2,
+"free": false,
+"iced": false,
+"items": [
+"pu-erh shou",
+"casca de tangerina seca (chenpi)",
+"água fervente, por rodada"
+]
+},
+{
+"name": {
+"pt": "Zavarka à Russa",
+"en": "Russian Zavarka"
+},
+"guideNumber": 2,
+"free": false,
+"iced": false,
+"items": [
+"chá preto (Keemun, Ceylon ou blend russo)",
+"água fervente",
+"água quente para diluir, limão, geleia"
+]
+},
+{
+"name": {
+"pt": "Leite de Aveia, Tâmara e Canela",
+"en": "Oat Milk with Date and Cinnamon"
+},
+"guideNumber": 3,
+"free": false,
+"iced": false,
+"items": [
+"bebida de aveia",
+"tâmaras sem caroço",
+"canela",
+"sal"
+]
+},
+{
+"name": {
+"pt": "Leite de Amêndoas, Baunilha e Noz-moscada",
+"en": "Almond Milk with Vanilla and Nutmeg"
+},
+"guideNumber": 3,
+"free": false,
+"iced": false,
+"items": [
+"leite de amêndoas",
+"extrato de baunilha",
+"noz-moscada ralada",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Chá de Banana com Canela",
+"en": "Banana and Cinnamon Tea"
+},
+"guideNumber": 3,
+"free": true,
+"iced": false,
+"items": [
+"banana orgânica madura, com casca, bem lavada",
+"água",
+"pau de canela"
+]
+},
+{
+"name": {
+"pt": "Melissa Morna com Limão",
+"en": "Warm Lemon Balm and Lemon"
+},
+"guideNumber": 3,
+"free": true,
+"iced": false,
+"items": [
+"melissa fresca (ou 2 c. sopa seca)",
+"lavanda",
+"água a 90 °C",
+"limão-siciliano"
+]
+},
+{
+"name": {
+"pt": "Shot de Matcha com Gengibre",
+"en": "Matcha Ginger Shot"
+},
+"guideNumber": 4,
+"free": false,
+"iced": false,
+"items": [
+"matcha",
+"água a 75 °C",
+"suco de gengibre fresco (ralado e espremido)",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Lassi de Matcha",
+"en": "Matcha Lassi"
+},
+"guideNumber": 4,
+"free": false,
+"iced": true,
+"items": [
+"iogurte natural integral",
+"água gelada",
+"matcha",
+"mel",
+"cardamomo em pó"
+]
+},
+{
+"name": {
+"pt": "Gyokuro no Gelo",
+"en": "Ice-brewed Gyokuro"
+},
+"guideNumber": 4,
+"free": true,
+"iced": true,
+"items": [
+"gyokuro ou sencha de sombra",
+"cubos de gelo de água filtrada"
+]
+},
+{
+"name": {
+"pt": "Verde, Limão & Gengibre",
+"en": "Green, Lime & Ginger"
+},
+"guideNumber": 4,
+"free": false,
+"iced": false,
+"items": [
+"gengibre",
+"água",
+"chá verde chinês",
+"casca de limão"
+]
+},
+{
+"name": {
+"pt": "Branco da Tarde com Hortelã",
+"en": "Afternoon White with Mint"
+},
+"guideNumber": 4,
+"free": false,
+"iced": false,
+"items": [
+"Shou Mei ou Bai Mu Dan",
+"hortelã fresca",
+"água a 85 °C"
+]
+},
+{
+"name": {
+"pt": "Tererê de Laranja e Alecrim",
+"en": "Orange & Rosemary Tereré"
+},
+"guideNumber": 4,
+"free": false,
+"iced": true,
+"items": [
+"erva-mate para tererê",
+"suco de laranja natural",
+"água gelada",
+"alecrim"
+]
+},
+{
+"name": {
+"pt": "Verde com Guaraná e Limão",
+"en": "Green Tea with Guaraná and Lime"
+},
+"guideNumber": 4,
+"free": false,
+"iced": true,
+"items": [
+"chá verde frio (cold brew ou flash)",
+"guaraná em pó",
+"limão (suco)",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Mocha de Chá Preto",
+"en": "Black Tea Mocha"
+},
+"guideNumber": 4,
+"free": true,
+"iced": false,
+"items": [
+"chá preto Assam",
+"água fervente",
+"cacau em pó 100%",
+"leite",
+"açúcar mascavo"
+]
+},
+{
+"name": {
+"pt": "Oolong com Laranja Chamuscada",
+"en": "Oolong with Charred Orange"
+},
+"guideNumber": 4,
+"free": false,
+"iced": false,
+"items": [
+"oolong tostado (Dong Ding, Da Hong Pao)",
+"rodelas grossas de laranja",
+"água a 95 °C"
+]
+},
+{
+"name": {
+"pt": "Genmaicha de Meio da Tarde",
+"en": "Mid-afternoon Genmaicha"
+},
+"guideNumber": 4,
+"free": false,
+"iced": false,
+"items": [
+"genmaicha",
+"água a 85 °C"
+]
+},
+{
+"name": {
+"pt": "Hojicha Latte",
+"en": "Hojicha Latte"
+},
+"guideNumber": 4,
+"free": false,
+"iced": false,
+"items": [
+"hojicha em folhas",
+"água fervente",
+"leite",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Verde & Água de Coco",
+"en": "Green Tea & Coconut Water"
+},
+"guideNumber": 4,
+"free": false,
+"iced": true,
+"items": [
+"chá verde",
+"água fria",
+"água de coco gelada",
+"limão em rodelas"
+]
+},
+{
+"name": {
+"pt": "Mate Gelado de Coco",
+"en": "Iced Coconut Mate"
+},
+"guideNumber": 4,
+"free": false,
+"iced": true,
+"items": [
+"erva-mate",
+"água fria",
+"água de coco",
+"coco ralado tostado (opcional)"
+]
+},
+{
+"name": {
+"pt": "Verde & Cacau com Pimenta",
+"en": "Green Tea, Cacao & Chilli"
+},
+"guideNumber": 4,
+"free": false,
+"iced": false,
+"items": [
+"chá verde chinês",
+"nibs de cacau",
+"pimenta-calabresa ou caiena",
+"água a 80 °C"
+]
+},
+{
+"name": {
+"pt": "Ceylon com Cardamomo e Mel",
+"en": "Ceylon with Cardamom and Honey"
+},
+"guideNumber": 4,
+"free": false,
+"iced": false,
+"items": [
+"chá preto Ceylon",
+"bagas de cardamomo amassadas",
+"água a 95 °C",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Kabusecha de Concentração",
+"en": "Concentration Kabusecha"
+},
+"guideNumber": 4,
+"free": false,
+"iced": false,
+"items": [
+"kabusecha ou gyokuro",
+"água a 60 °C"
+]
+},
+{
+"name": {
+"pt": "Kukicha com Maçã Verde",
+"en": "Kukicha with Green Apple"
+},
+"guideNumber": 4,
+"free": false,
+"iced": false,
+"items": [
+"kukicha (chá de talos)",
+"maçã verde em lâminas finas",
+"água a 85 °C"
+]
+},
+{
+"name": {
+"pt": "Rooibos & Hortelã: a Última Xícara",
+"en": "Rooibos & Mint: the Last Cup"
+},
+"guideNumber": 4,
+"free": false,
+"iced": false,
+"items": [
+"rooibos",
+"hortelã",
+"água fervente"
+]
+},
+{
+"name": {
+"pt": "Chá Gelado de Pêssego de Verdade",
+"en": "Real Peach Iced Tea"
+},
+"guideNumber": 5,
+"free": true,
+"iced": true,
+"items": [
+"pêssegos maduros (ou 4 metades em calda, escorridas)",
+"açúcar",
+"água",
+"chá preto",
+"água fervente",
+"gelo",
+"limão (suco)"
+]
+},
+{
+"name": {
+"pt": "Limonada Suíça de Chá Verde",
+"en": "Green Tea Brazilian Lemonade"
+},
+"guideNumber": 5,
+"free": true,
+"iced": true,
+"items": [
+"limões-taiti com casca, lavados",
+"cold brew de chá verde",
+"leite condensado ou xarope",
+"gelo"
+]
+},
+{
+"name": {
+"pt": "Ponche de Hibisco e Gengibre",
+"en": "Hibiscus & Ginger Punch"
+},
+"guideNumber": 5,
+"free": false,
+"iced": true,
+"items": [
+"hibisco",
+"gengibre em lâminas",
+"água",
+"xarope simples",
+"laranjas em rodelas",
+"água com gás gelada"
+]
+},
+{
+"name": {
+"pt": "Earl Grey Gelado com Lavanda",
+"en": "Iced Earl Grey with Lavender"
+},
+"guideNumber": 5,
+"free": false,
+"iced": true,
+"items": [
+"Earl Grey",
+"lavanda culinária",
+"água fria",
+"xarope de mel"
+]
+},
+{
+"name": {
+"pt": "Granita de Chá Preto e Limão",
+"en": "Black Tea & Lemon Granita"
+},
+"guideNumber": 5,
+"free": false,
+"iced": true,
+"items": [
+"chá preto forte",
+"açúcar",
+"limão-siciliano (suco e raspas)"
+]
+},
+{
+"name": {
+"pt": "Picolé de Chá Verde e Coco",
+"en": "Green Tea & Coconut Ice Pops"
+},
+"guideNumber": 5,
+"free": false,
+"iced": true,
+"items": [
+"cold brew verde concentrado",
+"leite de coco",
+"açúcar",
+"coco ralado"
+]
+},
+{
+"name": {
+"pt": "Smoothie Verde Tropical",
+"en": "Tropical Green Smoothie"
+},
+"guideNumber": 5,
+"free": false,
+"iced": true,
+"items": [
+"cold brew de chá verde",
+"abacaxi congelado em cubos",
+"hortelã",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Affogato de Chá Preto",
+"en": "Black Tea Affogato"
+},
+"guideNumber": 5,
+"free": false,
+"iced": false,
+"items": [
+"sorvete de creme",
+"chá preto Assam ou Keemun",
+"água fervente",
+"açúcar mascavo"
+]
+},
+{
+"name": {
+"pt": "Usucha",
+"en": "Usucha"
+},
+"guideNumber": 6,
+"free": true,
+"iced": false,
+"items": [
+"matcha cerimonial (2 chashaku ou 1 c. chá rasa)",
+"água a 75–80 °C"
+]
+},
+{
+"name": {
+"pt": "Koicha",
+"en": "Koicha"
+},
+"guideNumber": 6,
+"free": false,
+"iced": false,
+"items": [
+"matcha cerimonial de alta qualidade",
+"água a 75 °C"
+]
+},
+{
+"name": {
+"pt": "Matcha Latte Clássico",
+"en": "Classic Matcha Latte"
+},
+"guideNumber": 6,
+"free": false,
+"iced": false,
+"items": [
+"matcha",
+"água a 75 °C",
+"leite integral",
+"xarope simples ou mel (opcional)"
+]
+},
+{
+"name": {
+"pt": "Matcha Gelado em Camadas",
+"en": "Layered Iced Matcha"
+},
+"guideNumber": 6,
+"free": false,
+"iced": true,
+"items": [
+"matcha",
+"água fria",
+"leite gelado",
+"xarope",
+"gelo"
+]
+},
+{
+"name": {
+"pt": "Matcha de Morango",
+"en": "Strawberry Matcha"
+},
+"guideNumber": 6,
+"free": false,
+"iced": true,
+"items": [
+"morangos maduros",
+"açúcar ou mel",
+"leite gelado",
+"matcha",
+"água a 75 °C"
+]
+},
+{
+"name": {
+"pt": "Matcha Tônica",
+"en": "Matcha Tonic"
+},
+"guideNumber": 6,
+"free": false,
+"iced": true,
+"items": [
+"matcha",
+"água a 75 °C",
+"água tônica gelada",
+"casca de limão-siciliano"
+]
+},
+{
+"name": {
+"pt": "Matcha com Laranja",
+"en": "Orange Matcha"
+},
+"guideNumber": 6,
+"free": false,
+"iced": true,
+"items": [
+"matcha",
+"água fria",
+"suco de laranja natural coado"
+]
+},
+{
+"name": {
+"pt": "Matcha Coco",
+"en": "Coconut Matcha"
+},
+"guideNumber": 6,
+"free": false,
+"iced": true,
+"items": [
+"matcha",
+"água a 75 °C",
+"água de coco gelada",
+"leite de coco"
+]
+},
+{
+"name": {
+"pt": "Matcha Branco com Baunilha",
+"en": "Vanilla White Matcha"
+},
+"guideNumber": 6,
+"free": false,
+"iced": false,
+"items": [
+"matcha",
+"água a 75 °C",
+"leite",
+"chocolate branco picado",
+"extrato de baunilha"
+]
+},
+{
+"name": {
+"pt": "Matcha Especiado",
+"en": "Spiced Matcha"
+},
+"guideNumber": 6,
+"free": false,
+"iced": false,
+"items": [
+"leite",
+"pau de canela pequeno",
+"bagas de cardamomo amassadas",
+"gengibre",
+"matcha",
+"água a 75 °C",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Smoothie Verde",
+"en": "Green Smoothie"
+},
+"guideNumber": 6,
+"free": false,
+"iced": true,
+"items": [
+"banana congelada",
+"espinafre baby",
+"leite ou bebida vegetal",
+"matcha culinário",
+"aveia em flocos"
+]
+},
+{
+"name": {
+"pt": "Affogato de Matcha",
+"en": "Matcha Affogato"
+},
+"guideNumber": 6,
+"free": false,
+"iced": false,
+"items": [
+"sorvete de creme ou baunilha",
+"matcha",
+"água a 75 °C"
+]
+},
+{
+"name": {
+"pt": "Overnight Oats de Matcha",
+"en": "Matcha Overnight Oats"
+},
+"guideNumber": 6,
+"free": false,
+"iced": true,
+"items": [
+"aveia em flocos",
+"leite",
+"iogurte natural",
+"matcha culinário",
+"mel",
+"chia"
+]
+},
+{
+"name": {
+"pt": "Biscoito Amanteigado de Matcha",
+"en": "Matcha Shortbread"
+},
+"guideNumber": 6,
+"free": false,
+"iced": false,
+"items": [
+"manteiga sem sal em temperatura ambiente",
+"açúcar de confeiteiro",
+"farinha de trigo",
+"matcha culinário peneirado",
+"sal"
+]
+},
+{
+"name": {
+"pt": "Brigadeiro de Matcha",
+"en": "Matcha Brigadeiro"
+},
+"guideNumber": 6,
+"free": true,
+"iced": false,
+"items": [
+"leite condensado (395 g)",
+"manteiga",
+"matcha culinário peneirado",
+"chocolate branco picado"
+]
+},
+{
+"name": {
+"pt": "Panquecas de Matcha",
+"en": "Matcha Pancakes"
+},
+"guideNumber": 6,
+"free": false,
+"iced": false,
+"items": [
+"farinha de trigo",
+"matcha culinário",
+"açúcar",
+"fermento químico",
+"ovo",
+"leite",
+"manteiga derretida"
+]
+},
+{
+"name": {
+"pt": "Tiramisù de Matcha",
+"en": "Matcha Tiramisù"
+},
+"guideNumber": 6,
+"free": false,
+"iced": true,
+"items": [
+"matcha",
+"água a 75 °C",
+"mascarpone (ou cream cheese)",
+"creme de leite fresco gelado",
+"açúcar de confeiteiro",
+"biscoito champanhe"
+]
+},
+{
+"name": {
+"pt": "Sorvete de Matcha sem Máquina",
+"en": "No-churn Matcha Ice Cream"
+},
+"guideNumber": 6,
+"free": false,
+"iced": true,
+"items": [
+"creme de leite fresco gelado",
+"leite condensado",
+"matcha culinário",
+"sal"
+]
+},
+{
+"name": {
+"pt": "Capim-cidreira & Maracujá",
+"en": "Lemongrass & Passion Fruit"
+},
+"guideNumber": 7,
+"free": true,
+"iced": false,
+"items": [
+"capim-cidreira fresco",
+"maracujá (polpa com sementes)",
+"água a 95 °C",
+"mel"
+]
+},
+{
+"name": {
+"pt": "Chá de Hortelã à Marroquina",
+"en": "Moroccan Mint Tea"
+},
+"guideNumber": 7,
+"free": false,
+"iced": false,
+"items": [
+"chá verde gunpowder",
+"hortelã fresca",
+"água fervente",
+"açúcar (opcional)"
+]
+},
+{
+"name": {
+"pt": "Mel de Lavanda e Limão",
+"en": "Lavender & Lemon Honey"
+},
+"guideNumber": 7,
+"free": false,
+"iced": false,
+"items": [
+"mel líquido",
+"lavanda seca culinária",
+"casca de limão-siciliano em tiras, seca por 1 dia"
+]
+},
+{
+"name": {
+"pt": "Sal de Ervas do Quintal",
+"en": "Backyard Herb Salt"
+},
+"guideNumber": 7,
+"free": true,
+"iced": false,
+"items": [
+"folhas frescas de alecrim, tomilho e sálvia",
+"dentes de alho",
+"sal grosso",
+"raspas de limão"
+]
+},
+{
+"name": {
+"pt": "Xarope de Capim-cidreira",
+"en": "Lemongrass Syrup"
+},
+"guideNumber": 7,
+"free": false,
+"iced": false,
+"items": [
+"açúcar",
+"água",
+"capim-cidreira picado"
+]
+},
+{
+"name": {
+"pt": "Água de Manjericão e Morango",
+"en": "Basil & Strawberry Water"
+},
+"guideNumber": 7,
+"free": false,
+"iced": true,
+"items": [
+"morangos em lâminas",
+"manjericão",
+"água fria filtrada"
+]
+},
+{
+"name": {
+"pt": "Erva-doce com Maçã",
+"en": "Fennel and Apple"
+},
+"guideNumber": 7,
+"free": false,
+"iced": false,
+"items": [
+"sementes de erva-doce amassadas",
+"maçã em cubos com casca",
+"água",
+"pau de canela pequeno"
+]
+},
+{
+"name": {
+"pt": "Raspadinha de Hortelã e Limão",
+"en": "Mint & Lime Shaved Ice"
+},
+"guideNumber": 7,
+"free": false,
+"iced": true,
+"items": [
+"hortelã",
+"água fervente",
+"açúcar",
+"limões (suco)"
+]
+},
+{
+"name": {
+"pt": "Manteiga de Ervas",
+"en": "Herb Butter"
+},
+"guideNumber": 7,
+"free": false,
+"iced": false,
+"items": [
+"manteiga em temperatura ambiente",
+"ervas frescas picadas (salsa, manjericão, tomilho)",
+"dente de alho ralado",
+"sal e raspas de limão"
+]
+},
+{
+"name": {
+"pt": "Vinagre Aromático de Ervas",
+"en": "Herb-infused Vinegar"
+},
+"guideNumber": 7,
+"free": false,
+"iced": false,
+"items": [
+"vinagre de vinho branco ou maçã",
+"alecrim, tomilho ou estragão secos ao ar 1 dia",
+"casca de limão"
+]
+},
+{
+"name": {
+"pt": "Latte de Rooibos Brasil",
+"en": "Rooibos Brazil Latte"
+},
+"guideNumber": 8,
+"free": false,
+"iced": false,
+"items": [
+"blend Rooibos Brasil",
+"água fervente",
+"leite",
+"mel ou xarope de rapadura"
+]
+},
+{
+"name": {
+"pt": "Quentão sem Álcool",
+"en": "Alcohol-free Quentão"
+},
+"guideNumber": 8,
+"free": true,
+"iced": false,
+"items": [
+"blend Quentão sem Álcool",
+"suco de uva integral",
+"água",
+"açúcar mascavo (opcional)"
+]
+},
+{
+"name": {
+"pt": "Xarope de Blend",
+"en": "Blend Syrup"
+},
+"guideNumber": 8,
+"free": false,
+"iced": false,
+"items": [
+"blend à escolha",
+"água fervente",
+"açúcar"
+]
+},
+{
+"name": {
+"pt": "Cold Brew Frutado com Gás",
+"en": "Sparkling Fruity Cold Brew"
+},
+"guideNumber": 8,
+"free": true,
+"iced": true,
+"items": [
+"Morango & Rosa ou Rubi Tropical",
+"água fria",
+"água com gás gelada",
+"xarope de blend"
+]
+},
+{
+"name": {
+"pt": "Bolo de Caneca com Chá",
+"en": "Tea Mug Cake"
+},
+"guideNumber": 8,
+"free": false,
+"iced": false,
+"items": [
+"farinha de trigo",
+"açúcar",
+"blend moído no pilão (Earl Grey, Chai ou Natal)",
+"ovo",
+"leite",
+"óleo",
+"fermento"
+]
+},
+{
+"name": {
+"pt": "Biscoitos de Natal com Chá",
+"en": "Christmas Tea Biscuits"
+},
+"guideNumber": 8,
+"free": false,
+"iced": false,
+"items": [
+"farinha de trigo",
+"manteiga gelada",
+"açúcar mascavo",
+"ovo",
+"blend Natal Especiado moído fino",
+"sal"
+]
+},
+{
+"name": {
+"pt": "Ovos Marmorizados no Chá",
+"en": "Tea-marbled Eggs"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"ovos",
+"chá preto (ou lapsang)",
+"shoyu",
+"anis-estrelado",
+"pau de canela",
+"água"
+]
+},
+{
+"name": {
+"pt": "Frango Defumado no Chá",
+"en": "Tea-smoked Chicken"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"sobrecoxas sem osso",
+"chá lapsang ou preto",
+"arroz cru",
+"açúcar mascavo",
+"casca de laranja",
+"sal, alho e shoyu"
+]
+},
+{
+"name": {
+"pt": "Sal de Chá Verde",
+"en": "Green Tea Salt"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"sencha",
+"flor de sal ou sal grosso",
+"raspas de limão secas (opcional)"
+]
+},
+{
+"name": {
+"pt": "Ochazuke",
+"en": "Ochazuke"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"arroz japonês cozido",
+"sencha ou genmaicha quente",
+"salmão grelhado em lascas",
+"nori, gergelim, cebolinha",
+"shoyu"
+]
+},
+{
+"name": {
+"pt": "Ameixas Pochê no Chá",
+"en": "Tea-poached Prunes"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"ameixas secas",
+"chá preto forte (Earl Grey é ótimo)",
+"açúcar",
+"pau de canela",
+"casca de laranja"
+]
+},
+{
+"name": {
+"pt": "Bolo de Earl Grey",
+"en": "Earl Grey Loaf Cake"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"leite",
+"Earl Grey (≈ 4 g)",
+"manteiga",
+"açúcar",
+"ovos",
+"farinha com fermento",
+"açúcar de confeiteiro + chá forte (calda)"
+]
+},
+{
+"name": {
+"pt": "Panna Cotta de Matcha",
+"en": "Matcha Panna Cotta"
+},
+"guideNumber": 9,
+"free": false,
+"iced": true,
+"items": [
+"creme de leite fresco",
+"leite",
+"açúcar",
+"matcha culinário",
+"gelatina em pó sem sabor"
+]
+},
+{
+"name": {
+"pt": "Arroz-doce de Hojicha",
+"en": "Hojicha Rice Pudding"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"arroz branco",
+"leite",
+"hojicha em folhas",
+"leite condensado",
+"sal"
+]
+},
+{
+"name": {
+"pt": "Vinagrete de Hibisco",
+"en": "Hibiscus Vinaigrette"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"hibisco",
+"água fervente",
+"mel",
+"mostarda Dijon",
+"azeite",
+"sal e pimenta"
+]
+},
+{
+"name": {
+"pt": "Cookies de Rooibos e Laranja",
+"en": "Rooibos & Orange Cookies"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"manteiga",
+"açúcar mascavo",
+"ovo",
+"farinha de trigo",
+"rooibos moído fino",
+"raspas de laranja",
+"bicarbonato"
+]
+},
+{
+"name": {
+"pt": "Scones Clássicos",
+"en": "Classic Scones"
+},
+"guideNumber": 9,
+"free": true,
+"iced": false,
+"items": [
+"farinha de trigo",
+"fermento químico",
+"açúcar",
+"manteiga gelada em cubos",
+"leite gelado",
+"ovo (metade para pincelar)",
+"sal"
+]
+},
+{
+"name": {
+"pt": "Sanduíches de Chá da Tarde",
+"en": "Afternoon Tea Sandwiches"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"pão de forma fino",
+"pepino em lâminas finas",
+"cream cheese com hortelã picada",
+"ovos cozidos picados",
+"maionese com cebolinha",
+"manteiga, sal e pimenta"
+]
+},
+{
+"name": {
+"pt": "Arroz de Jasmim Perfumado",
+"en": "Jasmine-scented Rice"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"arroz agulhinha ou jasmim",
+"chá verde de jasmim (3 g, 80 °C, 3 min)",
+"óleo",
+"sal"
+]
+},
+{
+"name": {
+"pt": "Salmão Curado com Lapsang",
+"en": "Lapsang-cured Salmon"
+},
+"guideNumber": 9,
+"free": false,
+"iced": true,
+"items": [
+"filé de salmão com pele, congelado antes",
+"sal grosso",
+"açúcar mascavo",
+"lapsang souchong moído",
+"raspas de limão-siciliano"
+]
+},
+{
+"name": {
+"pt": "Marinada de Chá Preto",
+"en": "Black Tea Marinade"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"chá preto forte, frio",
+"shoyu",
+"mel",
+"dentes de alho amassados",
+"gengibre ralado",
+"pimenta-preta"
+]
+},
+{
+"name": {
+"pt": "Chutney de Manga com Chá Preto",
+"en": "Mango & Black Tea Chutney"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"mangas firmes em cubos",
+"chá preto Ceylon forte",
+"açúcar mascavo",
+"vinagre de maçã",
+"cebola picada",
+"gengibre ralado e uma pitada de pimenta-calabresa"
+]
+},
+{
+"name": {
+"pt": "Brigadeiro de Earl Grey",
+"en": "Earl Grey Brigadeiro"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"creme de leite",
+"Earl Grey",
+"leite condensado",
+"cacau em pó",
+"manteiga"
+]
+},
+{
+"name": {
+"pt": "Pudim de Chai",
+"en": "Chai Flan"
+},
+"guideNumber": 9,
+"free": true,
+"iced": false,
+"items": [
+"leite condensado",
+"leite",
+"ovos",
+"chá preto",
+"pau de canela, 4 cardamomos, 3 cravos",
+"açúcar para a calda"
+]
+},
+{
+"name": {
+"pt": "Trufas Defumadas",
+"en": "Smoky Truffles"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"chocolate 60–70% picado",
+"creme de leite fresco",
+"lapsang souchong",
+"manteiga",
+"cacau em pó"
+]
+},
+{
+"name": {
+"pt": "Geleia de Hibisco",
+"en": "Hibiscus Jam"
+},
+"guideNumber": 9,
+"free": false,
+"iced": false,
+"items": [
+"hibisco seco",
+"água fervente",
+"maçãs raladas com casca",
+"açúcar",
+"limão (suco)"
+]
+},
+{
+"name": {
+"pt": "Mate Cocido com Leite",
+"en": "Mate Cocido with Milk"
+},
+"guideNumber": 10,
+"free": true,
+"iced": false,
+"items": [
+"erva-mate",
+"açúcar",
+"água",
+"leite"
+]
+},
+{
+"name": {
+"pt": "Tererê de Maracujá e Hortelã",
+"en": "Passion Fruit & Mint Tereré"
+},
+"guideNumber": 10,
+"free": false,
+"iced": true,
+"items": [
+"erva para tererê",
+"maracujás (polpa)",
+"água gelada",
+"hortelã",
+"açúcar (opcional)"
+]
+},
+{
+"name": {
+"pt": "Bolo de Chá-mate com Laranja",
+"en": "Mate & Orange Cake"
+},
+"guideNumber": 10,
+"free": false,
+"iced": false,
+"items": [
+"chá-mate tostado forte (3 c. sopa em 200 ml)",
+"ovos",
+"açúcar",
+"óleo",
+"farinha de trigo",
+"fermento",
+"raspas e suco de laranja"
+]
+},
+{
+"name": {
+"pt": "Chipa",
+"en": "Chipa"
+},
+"guideNumber": 10,
+"free": true,
+"iced": false,
+"items": [
+"polvilho doce",
+"queijo meia-cura ralado",
+"manteiga",
+"ovos",
+"leite",
+"sal e 1 c. chá de erva-doce"
+]
+},
+{
+"name": {
+"pt": "Xarope de Mate",
+"en": "Mate Syrup"
+},
+"guideNumber": 10,
+"free": false,
+"iced": false,
+"items": [
+"chá-mate tostado",
+"água fervente",
+"açúcar mascavo ou rapadura"
+]
+},
+{
+"name": {
+"pt": "Cookies de Mate e Chocolate Branco",
+"en": "Mate & White Chocolate Cookies"
+},
+"guideNumber": 10,
+"free": false,
+"iced": false,
+"items": [
+"manteiga",
+"açúcar mascavo",
+"ovo",
+"farinha de trigo",
+"erva-mate moída fina e peneirada",
+"bicarbonato",
+"chocolate branco picado"
+]
+}
+]

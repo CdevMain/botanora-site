@@ -11,7 +11,8 @@ const { teas } = require('../content/teas');
 const { benefits } = require('../content/benefits');
 const { quizMap } = require('../content/quiz');
 const { faq } = require('../content/faq');
-const recipes = require('../content/recipes.json');
+const recipes = [...require('../content/recipes.json'), ...require('../content/pantry-recipes.json')];
+const pantry = require('../pantry');
 const store = require('../store');
 
 const T = {
@@ -20,7 +21,11 @@ const T = {
     benefitsTitle: 'Para que costuma ser usado', faqTitle: 'Perguntas frequentes', others: 'Outros chás', recipesTitle: 'Receitas para experimentar',
     guideCta: 'Quer ir mais fundo?', guideCtaText: 'Este assunto está completo no guia em PDF, com receitas, tabelas e técnica.', seeGuide: 'Ver o guia',
     rIndexTitle: 'Receitas de chá grátis | Botânora', rIndexH1: 'Receitas de chá', rIndexEyebrow: 'Receitas grátis',
-    rIndexLead: 'Vinte receitas testadas, duas de cada guia Botânora: chás quentes e gelados, lattes, doces e salgados com chá. Com medidas, temperatura e tempo.',
+    rIndexLead: 'Receitas testadas, com medidas, temperatura e tempo: chás quentes e gelados, lattes, doces e salgados com chá. Comece pelo que você tem em casa.',
+    pantryEyebrow: 'Com o que você tem', pantryH2: 'Marque o que tem em casa', pantryLead: 'Escolha os ingredientes e mostramos a melhor receita que dá para fazer agora. Água e gelo já contam.',
+    pantryLabel: 'Receita de despensa', pantryGroup: 'Receitas de despensa', pantryGroupText: 'Combinações simples para fazer com o que já tem em casa.',
+    pMore: 'Gostou? Vá além com o guia', pMoreText: n => `O guia completo tem ${n} páginas, com receitas exclusivas, técnica e tabelas, em português e inglês.`,
+    pUi: { selected: n => n === 1 ? '1 ingrediente marcado' : `${n} ingredientes marcados`, none: 'Nenhum ingrediente marcado', clear: 'Limpar', empty: 'Marque pelo menos um ingrediente para ver a receita.', nothing: 'Ainda não temos receita com essa combinação. Tente marcar mais um ou dois ingredientes.', best: 'Melhor opção agora', ready: 'Você tem tudo', missOne: 'Falta só', miss: 'Falta', youHave: 'Você tem', open: 'Ver modo de preparo', more: 'Também dá para fazer', guides: 'Nos guias completos', guideHave: (a, b) => `você tem ${a} de ${b} ingredientes`, guideReady: 'dá para fazer com o que você tem', guideCta: 'Ver o guia', hot: 'Quente', iced: 'Gelado', caf: 'com cafeína', nocaf: 'sem cafeína', loading: 'Procurando…', see: 'Ver receita' },
     rIndexDesc: 'Receitas de chá grátis com medidas, temperatura e tempo: chá gelado, matcha, chimarrão, chai, scones, brigadeiro de matcha e mais.',
     ingredients: 'Ingredientes', method: 'Modo de preparo', finish: 'Finalização', tip: 'Dica', time: 'Tempo', yieldL: 'Rende', level: 'Nível',
     caf: 'Com cafeína', nocaf: 'Sem cafeína', iced: 'Gelado', hot: 'Quente', fromGuide: 'Do guia', more: 'Esta receita faz parte do guia', moreText: n => `O guia completo tem ${n} páginas, com mais receitas, técnica e tabelas, em português e inglês.`,
@@ -37,7 +42,11 @@ const T = {
     benefitsTitle: 'What it is commonly used for', faqTitle: 'Frequently asked questions', others: 'Other teas', recipesTitle: 'Recipes to try',
     guideCta: 'Want to go deeper?', guideCtaText: 'This topic is covered in full in the PDF guide, with recipes, tables and technique.', seeGuide: 'See the guide',
     rIndexTitle: 'Free tea recipes | Botânora', rIndexH1: 'Tea recipes', rIndexEyebrow: 'Free recipes',
-    rIndexLead: 'Twenty tested recipes, two from each Botânora guide: hot and iced teas, lattes, sweets and savoury dishes with tea. With amounts, temperature and time.',
+    rIndexLead: 'Tested recipes with amounts, temperature and time: hot and iced teas, lattes, sweets and savoury dishes with tea. Start with what you have at home.',
+    pantryEyebrow: 'With what you have', pantryH2: 'Tick what you have at home', pantryLead: 'Pick your ingredients and we show the best recipe you can make right now. Water and ice are already counted.',
+    pantryLabel: 'Pantry recipe', pantryGroup: 'Pantry recipes', pantryGroupText: 'Simple combinations to make with what you already have.',
+    pMore: 'Enjoyed it? Go further with the guide', pMoreText: n => `The full guide has ${n} pages, with exclusive recipes, technique and tables, in Portuguese and English.`,
+    pUi: { selected: n => n === 1 ? '1 ingredient ticked' : `${n} ingredients ticked`, none: 'No ingredients ticked', clear: 'Clear', empty: 'Tick at least one ingredient to see a recipe.', nothing: 'No recipe for this combination yet. Try ticking one or two more ingredients.', best: 'Best option right now', ready: 'You have everything', missOne: 'Only missing', miss: 'Missing', youHave: 'You have', open: 'See the method', more: 'You can also make', guides: 'In the full guides', guideHave: (a, b) => `you have ${a} of ${b} ingredients`, guideReady: 'you can make it with what you have', guideCta: 'See the guide', hot: 'Hot', iced: 'Iced', caf: 'caffeinated', nocaf: 'caffeine-free', loading: 'Searching…', see: 'See recipe' },
     rIndexDesc: 'Free tea recipes with amounts, temperature and time: iced tea, matcha, yerba mate, chai, scones, matcha brigadeiro and more.',
     ingredients: 'Ingredients', method: 'Method', finish: 'To finish', tip: 'Tip', time: 'Time', yieldL: 'Makes', level: 'Level',
     caf: 'Caffeinated', nocaf: 'Caffeine-free', iced: 'Iced', hot: 'Hot', fromGuide: 'From the guide', more: 'This recipe is part of the guide', moreText: n => `The full guide has ${n} pages, with more recipes, technique and tables, in Portuguese and English.`,
@@ -102,7 +111,7 @@ function guideCta(lang, p) {
 function recipeCard(r, lang) {
   const t = T[lang];
   return `<a class="recipe-card" href="${recipePaths(r)[lang]}">
-  <span class="label">${esc(t.fromGuide)} ${String(r.guideNumber).padStart(2, '0')}</span>
+  <span class="label">${r.pantry ? esc(t.pantryLabel) : `${esc(t.fromGuide)} ${String(r.guideNumber).padStart(2, '0')}`}</span>
   <h3>${esc(r.name[lang])}</h3><p>${esc(r.tag[lang])}</p>
   <span class="recipe-card-meta">${icon('clock', 'ico-sm')} ${esc(r.time[lang])} · ${r.iced ? esc(t.iced) : esc(t.hot)} · ${r.caffeine ? esc(t.caf) : esc(t.nocaf)}</span>
 </a>`;
@@ -161,12 +170,32 @@ ${recs.length ? `<section class="section band-paper-2"><div class="wrap"><h2 cla
 }
 
 // ---------------- RECEITAS ----------------
+function pantrySection(lang) {
+  const t = T[lang];
+  const ui = { ...t.pUi, selected: [t.pUi.selected(1), t.pUi.selected(2).replace('2', '{n}')], guideHave: t.pUi.guideHave('{a}', '{b}') };
+  return `<section class="section band-paper pantry" id="${lang === 'pt' ? 'com-o-que-voce-tem' : 'with-what-you-have'}" data-pantry='${esc(JSON.stringify(ui))}'>
+  <div class="wrap pantry-wrap">
+    <div class="pantry-pick">
+      <p class="label">${esc(t.pantryEyebrow)}</p>
+      <h2 class="h2">${esc(t.pantryH2)}</h2>
+      <p class="muted">${esc(t.pantryLead)}</p>
+      ${pantry.chips(lang).map(g => `<fieldset class="pantry-group"><legend>${esc(g.label)}</legend><div class="pantry-chips">${g.items.map(c => `<button type="button" class="chip" aria-pressed="false" data-k="${esc(c.key)}">${esc(c.label)}</button>`).join('')}</div></fieldset>`).join('')}
+      <p class="pantry-bar"><span data-pantry-count>${esc(t.pUi.none)}</span> <button type="button" class="link-btn" data-pantry-clear hidden>${esc(t.pUi.clear)}</button> <a class="btn btn-dark btn-sm pantry-go" href="#${lang === 'pt' ? 'receita-sugerida' : 'suggested-recipe'}" hidden>${esc(t.pUi.see)} ↓</a></p>
+    </div>
+    <div class="pantry-out" id="${lang === 'pt' ? 'receita-sugerida' : 'suggested-recipe'}" data-pantry-out aria-live="polite"><p class="pantry-empty">${esc(t.pUi.empty)}</p></div>
+  </div>
+</section>`;
+}
+
 function recipesIndex(lang) {
   const t = T[lang];
   const groups = {};
-  recipes.forEach(r => { (groups[r.guide] = groups[r.guide] || []).push(r); });
+  recipes.filter(r => !r.pantry).forEach(r => { (groups[r.guide] = groups[r.guide] || []).push(r); });
+  const pantryList = recipes.filter(r => r.pantry);
   const body = `${pageHero({ eyebrow: t.rIndexEyebrow, h1: t.rIndexH1, lead: t.rIndexLead })}
-<section class="section band-paper"><div class="wrap">
+${pantrySection(lang)}
+<section class="section band-paper-2"><div class="wrap">
+  <div class="recipe-group"><h2 class="label">${esc(t.pantryGroup)}</h2><p class="muted recipe-group-text">${esc(t.pantryGroupText)}</p><div class="recipe-grid">${pantryList.map(r => recipeCard(r, lang)).join('')}</div></div>
   ${Object.entries(groups).map(([slug, list]) => { const p = productBySlug(slug); return `<div class="recipe-group"><h2 class="label">${esc(t.fromGuide)}: ${p ? `<a href="${url(lang, 'shop', slug)}">${esc(p.title[lang])}</a>` : esc(slug)}</h2><div class="recipe-grid">${list.map(r => recipeCard(r, lang)).join('')}</div></div>`; }).join('')}
 </div></section>`;
   const ld = [{ '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: recipes.map((r, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(recipePaths(r)[lang]), name: r.name[lang] })) },
@@ -181,7 +210,7 @@ function recipePage(lang, r) {
   const crumbItems = [[t.home, url(lang, 'home')], [t.recipesName, url(lang, 'recipes')], [r.name[lang], paths[lang]]];
   const title = `${r.name[lang]}: ${lang === 'pt' ? 'receita' : 'recipe'} | Botânora`;
   const desc = `${r.tag[lang]} ${lang === 'pt' ? 'Ingredientes' : 'Ingredients'}: ${r.ingredients.map(i => i.item[lang]).slice(0, 4).join(', ')}. ${t.time}: ${r.time[lang]}.`;
-  const body = `${pageHero({ eyebrow: t.fromGuide + (p ? ' ' + p.title[lang] : ''), h1: r.name[lang], lead: r.tag[lang] })}
+  const body = `${pageHero({ eyebrow: r.pantry ? t.pantryLabel : t.fromGuide + (p ? ' ' + p.title[lang] : ''), h1: r.name[lang], lead: r.tag[lang] })}
 ${crumbs(lang, crumbItems)}
 <section class="section band-paper seo-page">
   <div class="wrap seo-grid">
@@ -199,7 +228,7 @@ ${crumbs(lang, crumbItems)}
       ${r.tip ? `<p class="answer"><strong>${esc(t.tip)}:</strong> ${esc(r.tip[lang])}</p>` : ''}
     </article>
     <aside class="seo-side">
-      ${p ? `<div class="fact-box"><p class="label">${esc(t.more)}</p><p>${esc(t.moreText(p.pages))}</p></div>` : ''}
+      ${p ? `<div class="fact-box"><p class="label">${esc(r.pantry ? t.pMore : t.more)}</p><p>${esc(r.pantry ? t.pMoreText(p.pages) : t.moreText(p.pages))}</p></div>` : ''}
       ${guideCta(lang, p)}
     </aside>
   </div>

@@ -156,6 +156,49 @@
     });
   });
 
+  // ---------- receitas: "com o que você tem" ----------
+  const pan = $('[data-pantry]');
+  if (pan) {
+    const U = JSON.parse(pan.dataset.pantry), out = $('[data-pantry-out]', pan), count = $('[data-pantry-count]', pan), clear = $('[data-pantry-clear]', pan);
+    const chips = $$('.chip[data-k]', pan), KEY = 'botanora_pantry';
+    const e = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const sel = () => chips.filter(c => c.getAttribute('aria-pressed') === 'true').map(c => c.dataset.k);
+    let timer = null, seq = 0;
+    const meta = r => `${r.time} · ${r.iced ? U.iced : U.hot} · ${r.caffeine ? U.caf : U.nocaf}`;
+    const status = r => r.missing.length ? `${r.missing.length === 1 ? U.missOne : U.miss}: ${e(r.missing.join(', '))}` : U.ready;
+    function render(d) {
+      if (!d.best) { out.innerHTML = `<p class="pantry-empty">${e(sel().length ? U.nothing : U.empty)}</p>`; return; }
+      const b = d.best;
+      out.innerHTML = `<article class="pantry-best">
+        <p class="pantry-flag${b.missing.length ? '' : ' ok'}"><span class="label">${e(U.best)}</span> <span>${status(b)}</span></p>
+        <h3 class="h3"><a href="${e(b.url)}">${e(b.name)}</a></h3>
+        <p class="muted">${e(b.tag)}</p><p class="tiny muted">${e(meta(b))}</p>
+        <ul class="pantry-ing">${b.ingredients.map(i => `<li class="${i.ok ? 'ok' : 'no'}"><span aria-hidden="true">${i.ok ? '✓' : '○'}</span> <b>${e(i.qty)}</b> ${e(i.item)}</li>`).join('')}</ul>
+        <a class="btn btn-dark" href="${e(b.url)}">${e(U.open)}</a>
+      </article>
+      ${d.more.length ? `<p class="label pantry-sub">${e(U.more)}</p><div class="pantry-more">${d.more.map(r => `<a class="pantry-mini" href="${e(r.url)}"><b>${e(r.name)}</b><span class="tiny${r.missing.length ? '' : ' ok'}">${status(r)}</span><span class="tiny muted">${e(meta(r))}</span></a>`).join('')}</div>` : ''}
+      ${d.guides.length ? `<p class="label pantry-sub">${e(U.guides)}</p><div class="pantry-guides">${d.guides.map(g => `<a class="pantry-guide" href="${e(g.url)}"><img src="${e(g.cover)}" alt="" loading="lazy" width="54" height="76"><span><b>${e(g.recipe)}</b><span class="tiny muted">${e(g.ready ? U.guideReady : U.guideHave.replace('{a}', g.have).replace('{b}', g.total))}</span><span class="tiny pantry-guide-name">${e(g.guide)} →</span></span></a>`).join('')}</div>` : ''}`;
+    }
+    function update() {
+      const s = sel();
+      count.textContent = s.length ? (s.length === 1 ? U.selected[0] : U.selected[1].replace('{n}', s.length)) : U.none;
+      clear.hidden = !s.length;
+      const go = $('.pantry-go', pan); if (go) go.hidden = !s.length;
+      try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (_) {}
+      clearTimeout(timer);
+      if (!s.length) { render({ best: null }); return; }
+      out.classList.add('is-loading');
+      timer = setTimeout(async () => {
+        const my = ++seq;
+        try { const d = await post('/api/pantry', { have: s, lang, path: location.pathname }); if (my === seq) render(d); }
+        catch (_) {} finally { if (my === seq) out.classList.remove('is-loading'); }
+      }, 250);
+    }
+    chips.forEach(c => c.addEventListener('click', () => { c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); update(); }));
+    clear.addEventListener('click', () => { chips.forEach(c => c.setAttribute('aria-pressed', 'false')); update(); });
+    try { const saved = JSON.parse(localStorage.getItem(KEY) || '[]'); if (saved.length) { chips.forEach(c => { if (saved.includes(c.dataset.k)) c.setAttribute('aria-pressed', 'true'); }); update(); } } catch (_) {}
+  }
+
   // ---------- recomendações: se a foto não carregar, mostra o ícone ----------
   const affFallback = img => { const box = img.closest('.aff-media'); if (box) box.classList.add('aff-media-ico'); img.remove(); };
   document.addEventListener('error', e => { if (e.target.matches && e.target.matches('[data-aff-img]')) affFallback(e.target); }, true);

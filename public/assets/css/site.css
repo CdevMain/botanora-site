@@ -871,3 +871,54 @@ html.pv-lock { overflow: hidden; }
   .main-nav ul { gap: 14px; }
   .main-nav ul a { letter-spacing: .08em; font-size: 11.5px; }
 }
+
+/* ---------- receitas: com o que você tem ---------- */
+.pantry-wrap { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 64px); align-items: start; }
+.pantry-pick .h2 { margin: 6px 0 10px; }
+.pantry-pick > .muted { margin: 0 0 22px; max-width: 520px; }
+.pantry-group { border: 0; margin: 0 0 16px; padding: 0; }
+.pantry-group legend { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; padding: 0; }
+.pantry-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.pantry-chips .chip { padding: 8px 14px; font-size: 13.5px; letter-spacing: .02em; background: var(--paper); }
+.pantry-chips .chip[aria-pressed="true"] { background: var(--night); color: var(--paper); border-color: var(--night); }
+.pantry-chips .chip[aria-pressed="true"]::before { content: '✓'; color: var(--gold); font-size: 12px; }
+.pantry-bar { display: flex; gap: 14px; align-items: center; font-size: 14px; color: var(--muted); margin: 18px 0 0; }
+.pantry-out { position: sticky; top: 100px; transition: opacity .2s; }
+.pantry-out.is-loading { opacity: .55; }
+.pantry-empty { border: 1px dashed var(--line); padding: 28px; text-align: center; color: var(--muted); margin: 0; }
+.pantry-best { background: #fffdf8; border: 1px solid var(--line); padding: clamp(22px, 3vw, 32px); box-shadow: 0 18px 40px -26px rgba(17, 26, 33, .35); }
+.pantry-best .h3 { margin: 6px 0 6px; }
+.pantry-best .h3 a { color: inherit; text-decoration: none; }
+.pantry-best .h3 a:hover { color: var(--gold-3); }
+.pantry-best > .muted { margin: 0 0 4px; }
+.pantry-flag { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; margin: 0; font-size: 13.5px; color: #8a5a1f; }
+.pantry-flag.ok span:last-child { color: var(--ok); font-weight: 500; }
+.pantry-ing { list-style: none; padding: 0; margin: 16px 0 20px; display: grid; gap: 6px; font-size: 14.5px; }
+.pantry-ing li span { display: inline-block; width: 16px; color: var(--ok); }
+.pantry-ing li.no { color: var(--muted); }
+.pantry-ing li.no span { color: #b9823a; }
+.pantry-sub { margin: 26px 0 10px; }
+.pantry-more { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.pantry-mini { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); text-decoration: none; color: inherit; background: var(--paper); transition: border-color .2s; }
+.pantry-mini:hover { border-color: var(--gold-3); }
+.pantry-mini b { font: 500 17px/1.25 var(--serif); }
+.pantry-mini .tiny { color: #8a5a1f; }
+.pantry-mini .tiny.ok { color: var(--ok); }
+.pantry-mini .tiny.muted { color: var(--muted); }
+.pantry-guides { display: grid; gap: 10px; }
+.pantry-guide { display: flex; gap: 14px; align-items: center; padding: 10px 14px 10px 10px; border: 1px solid var(--line); text-decoration: none; color: inherit; transition: border-color .2s; }
+.pantry-guide:hover { border-color: var(--gold-3); }
+.pantry-guide img { width: 54px; height: 76px; object-fit: cover; flex: none; box-shadow: 0 6px 14px -8px rgba(0, 0, 0, .5); }
+.pantry-guide > span { display: grid; gap: 2px; }
+.pantry-guide b { font: 500 16px/1.25 var(--serif); }
+.pantry-guide-name { color: var(--gold-3); letter-spacing: .04em; }
+.recipe-group-text { margin: -4px 0 16px; }
+@media (min-width: 901px) { .pantry-go { display: none !important; } }
+@media (max-width: 900px) {
+  .pantry-wrap { grid-template-columns: 1fr; }
+  .pantry-out { position: static; scroll-margin-top: 90px; }
+  .pantry-bar { position: sticky; bottom: 0; z-index: 5; margin: 18px calc(var(--gutter) * -1) 0; padding: 12px var(--gutter); background: rgba(244, 239, 228, .97); border-top: 1px solid var(--line); backdrop-filter: blur(6px); }
+  .pantry-go { margin-left: auto; white-space: nowrap; padding: 12px 18px; }
+  .pantry-bar [data-pantry-count] { font-size: 13px; line-height: 1.3; }
+}
+@media (max-width: 600px) { .pantry-more { grid-template-columns: 1fr; } }

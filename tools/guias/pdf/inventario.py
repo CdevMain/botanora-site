@@ -3,7 +3,7 @@
 Uso: python3 inventario.py <saida.md>
 Rode sempre que um guia for criado ou alterado.
 """
-import sys, importlib, contextlib, io, datetime
+import os, sys, importlib, contextlib, io, datetime
 from collections import defaultdict
 import catalog
 
@@ -110,6 +110,18 @@ def main(dest):
               'Calendário do chá: uma receita por semana, acompanhando as estações e as festas brasileiras.']:
         w(f'- {t}')
     w('')
+    # Receitas de despensa do site (grátis, fora dos guias): não repetir em guias novos
+    import json as _json
+    pr = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'src', 'content', 'pantry-recipes.json')
+    if os.path.exists(pr):
+        lst = _json.load(open(pr))
+        w('## Receitas de despensa do site (grátis)')
+        w('')
+        w(f'{len(lst)} receitas criadas para a ferramenta "Com o que você tem" da página Receitas. São públicas e não estão em nenhum guia: um guia novo não deve repeti-las.')
+        w('')
+        for r in lst:
+            w(f"- **{r['name']['pt']}**: {', '.join(i['item']['pt'] for i in r['ingredients'])}")
+        w('')
     open(dest, 'w').write('\n'.join(L))
     print('ok', dest, len(items), 'itens')
 

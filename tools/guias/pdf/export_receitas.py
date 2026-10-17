@@ -38,6 +38,7 @@ def slugify(s):
 
 def main():
     out = []
+    index = []  # todas as receitas dos guias: só nome e ingredientes (sem quantidade nem preparo)
     for num, title, mods in catalog.GUIDES:
         want = PICKS[num]
         found = {}
@@ -48,6 +49,9 @@ def main():
                 for r in getattr(M, var, []) or []:
                     if isinstance(r, dict) and catalog.pt(r['name']) in want and 'steps' in r:
                         found[catalog.pt(r['name'])] = r
+                    if isinstance(r, dict) and 'steps' in r and 'ing' in r and not any(x['name']['pt'] == catalog.pt(r['name']) for x in index):
+                        index.append({'name': both(r['name']), 'guideNumber': int(num), 'free': catalog.pt(r['name']) in want,
+                                      'iced': bool(r.get('iced')), 'items': [both(i)['pt'] for q, i in r['ing']]})
         with contextlib.redirect_stdout(io.StringIO()):
             G = importlib.import_module(mods[-1]).GUIDE
         for name in want:
@@ -67,6 +71,9 @@ def main():
                 'tip': both(r['tip']) if r.get('tip') else None,
             })
     dest = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'src', 'content', 'recipes.json')
+    idx = os.path.join(os.path.dirname(dest), 'pantry-index.json')
+    json.dump(index, open(idx, 'w'), ensure_ascii=False, indent=0)
+    print(len(index), 'receitas no índice da busca por ingredientes ->', os.path.abspath(idx))
     json.dump(out, open(dest, 'w'), ensure_ascii=False, indent=1)
     print(len(out), 'receitas ->', os.path.abspath(dest))
 

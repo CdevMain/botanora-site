@@ -1,0 +1,1494 @@
+[
+ {
+  "slug": {
+   "pt": "cha-preto-com-laranja-e-cravo",
+   "en": "black-tea-with-orange-and-clove"
+  },
+  "guide": "infusoes-de-autor",
+  "guideNumber": 1,
+  "pantry": true,
+  "name": {
+   "pt": "Chá Preto com Laranja e Cravo",
+   "en": "Black Tea with Orange and Clove"
+  },
+  "tag": {
+   "pt": "Malte do chá preto, perfume cítrico e um calor suave de cravo.",
+   "en": "Malty black tea, citrus perfume and a gentle warmth of clove."
+  },
+  "time": {
+   "pt": "6 min",
+   "en": "6 min"
+  },
+  "yield": {
+   "pt": "1 xícara · 250 ml",
+   "en": "1 cup · 250 ml"
+  },
+  "caffeine": true,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "300 ml",
+     "en": "300 ml"
+    },
+    "item": {
+     "pt": "água",
+     "en": "water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 sachê ou 2 g",
+     "en": "1 bag or 2 g"
+    },
+    "item": {
+     "pt": "chá preto",
+     "en": "black tea"
+    }
+   },
+   {
+    "qty": {
+     "pt": "3 tiras",
+     "en": "3 strips"
+    },
+    "item": {
+     "pt": "casca de laranja, sem a parte branca",
+     "en": "orange peel, without the white pith"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2",
+     "en": "2"
+    },
+    "item": {
+     "pt": "cravos-da-índia",
+     "en": "cloves"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 colher (chá)",
+     "en": "1 tsp"
+    },
+    "item": {
+     "pt": "mel (opcional)",
+     "en": "honey (optional)"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Ferva a água com os cravos e a casca de laranja por 2 minutos.",
+    "en": "Boil the water with the cloves and orange peel for 2 minutes."
+   },
+   {
+    "pt": "Desligue, espere 30 segundos (a água fica perto de 95 °C) e coloque o chá preto.",
+    "en": "Turn off the heat, wait 30 seconds (the water drops to about 95 °C) and add the black tea."
+   },
+   {
+    "pt": "Tampe e deixe 4 minutos. Coe e adoce com mel, se quiser.",
+    "en": "Cover and steep for 4 minutes. Strain and sweeten with honey if you like."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Torça uma tira de casca sobre a xícara antes de servir: os óleos da laranja perfumam a bebida.",
+   "en": "Twist a strip of peel over the cup before serving: the orange oils perfume the drink."
+  }
+ },
+ {
+  "slug": {
+   "pt": "verde-gelado-com-abacaxi-e-hortela",
+   "en": "iced-green-tea-with-pineapple-and-mint"
+  },
+  "guide": "chas-gelados",
+  "guideNumber": 5,
+  "pantry": true,
+  "name": {
+   "pt": "Verde Gelado com Abacaxi e Hortelã",
+   "en": "Iced Green Tea with Pineapple and Mint"
+  },
+  "tag": {
+   "pt": "Refrescante e levemente doce, com o frescor da hortelã por cima.",
+   "en": "Refreshing and lightly sweet, with fresh mint on top."
+  },
+  "time": {
+   "pt": "15 min",
+   "en": "15 min"
+  },
+  "yield": {
+   "pt": "2 copos · 500 ml",
+   "en": "2 glasses · 500 ml"
+  },
+  "caffeine": true,
+  "iced": true,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "250 ml",
+     "en": "250 ml"
+    },
+    "item": {
+     "pt": "água a 80 °C",
+     "en": "water at 80 °C"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2 sachês ou 4 g",
+     "en": "2 bags or 4 g"
+    },
+    "item": {
+     "pt": "chá verde",
+     "en": "green tea"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 xícara",
+     "en": "1 cup"
+    },
+    "item": {
+     "pt": "abacaxi em cubos",
+     "en": "diced pineapple"
+    }
+   },
+   {
+    "qty": {
+     "pt": "250 ml",
+     "en": "250 ml"
+    },
+    "item": {
+     "pt": "água gelada",
+     "en": "ice-cold water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "6 folhas",
+     "en": "6 leaves"
+    },
+    "item": {
+     "pt": "hortelã",
+     "en": "mint"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 colher (sopa)",
+     "en": "1 tbsp"
+    },
+    "item": {
+     "pt": "mel",
+     "en": "honey"
+    }
+   },
+   {
+    "qty": {
+     "pt": "a gosto",
+     "en": "to taste"
+    },
+    "item": {
+     "pt": "gelo",
+     "en": "ice"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Infunda o chá verde na água a 80 °C por 2 minutos e meio. Coe e dissolva o mel.",
+    "en": "Steep the green tea in the 80 °C water for 2½ minutes. Strain and stir in the honey."
+   },
+   {
+    "pt": "Bata o abacaxi com a água gelada no liquidificador e coe.",
+    "en": "Blend the pineapple with the ice-cold water and strain."
+   },
+   {
+    "pt": "Amasse de leve a hortelã no fundo dos copos, junte gelo, o suco de abacaxi e o chá. Mexa e sirva.",
+    "en": "Lightly bruise the mint in the glasses, add ice, the pineapple juice and the tea. Stir and serve."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Chá verde com água fervendo amarga. Sem termômetro, espere 3 minutos depois que a água ferver.",
+   "en": "Boiling water makes green tea bitter. No thermometer? Wait 3 minutes after the water boils."
+  }
+ },
+ {
+  "slug": {
+   "pt": "camomila-com-laranja-e-baunilha",
+   "en": "chamomile-with-orange-and-vanilla"
+  },
+  "guide": "ritual-da-noite",
+  "guideNumber": 3,
+  "pantry": true,
+  "name": {
+   "pt": "Camomila com Laranja e Baunilha",
+   "en": "Chamomile with Orange and Vanilla"
+  },
+  "tag": {
+   "pt": "Floral, cítrica e macia: uma xícara para desacelerar.",
+   "en": "Floral, citrusy and smooth: a cup to slow down."
+  },
+  "time": {
+   "pt": "7 min",
+   "en": "7 min"
+  },
+  "yield": {
+   "pt": "1 xícara · 250 ml",
+   "en": "1 cup · 250 ml"
+  },
+  "caffeine": false,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "250 ml",
+     "en": "250 ml"
+    },
+    "item": {
+     "pt": "água fervente",
+     "en": "boiling water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2 colheres (sopa) ou 2 sachês",
+     "en": "2 tbsp or 2 bags"
+    },
+    "item": {
+     "pt": "flores de camomila",
+     "en": "chamomile flowers"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2 tiras",
+     "en": "2 strips"
+    },
+    "item": {
+     "pt": "casca de laranja",
+     "en": "orange peel"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2 gotas",
+     "en": "2 drops"
+    },
+    "item": {
+     "pt": "extrato de baunilha",
+     "en": "vanilla extract"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 colher (chá)",
+     "en": "1 tsp"
+    },
+    "item": {
+     "pt": "mel",
+     "en": "honey"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Coloque a camomila e a casca de laranja no bule ou na xícara.",
+    "en": "Put the chamomile and orange peel in a teapot or cup."
+   },
+   {
+    "pt": "Cubra com a água fervente, tampe e deixe 5 minutos.",
+    "en": "Pour over the boiling water, cover and steep for 5 minutes."
+   },
+   {
+    "pt": "Coe, junte a baunilha e o mel e mexa.",
+    "en": "Strain, add the vanilla and honey and stir."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Tampe sempre: o aroma da camomila vai embora com o vapor.",
+   "en": "Always cover it: chamomile aroma escapes with the steam."
+  }
+ },
+ {
+  "slug": {
+   "pt": "cha-de-casca-de-abacaxi-com-canela-e-gengibre",
+   "en": "pineapple-peel-tea-with-cinnamon-and-ginger"
+  },
+  "guide": "ervas-do-quintal",
+  "guideNumber": 7,
+  "pantry": true,
+  "name": {
+   "pt": "Chá de Casca de Abacaxi com Canela e Gengibre",
+   "en": "Pineapple Peel Tea with Cinnamon and Ginger"
+  },
+  "tag": {
+   "pt": "O clássico da casa que aproveita a casca: doce, picante e perfumado.",
+   "en": "The home classic that uses the peel: sweet, spicy and fragrant."
+  },
+  "time": {
+   "pt": "20 min",
+   "en": "20 min"
+  },
+  "yield": {
+   "pt": "1 litro",
+   "en": "1 litre"
+  },
+  "caffeine": false,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "de 1 abacaxi",
+     "en": "from 1 pineapple"
+    },
+    "item": {
+     "pt": "cascas de abacaxi bem lavadas",
+     "en": "well-washed pineapple peels"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1,2 litro",
+     "en": "1.2 litres"
+    },
+    "item": {
+     "pt": "água",
+     "en": "water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1",
+     "en": "1"
+    },
+    "item": {
+     "pt": "pau de canela",
+     "en": "cinnamon stick"
+    }
+   },
+   {
+    "qty": {
+     "pt": "3 rodelas",
+     "en": "3 slices"
+    },
+    "item": {
+     "pt": "gengibre",
+     "en": "ginger"
+    }
+   },
+   {
+    "qty": {
+     "pt": "a gosto",
+     "en": "to taste"
+    },
+    "item": {
+     "pt": "açúcar ou mel",
+     "en": "sugar or honey"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Lave bem as cascas com uma escovinha.",
+    "en": "Scrub the peels well with a small brush."
+   },
+   {
+    "pt": "Leve à panela com a água, a canela e o gengibre. Ferva e deixe 15 minutos em fogo baixo, com tampa.",
+    "en": "Put them in a pan with the water, cinnamon and ginger. Bring to the boil and simmer, covered, for 15 minutes."
+   },
+   {
+    "pt": "Desligue, descanse 5 minutos e coe. Adoce se quiser e sirva quente ou gelado.",
+    "en": "Turn off the heat, rest 5 minutes and strain. Sweeten if you like and serve hot or iced."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Junte o miolo do abacaxi: ele dá mais sabor e doçura ao chá.",
+   "en": "Add the pineapple core too: it gives the tea more flavour and sweetness."
+  }
+ },
+ {
+  "slug": {
+   "pt": "cha-de-canela-e-cravo",
+   "en": "cinnamon-and-clove-tea"
+  },
+  "guide": "blends-autorais",
+  "guideNumber": 8,
+  "pantry": true,
+  "name": {
+   "pt": "Chá de Canela e Cravo",
+   "en": "Cinnamon and Clove Tea"
+  },
+  "tag": {
+   "pt": "Quente, doce e aromático, com um toque de limão no fim.",
+   "en": "Warm, sweet and aromatic, with a hint of lemon at the end."
+  },
+  "time": {
+   "pt": "12 min",
+   "en": "12 min"
+  },
+  "yield": {
+   "pt": "2 xícaras · 500 ml",
+   "en": "2 cups · 500 ml"
+  },
+  "caffeine": false,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "500 ml",
+     "en": "500 ml"
+    },
+    "item": {
+     "pt": "água",
+     "en": "water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2",
+     "en": "2"
+    },
+    "item": {
+     "pt": "paus de canela",
+     "en": "cinnamon sticks"
+    }
+   },
+   {
+    "qty": {
+     "pt": "6",
+     "en": "6"
+    },
+    "item": {
+     "pt": "cravos-da-índia",
+     "en": "cloves"
+    }
+   },
+   {
+    "qty": {
+     "pt": "de ½ limão",
+     "en": "from ½ lemon"
+    },
+    "item": {
+     "pt": "casca de limão (opcional)",
+     "en": "lemon peel (optional)"
+    }
+   },
+   {
+    "qty": {
+     "pt": "a gosto",
+     "en": "to taste"
+    },
+    "item": {
+     "pt": "mel",
+     "en": "honey"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Quebre os paus de canela ao meio e ferva com a água e os cravos.",
+    "en": "Break the cinnamon sticks in half and boil with the water and cloves."
+   },
+   {
+    "pt": "Baixe o fogo e deixe 8 minutos.",
+    "en": "Lower the heat and simmer for 8 minutes."
+   },
+   {
+    "pt": "Desligue, junte a casca de limão, tampe por 2 minutos, coe e adoce com mel.",
+    "en": "Turn off the heat, add the lemon peel, cover for 2 minutes, strain and sweeten with honey."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Canela quebrada solta mais sabor que o pau inteiro.",
+   "en": "Broken cinnamon releases more flavour than a whole stick."
+  }
+ },
+ {
+  "slug": {
+   "pt": "cha-com-leite-a-inglesa",
+   "en": "english-style-milk-tea"
+  },
+  "guide": "atlas-do-cha",
+  "guideNumber": 2,
+  "pantry": true,
+  "name": {
+   "pt": "Chá com Leite à Inglesa",
+   "en": "English-style Milk Tea"
+  },
+  "tag": {
+   "pt": "Forte, encorpado e reconfortante, como se toma na Inglaterra.",
+   "en": "Strong, full-bodied and comforting, the way it is drunk in England."
+  },
+  "time": {
+   "pt": "6 min",
+   "en": "6 min"
+  },
+  "yield": {
+   "pt": "1 caneca · 300 ml",
+   "en": "1 mug · 300 ml"
+  },
+  "caffeine": true,
+  "iced": false,
+  "milk": true,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "250 ml",
+     "en": "250 ml"
+    },
+    "item": {
+     "pt": "água fervente",
+     "en": "boiling water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2 sachês ou 5 g",
+     "en": "2 bags or 5 g"
+    },
+    "item": {
+     "pt": "chá preto",
+     "en": "black tea"
+    }
+   },
+   {
+    "qty": {
+     "pt": "50 ml",
+     "en": "50 ml"
+    },
+    "item": {
+     "pt": "leite",
+     "en": "milk"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 colher (chá)",
+     "en": "1 tsp"
+    },
+    "item": {
+     "pt": "açúcar (opcional)",
+     "en": "sugar (optional)"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Aqueça a caneca com um pouco de água quente e descarte.",
+    "en": "Warm the mug with a little hot water and pour it out."
+   },
+   {
+    "pt": "Coloque o chá, cubra com a água fervente e deixe 4 a 5 minutos.",
+    "en": "Add the tea, pour over the boiling water and steep for 4 to 5 minutes."
+   },
+   {
+    "pt": "Retire o chá, junte o leite e o açúcar e mexa.",
+    "en": "Remove the tea, add the milk and sugar and stir."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "O chá precisa ser forte: uma infusão fraca fica aguada com o leite.",
+   "en": "The tea must be strong: a weak brew turns watery with milk."
+  }
+ },
+ {
+  "slug": {
+   "pt": "mate-gelado-com-limao-a-carioca",
+   "en": "rio-style-iced-mate-with-lemon"
+  },
+  "guide": "erva-mate",
+  "guideNumber": 10,
+  "pantry": true,
+  "name": {
+   "pt": "Mate Gelado com Limão à Carioca",
+   "en": "Rio-style Iced Mate with Lemon"
+  },
+  "tag": {
+   "pt": "O mate de praia: tostado, cítrico e bem gelado.",
+   "en": "The beach drink of Rio: toasty, citrusy and ice-cold."
+  },
+  "time": {
+   "pt": "15 min",
+   "en": "15 min"
+  },
+  "yield": {
+   "pt": "1 litro",
+   "en": "1 litre"
+  },
+  "caffeine": true,
+  "iced": true,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "1 litro",
+     "en": "1 litre"
+    },
+    "item": {
+     "pt": "água",
+     "en": "water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "4 colheres (sopa) ou 4 sachês",
+     "en": "4 tbsp or 4 bags"
+    },
+    "item": {
+     "pt": "chá-mate tostado",
+     "en": "roasted mate tea"
+    }
+   },
+   {
+    "qty": {
+     "pt": "3 colheres (sopa)",
+     "en": "3 tbsp"
+    },
+    "item": {
+     "pt": "açúcar",
+     "en": "sugar"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2",
+     "en": "2"
+    },
+    "item": {
+     "pt": "limões (suco)",
+     "en": "lemons (juice)"
+    }
+   },
+   {
+    "qty": {
+     "pt": "a gosto",
+     "en": "to taste"
+    },
+    "item": {
+     "pt": "gelo",
+     "en": "ice"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Ferva a água, desligue, junte o mate tostado e tampe por 5 minutos.",
+    "en": "Boil the water, turn off the heat, add the roasted mate and cover for 5 minutes."
+   },
+   {
+    "pt": "Coe, adoce ainda quente e deixe esfriar.",
+    "en": "Strain, sweeten while hot and let it cool."
+   },
+   {
+    "pt": "Sirva com bastante gelo e o suco de limão na hora.",
+    "en": "Serve over plenty of ice with the lemon juice added at the last minute."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Use mate tostado (de sachê ou a granel), não erva de chimarrão. O limão vai na hora porque amarga se ficar parado.",
+   "en": "Use roasted mate (bags or loose), not chimarrão yerba. Add the lemon at the end, because it turns bitter if it sits."
+  }
+ },
+ {
+  "slug": {
+   "pt": "rooibos-gelado-de-laranja",
+   "en": "iced-orange-rooibos"
+  },
+  "guide": "chas-gelados",
+  "guideNumber": 5,
+  "pantry": true,
+  "name": {
+   "pt": "Rooibos Gelado de Laranja",
+   "en": "Iced Orange Rooibos"
+  },
+  "tag": {
+   "pt": "Sem cafeína, frutado e naturalmente doce: bom para qualquer hora.",
+   "en": "Caffeine-free, fruity and naturally sweet: good any time of day."
+  },
+  "time": {
+   "pt": "10 min",
+   "en": "10 min"
+  },
+  "yield": {
+   "pt": "2 copos · 500 ml",
+   "en": "2 glasses · 500 ml"
+  },
+  "caffeine": false,
+  "iced": true,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "300 ml",
+     "en": "300 ml"
+    },
+    "item": {
+     "pt": "água fervente",
+     "en": "boiling water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2 sachês",
+     "en": "2 bags"
+    },
+    "item": {
+     "pt": "rooibos",
+     "en": "rooibos"
+    }
+   },
+   {
+    "qty": {
+     "pt": "200 ml",
+     "en": "200 ml"
+    },
+    "item": {
+     "pt": "suco de laranja",
+     "en": "orange juice"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 colher (sopa)",
+     "en": "1 tbsp"
+    },
+    "item": {
+     "pt": "mel",
+     "en": "honey"
+    }
+   },
+   {
+    "qty": {
+     "pt": "a gosto",
+     "en": "to taste"
+    },
+    "item": {
+     "pt": "gelo e rodelas de laranja",
+     "en": "ice and orange slices"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Infunda o rooibos na água fervente por 6 minutos e retire os sachês.",
+    "en": "Steep the rooibos in the boiling water for 6 minutes and remove the bags."
+   },
+   {
+    "pt": "Dissolva o mel e deixe esfriar.",
+    "en": "Stir in the honey and let it cool."
+   },
+   {
+    "pt": "Nos copos com gelo, junte o chá e o suco de laranja. Finalize com rodelas de laranja.",
+    "en": "Fill glasses with ice, add the tea and orange juice. Finish with orange slices."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Congele um pouco do rooibos em forminhas: o gelo de chá não deixa a bebida aguada.",
+   "en": "Freeze some rooibos in an ice tray: tea ice cubes keep the drink from going watery."
+  }
+ },
+ {
+  "slug": {
+   "pt": "limonada-rosa-de-hibisco",
+   "en": "pink-hibiscus-lemonade"
+  },
+  "guide": "infusoes-de-autor",
+  "guideNumber": 1,
+  "pantry": true,
+  "name": {
+   "pt": "Limonada Rosa de Hibisco",
+   "en": "Pink Hibiscus Lemonade"
+  },
+  "tag": {
+   "pt": "Ácida, vibrante e cor de rubi, com hortelã para refrescar.",
+   "en": "Tart, vibrant and ruby-red, with mint to cool it down."
+  },
+  "time": {
+   "pt": "15 min",
+   "en": "15 min"
+  },
+  "yield": {
+   "pt": "1 litro",
+   "en": "1 litre"
+  },
+  "caffeine": false,
+  "iced": true,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "500 ml",
+     "en": "500 ml"
+    },
+    "item": {
+     "pt": "água fervente",
+     "en": "boiling water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2 colheres (sopa)",
+     "en": "2 tbsp"
+    },
+    "item": {
+     "pt": "flor de hibisco seca",
+     "en": "dried hibiscus flowers"
+    }
+   },
+   {
+    "qty": {
+     "pt": "4 colheres (sopa)",
+     "en": "4 tbsp"
+    },
+    "item": {
+     "pt": "açúcar",
+     "en": "sugar"
+    }
+   },
+   {
+    "qty": {
+     "pt": "300 ml",
+     "en": "300 ml"
+    },
+    "item": {
+     "pt": "água gelada",
+     "en": "ice-cold water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2",
+     "en": "2"
+    },
+    "item": {
+     "pt": "limões (suco)",
+     "en": "lemons (juice)"
+    }
+   },
+   {
+    "qty": {
+     "pt": "a gosto",
+     "en": "to taste"
+    },
+    "item": {
+     "pt": "gelo e folhas de hortelã",
+     "en": "ice and mint leaves"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Infunda o hibisco na água fervente por 5 minutos, coe e dissolva o açúcar.",
+    "en": "Steep the hibiscus in the boiling water for 5 minutes, strain and dissolve the sugar."
+   },
+   {
+    "pt": "Deixe esfriar e junte a água gelada e o suco de limão.",
+    "en": "Let it cool, then add the cold water and lemon juice."
+   },
+   {
+    "pt": "Sirva com gelo e folhas de hortelã.",
+    "en": "Serve over ice with mint leaves."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "O hibisco já é bem ácido: prove antes de pôr mais limão. Gestantes devem evitar hibisco.",
+   "en": "Hibiscus is already tart: taste before adding more lemon. Hibiscus is best avoided during pregnancy."
+  }
+ },
+ {
+  "slug": {
+   "pt": "capim-cidreira-com-maca-e-canela",
+   "en": "lemongrass-with-apple-and-cinnamon"
+  },
+  "guide": "ervas-do-quintal",
+  "guideNumber": 7,
+  "pantry": true,
+  "name": {
+   "pt": "Capim-cidreira com Maçã e Canela",
+   "en": "Lemongrass with Apple and Cinnamon"
+  },
+  "tag": {
+   "pt": "Cítrico e calmante, com a doçura da maçã cozida.",
+   "en": "Lemony and calming, with the sweetness of simmered apple."
+  },
+  "time": {
+   "pt": "10 min",
+   "en": "10 min"
+  },
+  "yield": {
+   "pt": "2 xícaras · 500 ml",
+   "en": "2 cups · 500 ml"
+  },
+  "caffeine": false,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "500 ml",
+     "en": "500 ml"
+    },
+    "item": {
+     "pt": "água",
+     "en": "water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "½",
+     "en": "½"
+    },
+    "item": {
+     "pt": "maçã em lâminas",
+     "en": "apple, thinly sliced"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1",
+     "en": "1"
+    },
+    "item": {
+     "pt": "pau de canela",
+     "en": "cinnamon stick"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 punhado ou 2 colheres (sopa) seco",
+     "en": "1 handful or 2 tbsp dried"
+    },
+    "item": {
+     "pt": "capim-cidreira",
+     "en": "lemongrass"
+    }
+   },
+   {
+    "qty": {
+     "pt": "a gosto",
+     "en": "to taste"
+    },
+    "item": {
+     "pt": "mel",
+     "en": "honey"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Ferva a água com a maçã e a canela por 5 minutos.",
+    "en": "Boil the water with the apple and cinnamon for 5 minutes."
+   },
+   {
+    "pt": "Desligue, junte o capim-cidreira picado, tampe e deixe 5 minutos.",
+    "en": "Turn off the heat, add the chopped lemongrass, cover and steep for 5 minutes."
+   },
+   {
+    "pt": "Coe e adoce com mel.",
+    "en": "Strain and sweeten with honey."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Capim fresco: corte em pedaços e torça com as mãos para liberar o aroma.",
+   "en": "Fresh lemongrass: cut it into pieces and twist it by hand to release the aroma."
+  }
+ },
+ {
+  "slug": {
+   "pt": "erva-doce-com-laranja",
+   "en": "fennel-seed-and-orange-tea"
+  },
+  "guide": "ritual-da-noite",
+  "guideNumber": 3,
+  "pantry": true,
+  "name": {
+   "pt": "Erva-doce com Laranja",
+   "en": "Fennel Seed and Orange Tea"
+  },
+  "tag": {
+   "pt": "Adocicada e anisada, com um fundo cítrico. Boa depois do jantar.",
+   "en": "Sweetish and anise-like, with a citrus background. Good after dinner."
+  },
+  "time": {
+   "pt": "8 min",
+   "en": "8 min"
+  },
+  "yield": {
+   "pt": "1 xícara · 250 ml",
+   "en": "1 cup · 250 ml"
+  },
+  "caffeine": false,
+  "iced": false,
+  "milk": false,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "250 ml",
+     "en": "250 ml"
+    },
+    "item": {
+     "pt": "água fervente",
+     "en": "boiling water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 colher (chá)",
+     "en": "1 tsp"
+    },
+    "item": {
+     "pt": "sementes de erva-doce",
+     "en": "fennel seeds"
+    }
+   },
+   {
+    "qty": {
+     "pt": "2 tiras",
+     "en": "2 strips"
+    },
+    "item": {
+     "pt": "casca de laranja",
+     "en": "orange peel"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 colher (chá)",
+     "en": "1 tsp"
+    },
+    "item": {
+     "pt": "mel",
+     "en": "honey"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Amasse levemente as sementes de erva-doce com um pilão ou as costas de uma colher.",
+    "en": "Lightly crush the fennel seeds with a mortar or the back of a spoon."
+   },
+   {
+    "pt": "Coloque as sementes e a casca de laranja na xícara, cubra com a água fervente e tampe por 6 minutos.",
+    "en": "Put the seeds and orange peel in the cup, pour over the boiling water and cover for 6 minutes."
+   },
+   {
+    "pt": "Coe e adoce com mel.",
+    "en": "Strain and sweeten with honey."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Amassar as sementes faz toda a diferença no sabor.",
+   "en": "Crushing the seeds makes all the difference to the flavour."
+  }
+ },
+ {
+  "slug": {
+   "pt": "leite-dourado-com-cha-preto",
+   "en": "golden-milk-with-black-tea"
+  },
+  "guide": "blends-autorais",
+  "guideNumber": 8,
+  "pantry": true,
+  "name": {
+   "pt": "Leite Dourado com Chá Preto",
+   "en": "Golden Milk with Black Tea"
+  },
+  "tag": {
+   "pt": "Cremoso, especiado e quente, com a cor da cúrcuma.",
+   "en": "Creamy, spiced and warming, coloured by turmeric."
+  },
+  "time": {
+   "pt": "8 min",
+   "en": "8 min"
+  },
+  "yield": {
+   "pt": "1 caneca · 300 ml",
+   "en": "1 mug · 300 ml"
+  },
+  "caffeine": true,
+  "iced": false,
+  "milk": true,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "100 ml",
+     "en": "100 ml"
+    },
+    "item": {
+     "pt": "água",
+     "en": "water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "3 rodelas ou ¼ colher (chá) em pó",
+     "en": "3 slices or ¼ tsp ground"
+    },
+    "item": {
+     "pt": "gengibre",
+     "en": "ginger"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 sachê",
+     "en": "1 bag"
+    },
+    "item": {
+     "pt": "chá preto",
+     "en": "black tea"
+    }
+   },
+   {
+    "qty": {
+     "pt": "200 ml",
+     "en": "200 ml"
+    },
+    "item": {
+     "pt": "leite (ou bebida vegetal)",
+     "en": "milk (or plant milk)"
+    }
+   },
+   {
+    "qty": {
+     "pt": "½ colher (chá)",
+     "en": "½ tsp"
+    },
+    "item": {
+     "pt": "cúrcuma em pó",
+     "en": "ground turmeric"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 pitada",
+     "en": "1 pinch"
+    },
+    "item": {
+     "pt": "canela em pó",
+     "en": "ground cinnamon"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 pitada",
+     "en": "1 pinch"
+    },
+    "item": {
+     "pt": "pimenta-do-reino",
+     "en": "black pepper"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 colher (chá)",
+     "en": "1 tsp"
+    },
+    "item": {
+     "pt": "mel",
+     "en": "honey"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Ferva a água com o gengibre por 2 minutos. Junte o chá preto e deixe 3 minutos.",
+    "en": "Boil the water with the ginger for 2 minutes. Add the black tea and leave for 3 minutes."
+   },
+   {
+    "pt": "Retire o chá, junte o leite, a cúrcuma, a canela e a pimenta. Aqueça sem ferver, mexendo, por 2 minutos.",
+    "en": "Remove the tea, add the milk, turmeric, cinnamon and pepper. Heat without boiling, stirring, for 2 minutes."
+   },
+   {
+    "pt": "Coe e adoce com mel.",
+    "en": "Strain and sweeten with honey."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "A pimenta-do-reino ajuda o corpo a aproveitar a cúrcuma: uma pitada basta.",
+   "en": "Black pepper helps the body absorb turmeric: a pinch is enough."
+  }
+ },
+ {
+  "slug": {
+   "pt": "mingau-de-aveia-no-rooibos-com-banana",
+   "en": "rooibos-oatmeal-with-banana"
+  },
+  "guide": "cha-e-mesa",
+  "guideNumber": 9,
+  "pantry": true,
+  "name": {
+   "pt": "Mingau de Aveia no Rooibos com Banana",
+   "en": "Rooibos Oatmeal with Banana"
+  },
+  "tag": {
+   "pt": "Café da manhã cremoso, sem cafeína, adoçado pela banana.",
+   "en": "A creamy, caffeine-free breakfast sweetened by banana."
+  },
+  "time": {
+   "pt": "10 min",
+   "en": "10 min"
+  },
+  "yield": {
+   "pt": "1 porção",
+   "en": "1 serving"
+  },
+  "caffeine": false,
+  "iced": false,
+  "milk": true,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "200 ml",
+     "en": "200 ml"
+    },
+    "item": {
+     "pt": "água fervente",
+     "en": "boiling water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 sachê",
+     "en": "1 bag"
+    },
+    "item": {
+     "pt": "rooibos",
+     "en": "rooibos"
+    }
+   },
+   {
+    "qty": {
+     "pt": "4 colheres (sopa)",
+     "en": "4 tbsp"
+    },
+    "item": {
+     "pt": "aveia em flocos",
+     "en": "rolled oats"
+    }
+   },
+   {
+    "qty": {
+     "pt": "100 ml",
+     "en": "100 ml"
+    },
+    "item": {
+     "pt": "leite",
+     "en": "milk"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1",
+     "en": "1"
+    },
+    "item": {
+     "pt": "banana madura",
+     "en": "ripe banana"
+    }
+   },
+   {
+    "qty": {
+     "pt": "a gosto",
+     "en": "to taste"
+    },
+    "item": {
+     "pt": "canela em pó e mel",
+     "en": "ground cinnamon and honey"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Infunda o rooibos na água fervente por 5 minutos e retire o sachê.",
+    "en": "Steep the rooibos in the boiling water for 5 minutes and remove the bag."
+   },
+   {
+    "pt": "Na panela, junte o chá, a aveia e metade da banana amassada. Cozinhe em fogo baixo, mexendo, por 4 minutos.",
+    "en": "In a pan, combine the tea, oats and half the banana, mashed. Cook over low heat, stirring, for 4 minutes."
+   },
+   {
+    "pt": "Junte o leite e cozinhe mais 1 minuto, até ficar cremoso. Sirva com a outra metade da banana em rodelas, canela e mel.",
+    "en": "Add the milk and cook 1 more minute until creamy. Serve with the rest of the banana sliced, cinnamon and honey."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Banana bem madura adoça sozinha: prove antes de pôr mel.",
+   "en": "A very ripe banana sweetens on its own: taste before adding honey."
+  }
+ },
+ {
+  "slug": {
+   "pt": "picole-de-cha-com-leite-condensado",
+   "en": "milk-tea-ice-pops"
+  },
+  "guide": "chas-gelados",
+  "guideNumber": 5,
+  "pantry": true,
+  "name": {
+   "pt": "Picolé de Chá com Leite Condensado",
+   "en": "Milk Tea Ice Pops"
+  },
+  "tag": {
+   "pt": "Sorvete de palito com gosto de chá com leite, cremoso e nada enjoativo.",
+   "en": "Creamy ice pops that taste like milk tea, without being cloying."
+  },
+  "time": {
+   "pt": "15 min + 6 h no congelador",
+   "en": "15 min + 6 h freezing"
+  },
+  "yield": {
+   "pt": "6 picolés",
+   "en": "6 ice pops"
+  },
+  "caffeine": true,
+  "iced": true,
+  "milk": true,
+  "level": {
+   "pt": "Simples",
+   "en": "Easy"
+  },
+  "ingredients": [
+   {
+    "qty": {
+     "pt": "300 ml",
+     "en": "300 ml"
+    },
+    "item": {
+     "pt": "água fervente",
+     "en": "boiling water"
+    }
+   },
+   {
+    "qty": {
+     "pt": "3 sachês",
+     "en": "3 bags"
+    },
+    "item": {
+     "pt": "chá preto",
+     "en": "black tea"
+    }
+   },
+   {
+    "qty": {
+     "pt": "200 ml",
+     "en": "200 ml"
+    },
+    "item": {
+     "pt": "leite",
+     "en": "milk"
+    }
+   },
+   {
+    "qty": {
+     "pt": "200 g (½ lata)",
+     "en": "200 g (½ can)"
+    },
+    "item": {
+     "pt": "leite condensado",
+     "en": "sweetened condensed milk"
+    }
+   },
+   {
+    "qty": {
+     "pt": "1 pitada (opcional)",
+     "en": "1 pinch (optional)"
+    },
+    "item": {
+     "pt": "canela em pó",
+     "en": "ground cinnamon"
+    }
+   }
+  ],
+  "steps": [
+   {
+    "pt": "Infunda o chá na água fervente por 5 minutos e retire os sachês. Ele deve ficar forte.",
+    "en": "Steep the tea in the boiling water for 5 minutes and remove the bags. It should be strong."
+   },
+   {
+    "pt": "Misture o leite, o leite condensado e a canela. Junte o chá morno e mexa bem.",
+    "en": "Mix the milk, condensed milk and cinnamon. Add the warm tea and stir well."
+   },
+   {
+    "pt": "Distribua em forminhas, leve ao congelador por 1 hora, coloque os palitos e congele por mais 5 horas.",
+    "en": "Pour into moulds, freeze for 1 hour, insert the sticks and freeze for 5 more hours."
+   }
+  ],
+  "finish": null,
+  "tip": {
+   "pt": "Para desenformar, passe a forminha rapidamente sob água morna.",
+   "en": "To unmould, run the mould briefly under warm water."
+  }
+ }
+]
