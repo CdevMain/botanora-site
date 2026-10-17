@@ -582,15 +582,29 @@ function receive(lang, { notice = '', email = '' } = {}) {
 ${pageHero({ eyebrow: 'Botânora', h1: r.h1, lead: r.lead, art: false })}
 <section class="section band-paper">
   <div class="wrap receive-grid">
-    <form class="buy-box stack-form" data-form="access" novalidate>
+    <form class="buy-box stack-form access-form" data-access novalidate data-msg='${esc(JSON.stringify({ wrong: r.wrong, expired: r.expiredCode, notfound: r.notFound, rate: r.rate, err: t.newsletter.err, resent: r.resent, noMail: r.noMail }))}'>
       ${note ? `<p class="notice">${esc(note)}</p>` : ''}
-      <label for="rc-email">${esc(r.email)}</label>
-      <input id="rc-email" type="email" name="email" required autocomplete="email" value="${esc(email)}" placeholder="${esc(t.newsletter.placeholder)}">
-      <label for="rc-code">${esc(r.code)}${mailer.enabled() ? ` <span class="opt">(${esc(r.codeOptional)})</span>` : ''}</label>
-      <input id="rc-code" name="code" autocomplete="off" maxlength="60" placeholder="Ex.: ABC1234">
-      <p class="tiny muted">${esc(r.codeHint)}</p>
-      <button class="btn btn-dark btn-block" type="submit">${icon('download', 'ico-sm')} ${esc(r.submit)}</button>
-      <p class="form-msg" role="status" data-ok="${esc(r.sent)}" data-need="${esc(r.needCode)}" data-err="${esc(r.notFound)}"></p>
+      <div data-step="email">
+        <label for="rc-email">${esc(r.email)}</label>
+        <input id="rc-email" type="email" name="email" required autocomplete="email" value="${esc(email)}" placeholder="${esc(t.newsletter.placeholder)}">
+        <button class="btn btn-dark btn-block" type="submit">${esc(r.sendCode)}</button>
+        <p class="tiny muted">${esc(r.emailHint)}</p>
+      </div>
+      <div data-step="code" hidden>
+        <p class="access-sent">${esc(r.codeSent)} <strong data-email-show></strong></p>
+        <label for="rc-code">${esc(r.codeLabel)}</label>
+        <input id="rc-code" name="code" class="code-input" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="000000">
+        <button class="btn btn-dark btn-block" type="submit">${icon('download', 'ico-sm')} ${esc(r.enter)}</button>
+        <p class="tiny muted access-links"><button type="button" class="link-btn" data-resend>${esc(r.resend)}</button> · <button type="button" class="link-btn" data-change>${esc(r.change)}</button> · <button type="button" class="link-btn" data-backup>${esc(r.noEmail)}</button></p>
+      </div>
+      <div data-step="backup" hidden>
+        <p class="access-sent" data-backup-intro>${esc(r.backupIntro)}</p>
+        <label for="rc-phone">${esc(r.phoneLabel)}</label>
+        <input id="rc-phone" name="phone" class="code-input" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="0000" autocomplete="off">
+        <button class="btn btn-dark btn-block" type="submit">${icon('download', 'ico-sm')} ${esc(r.enter)}</button>
+        <p class="tiny muted access-links"><button type="button" class="link-btn" data-change>${esc(r.change)}</button></p>
+      </div>
+      <p class="form-msg" role="status"></p>
     </form>
     <ol class="steps">${r.steps.map(([a, b], i) => `<li><span class="step-n">${String(i + 1).padStart(2, '0')}</span><div><strong>${esc(a)}</strong><p class="muted">${esc(b)}</p></div></li>`).join('')}
       <li class="steps-help"><p class="muted">${esc(r.help)} <a href="mailto:${esc(config.contactEmail)}">${esc(config.contactEmail)}</a></p></li>

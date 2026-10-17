@@ -358,14 +358,14 @@
           ${copy(i.webhookUrl)}
         </div>
         <div class="card"><div class="card-head"><h2>2 · Entrega "Acesso por e-mail"</h2></div>
-          <p class="hint">No produto da Cakto, em <b>Entrega → Acesso por e-mail</b>, use o link da página de receber (abaixo). Esse link é o mesmo para todos e não abre nada sozinho: o cliente informa o e-mail da compra e recebe um link de uso único (ou usa o código do pedido da Cakto). Cada aparelho entra uma vez e fica conectado; para outro aparelho, ele pede um novo link. Até 5 aparelhos por e-mail (MAX_DEVICES).</p>
+          <p class="hint">No produto da Cakto, em <b>Entrega → Acesso por e-mail</b>, use o link da página de receber (abaixo). Esse link é o mesmo para todos e não abre nada sozinho: o cliente informa o e-mail da compra e recebe um código de 6 dígitos (e um botão de entrada). Se o e-mail não chegar, confirma com os 4 últimos dígitos do celular informado na compra. Cada aparelho entra uma vez e fica conectado. Até 5 aparelhos por e-mail (MAX_DEVICES).</p>
           <p class="sub-h">Português</p>${copy(i.receive.pt)}<p class="sub-h">English</p>${copy(i.receive.en)}
         </div>
         <div class="card"><div class="card-head"><h2>3 · Ligar guias aos produtos</h2></div>
           <p class="hint">Em <b>Produtos</b>, preencha "IDs na Cakto" de cada guia com o ID do produto ou da oferta. Um combo pode liberar vários guias: coloque o mesmo ID em cada um. Para vender a versão em inglês, crie uma oferta separada e use <code>id:en</code>. Vendas sem guia ligado aparecem no registro abaixo com o ID para copiar.</p>
         </div>
         <div class="card"><div class="card-head"><h2>4 · E-mail automático (opcional)</h2>${ok(i.mail)}</div>
-          <p class="hint">Com <code>RESEND_API_KEY</code> e <code>MAIL_FROM</code> no <code>.env</code>, o cliente recebe um link de entrada (uso único) no idioma da compra assim que o pagamento é aprovado, e a página de receber passa a funcionar só com o e-mail. Sem isso, a entrada é pelo e-mail + código do pedido da Cakto.${i.mailFrom ? ` Remetente: <b>${esc(i.mailFrom)}</b>.` : ''}</p>
+          <p class="hint">Com <code>RESEND_API_KEY</code> e <code>MAIL_FROM</code> no <code>.env</code>, o cliente recebe um link de entrada (uso único) no idioma da compra assim que o pagamento é aprovado, e a página de receber passa a funcionar só com o e-mail. Sem isso, a entrada é pelo e-mail + 4 últimos dígitos do celular da compra.${i.mailFrom ? ` Remetente: <b>${esc(i.mailFrom)}</b>.` : ''}</p>
         </div>
       </div>
       <div class="card"><div class="card-head"><h2>Registro de webhooks</h2><button class="btn-sm" id="int-refresh">Atualizar</button></div>

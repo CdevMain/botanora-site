@@ -13,7 +13,10 @@ const T = {
     cta: 'Entrar na minha biblioteca',
     list: 'Seus guias',
     keep: h => `Por segurança, o botão funciona uma vez e vale por ${h >= 48 ? Math.round(h / 24) + ' dias' : h + ' horas'}. Depois de entrar, o aparelho fica conectado. Para outro aparelho ou se o link expirar, peça um novo em`,
-    foot: 'Botânora · Chás e botânicos'
+    foot: 'Botânora · Chás e botânicos',
+    codeSubject: c => `Seu código de acesso Botânora: ${c}`,
+    codeIntro: 'Use este código na página Receber meus guias para entrar neste aparelho. Ele vale por 15 minutos.',
+    orLink: 'Ou, se estiver neste aparelho, toque no botão:'
   },
   en: {
     subject: 'Your Botânora guides are ready',
@@ -22,13 +25,16 @@ const T = {
     cta: 'Sign in to my library',
     list: 'Your guides',
     keep: h => `For your security, the button works once and is valid for ${h >= 48 ? Math.round(h / 24) + ' days' : h + ' hours'}. Once you sign in, that device stays connected. For another device or if the link expires, request a new one at`,
-    foot: 'Botânora · Tea and botanicals'
+    foot: 'Botânora · Tea and botanicals',
+    codeSubject: c => `Your Botânora access code: ${c}`,
+    codeIntro: 'Enter this code on the Get my guides page to sign in on that device. It is valid for 15 minutes.',
+    orLink: 'Or, if you are on this device, tap the button:'
   }
 };
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-function accessEmail({ lang, name, link, receiveUrl, titles, hours = 72 }) {
+function accessEmail({ lang, name, link, receiveUrl, titles, hours = 72, code = '' }) {
   const t = T[lang] || T.pt;
   const keep = t.keep(hours);
   const html = `<!doctype html><html><body style="margin:0;background:#f4efe4;font-family:Georgia,'Times New Roman',serif;color:#16212a">
@@ -38,12 +44,15 @@ function accessEmail({ lang, name, link, receiveUrl, titles, hours = 72 }) {
 <tr><td style="padding:24px 40px 8px"><h1 style="font-weight:normal;font-size:28px;margin:0 0 14px">${esc(t.hello(name))}</h1>
 <p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d9d3c6;margin:0 0 22px">${esc(t.body)}</p>
 ${titles.length ? `<p style="font-family:Arial,sans-serif;font-size:11px;letter-spacing:3px;color:#d6b44c;margin:0 0 8px">${esc(t.list.toUpperCase())}</p><ul style="margin:0 0 26px;padding-left:18px;font-size:18px">${titles.map(x => `<li style="margin:4px 0">${esc(x)}</li>`).join('')}</ul>` : ''}
+${code ? `<p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d9d3c6;margin:0 0 14px">${esc(t.codeIntro)}</p>
+<p style="text-align:center;margin:0 0 26px"><span style="display:inline-block;font-family:'Courier New',monospace;font-size:34px;letter-spacing:10px;color:#111a21;background:#f4efe4;padding:14px 22px 14px 32px">${esc(code)}</span></p>
+<p style="font-family:Arial,sans-serif;font-size:13px;color:#9aa3a9;margin:0 0 12px;text-align:center">${esc(t.orLink)}</p>` : ''}
 <p style="text-align:center;margin:0 0 30px"><a href="${esc(link)}" style="display:inline-block;background:#d6b44c;color:#111a21;text-decoration:none;font-family:Arial,sans-serif;font-size:13px;letter-spacing:3px;padding:16px 28px">${esc(t.cta.toUpperCase())}</a></p>
 <p style="font-family:Arial,sans-serif;font-size:12.5px;line-height:1.6;color:#9aa3a9;margin:0 0 30px">${esc(keep)} <a href="${esc(receiveUrl)}" style="color:#d6b44c">${esc(receiveUrl.replace(/^https?:\/\//, ''))}</a></p></td></tr>
 <tr><td style="padding:18px 40px;border-top:1px solid #2a3640;font-family:Arial,sans-serif;font-size:12px;color:#6f7a82;text-align:center">${esc(t.foot)}</td></tr>
 </table></td></tr></table></body></html>`;
-  const text = `${t.hello(name)}\n\n${t.body}\n\n${titles.map(x => '- ' + x).join('\n')}\n\n${t.cta}: ${link}\n\n${keep} ${receiveUrl}`;
-  return { subject: t.subject, html, text };
+  const text = `${t.hello(name)}\n\n${code ? t.codeIntro + '\n\n    ' + code + '\n\n' : ''}${t.body}\n\n${titles.map(x => '- ' + x).join('\n')}\n\n${t.cta}: ${link}\n\n${keep} ${receiveUrl}`;
+  return { subject: code ? t.codeSubject(code) : t.subject, html, text };
 }
 
 async function send({ to, subject, html, text }) {

@@ -156,6 +156,61 @@
     });
   });
 
+  // ---------- acesso à biblioteca: e-mail -> código de 6 dígitos (plano B: celular) ----------
+  const acc = $('[data-access]');
+  if (acc) {
+    const M = JSON.parse(acc.dataset.msg || '{}');
+    const steps = $$('[data-step]', acc), emailIn = $('[name=email]', acc), codeIn = $('[name=code]', acc), phoneIn = $('[name=phone]', acc);
+    let step = 'email';
+    const go = s => {
+      step = s;
+      steps.forEach(el => { el.hidden = el.dataset.step !== s; });
+      $('[data-email-show]', acc).textContent = emailIn.value.trim();
+      msg(acc, true, '');
+      const f = { email: emailIn, code: codeIn, backup: phoneIn }[s];
+      if (f) setTimeout(() => f.focus(), 30);
+    };
+    const btnOf = () => $(`[data-step="${step}"] button[type=submit]`, acc);
+    async function send(extra) {
+      const btn = btnOf(); btn.disabled = true;
+      try {
+        const r = await post('/api/access', Object.assign({ email: emailIn.value.trim(), lang }, extra));
+        if (r.redirect) { location.href = r.redirect; return r; }
+        return r;
+      } catch (err) { msg(acc, false, M[err.error] || M.err); return null; }
+      finally { btn.disabled = false; }
+    }
+    acc.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (step === 'email') {
+        if (!emailIn.checkValidity() || !emailIn.value.trim()) { emailIn.reportValidity(); return; }
+        const r = await send({});
+        if (!r) return;
+        if (r.mail === false) { go('backup'); msg(acc, true, M.noMail); } else go('code');
+      } else if (step === 'code') {
+        const c = codeIn.value.replace(/\D/g, '');
+        if (c.length !== 6) { msg(acc, false, M.wrong); codeIn.focus(); return; }
+        await send({ code: c });
+      } else {
+        const ph = phoneIn.value.replace(/\D/g, '');
+        if (ph.length !== 4) { phoneIn.focus(); return; }
+        await send({ phone: ph });
+      }
+    });
+    // código colado ou digitado: envia sozinho ao completar 6 dígitos
+    codeIn.addEventListener('input', () => {
+      codeIn.value = codeIn.value.replace(/\D/g, '').slice(0, 6);
+      if (codeIn.value.length === 6) acc.requestSubmit ? acc.requestSubmit() : acc.dispatchEvent(new Event('submit', { cancelable: true }));
+    });
+    phoneIn.addEventListener('input', () => { phoneIn.value = phoneIn.value.replace(/\D/g, '').slice(0, 4); });
+    acc.addEventListener('click', async e => {
+      if (e.target.closest('[data-change]')) { codeIn.value = ''; phoneIn.value = ''; go('email'); }
+      if (e.target.closest('[data-backup]')) go('backup');
+      if (e.target.closest('[data-resend]')) { const r = await send({}); if (r) msg(acc, true, M.resent); }
+    });
+    if (emailIn.value) emailIn.focus();
+  }
+
   // ---------- espectro (home) ----------
   const sp = $('[data-spectrum]');
   if (sp) {

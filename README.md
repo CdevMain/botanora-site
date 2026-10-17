@@ -42,21 +42,21 @@ data/                     criado automaticamente: banco, eventos e PDFs (fora do
 | `/pt/preparo` | `/en/brewing` | Calculadora de dose + timer com aviso sonoro e notificação |
 | `/pt/quiz` | `/en/quiz` | "Qual chá é para você?" com recomendação de guia |
 | `/pt/loja` | `/en/shop` | Os 10 guias em PDF, compra ou lista de espera |
-| `/pt/receber` | `/en/receive` | Página de receber: e-mail (recebe um link de uso único) ou e-mail + código do pedido → biblioteca |
+| `/pt/receber` | `/en/receive` | Página de receber: e-mail → código de 6 dígitos (ou 4 últimos dígitos do celular da compra) → biblioteca |
 | `/pt/biblioteca` | `/en/library` | Biblioteca do cliente: só abre no aparelho conectado; escolhe o guia e o idioma do PDF |
 
 ## Vendas
 
 - **Toda venda acontece na Cakto.** Em **Painel → Produtos**, cole em cada guia o link do checkout da Cakto (PT e, se houver, EN). O botão Comprar da página do guia leva para esse link. Guia sem link mostra a lista de espera.
 - O PDF fica fora da pasta pública e só é entregue pela biblioteca, no aparelho conectado (limite de `MAX_DOWNLOADS` por pedido).
-- Sem a Resend configurada o site não envia e-mails: o cliente entra com e-mail + código do pedido, e o painel tem "Gerar link de acesso" (uso único, vale 3 dias).
+- Sem a Resend configurada o site não envia e-mails: o cliente entra com e-mail + 4 últimos dígitos do celular da compra, e o painel tem "Gerar link de acesso" (uso único, vale 3 dias).
 
 ## Cakto + entrega por e-mail
 
 Fluxo: o cliente compra na Cakto → a Cakto chama o webhook → o pedido é liberado aqui → o cliente abre a biblioteca e escolhe guia e idioma.
 
 1. **Webhook:** Cakto → Integrações → Webhooks → Adicionar. URL: `SITE_URL/api/webhooks/cakto`. Eventos: `purchase_approved`, `refund`, `chargeback`. Copie o *secret* para `CAKTO_WEBHOOK_SECRET` no `.env` e reinicie. A assinatura `X-Cakto-Signature` (HMAC-SHA256) é validada; reembolso e chargeback revogam o acesso.
-2. **Entrega "Acesso por e-mail":** no produto da Cakto, use o link `SITE_URL/receber` (ou `SITE_URL/receive` para a oferta em inglês). O cliente informa o e-mail e o código do pedido (o mesmo `refId` que aparece na Cakto) e entra na biblioteca.
+2. **Entrega "Acesso por e-mail":** no produto da Cakto, use o link `SITE_URL/receber` (ou `SITE_URL/receive` para a oferta em inglês). O cliente informa o e-mail, recebe um código de 6 dígitos e entra na biblioteca.
 3. **Ligar guias:** Painel → Produtos → "IDs na Cakto": ID do produto ou da oferta. Um combo libera vários guias se o mesmo ID estiver em cada um. Use `id:en` numa oferta em inglês para que o idioma padrão do PDF seja inglês. Vendas sem guia ligado aparecem em Painel → Integrações com o ID para copiar.
 4. **E-mail automático (opcional):** com `RESEND_API_KEY` e `MAIL_FROM` (domínio verificado na [Resend](https://resend.com)) o cliente recebe o link da biblioteca no idioma da compra assim que o pagamento é aprovado, e a página de receber funciona só com o e-mail.
 
@@ -82,7 +82,7 @@ Páginas de chá (`/pt/guia/<chá>`), 20 receitas grátis (`/pt/receitas`), perg
 
 - **Link de entrada de uso único:** chega por e-mail (24 h quando pedido na página de receber, 3 dias após a compra). Abre uma página com o botão "Entrar neste aparelho"; só o clique gasta o link, então leitores de e-mail que abrem links sozinhos não estragam o acesso. Guardamos apenas o hash do link.
 - **Aparelho conectado:** depois de entrar, o aparelho recebe um cookie seguro (HttpOnly) que dura `ACCESS_DAYS`. A biblioteca e os downloads só funcionam com ele; o endereço da biblioteca sozinho não abre nada.
-- **Outro aparelho:** a pessoa vai em Receber meus guias e pede um link novo, que chega no e-mail da compra. Sem e-mail configurado, entra com e-mail + código do pedido da Cakto.
+- **Entrar (qualquer aparelho):** em Receber meus guias a pessoa digita o e-mail e recebe um **código de 6 dígitos** (vale 15 minutos, 5 tentativas); o mesmo e-mail traz o botão de entrada. Se o e-mail não chegar, ela confirma com os **4 últimos dígitos do celular** informado na Cakto.
 - **Limites:** até `MAX_DEVICES` aparelhos por e-mail (o mais antigo sai) e `MAX_DOWNLOADS` por pedido. O cliente pode sair de um ou de todos os aparelhos; no painel, "Desconectar aparelhos" faz o mesmo.
 
 ## Criar um guia novo

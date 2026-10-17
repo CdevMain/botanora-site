@@ -23,6 +23,7 @@ function box() {
   if (!db.access || typeof db.access !== 'object') db.access = {};
   if (!db.access.links) db.access.links = {};
   if (!db.access.sessions) db.access.sessions = {};
+  if (!db.access.codes) db.access.codes = {};
   return db.access;
 }
 
@@ -31,6 +32,7 @@ function prune() {
   let changed = false;
   for (const [k, l] of Object.entries(a.links)) if (l.x < now - 7 * 24 * HOUR) { delete a.links[k]; changed = true; }
   for (const [k, s] of Object.entries(a.sessions)) if (s.x < now) { delete a.sessions[k]; changed = true; }
+  for (const [k, c] of Object.entries(a.codes)) if (c.x < now) { delete a.codes[k]; changed = true; }
   if (changed) store.save();
 }
 prune();
@@ -57,6 +59,25 @@ function consumeLink(t) {
   box().links[hash(t)].u = Date.now();
   store.save();
   return p.email;
+}
+
+// ---------- código de 6 dígitos (digitado no aparelho que vai entrar) ----------
+// Vale 15 minutos e aceita até 5 tentativas; pedir outro código invalida o anterior.
+const CODE_MIN = 15, CODE_TRIES = 5;
+function issueCode(email) {
+  const code = String(crypto.randomInt(0, 1000000)).padStart(6, '0');
+  box().codes[String(email).toLowerCase()] = { h: hash('code|' + code), x: Date.now() + CODE_MIN * 60000, n: 0 };
+  store.save();
+  return code;
+}
+function verifyCode(email, code) {
+  const k = String(email).toLowerCase(), c = box().codes[k];
+  if (!c || c.x < Date.now()) return 'expired';
+  if (c.n >= CODE_TRIES) { delete box().codes[k]; store.save(); return 'expired'; }
+  const ok = /^\d{6}$/.test(String(code)) && crypto.timingSafeEqual(Buffer.from(c.h), Buffer.from(hash('code|' + code)));
+  if (!ok) { c.n++; store.save(); return 'wrong'; }
+  delete box().codes[k]; store.save();
+  return 'ok';
 }
 
 // ---------- sessões por aparelho ----------
@@ -109,4 +130,4 @@ function cookieHeader(token) {
   return token ? `${base}; Max-Age=${config.accessDays * 86400}` : `${base}; Max-Age=0`;
 }
 
-module.exports = { issueLink, peekLink, consumeLink, createSession, sessionEmail, endSession, endAllSessions, devicesFor, cookieHeader };
+module.exports = { issueCode, verifyCode, CODE_MIN, issueLink, peekLink, consumeLink, createSession, sessionEmail, endSession, endAllSessions, devicesFor, cookieHeader };

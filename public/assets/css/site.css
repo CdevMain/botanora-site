@@ -422,6 +422,13 @@ input[type=range] { width: 100%; accent-color: var(--gold-3); margin-top: 10px; 
 .form-msg { min-height: 1.4em; margin: 6px 0 0; font-size: 14.5px; }
 .form-msg.is-ok { color: var(--ok); }
 .form-msg.is-err { color: #a3412b; }
+.access-form [data-step] { display: flex; flex-direction: column; gap: 10px; }
+.access-form [data-step][hidden] { display: none; }
+.access-form [data-step] .btn { margin-top: 6px; }
+.access-sent { margin: 0 0 4px; font-size: 15px; line-height: 1.55; }
+.access-sent strong { word-break: break-all; }
+.code-input { font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 26px !important; letter-spacing: .5em; text-align: center; padding-left: .5em !important; }
+.access-links { display: flex; flex-wrap: wrap; gap: 4px 6px; justify-content: center; margin: 6px 0 0; }
 .band-night .form-msg.is-ok { color: #9cc9a6; }
 .band-night .form-msg.is-err { color: #e79a85; }
 

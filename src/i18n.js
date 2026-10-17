@@ -175,11 +175,17 @@ const ui = {
     receive: {
       title: 'Receber meus guias | Botânora', h1: 'Receba seus guias',
       lead: 'Comprou um guia Botânora? Informe o e-mail usado na compra para entrar na sua biblioteca e baixar os PDFs no idioma que preferir. Vale para um aparelho novo também: cada aparelho entra uma vez e fica conectado.',
+      sendCode: 'Receber código de acesso', emailHint: 'Enviamos um código de 6 dígitos para o e-mail usado na compra. Funciona em qualquer aparelho.',
+      codeSent: 'Se houver compras neste e-mail, enviamos um código para', codeLabel: 'Código de 6 dígitos', enter: 'Entrar na biblioteca',
+      resend: 'Reenviar código', change: 'Trocar e-mail', noEmail: 'Não recebi o e-mail', resent: 'Enviamos um novo código. Confira também o spam.',
+      wrong: 'Código incorreto. Confira os 6 dígitos.', expiredCode: 'Este código expirou. Toque em Reenviar código.', rate: 'Muitas tentativas. Aguarde alguns minutos e tente de novo.',
+      backupIntro: 'Sem problema: confirme com os 4 últimos dígitos do celular que você informou na compra.', noMail: 'Confirme com os 4 últimos dígitos do celular que você informou na compra.',
+      phoneLabel: 'Últimos 4 dígitos do celular',
       email: 'E-mail da compra', code: 'Código do pedido', codeHint: 'Está no e-mail de confirmação da compra (ex.: o número do pedido na Cakto).',
       codeOptional: 'opcional se você recebe e-mails da Botânora',
       submit: 'Acessar meus guias', sent: 'Pronto! Se houver compras neste e-mail, enviamos agora um link para entrar. Ele vale por 24 horas e funciona uma vez. Confira também o spam.',
-      needCode: 'Informe também o código do pedido para liberar o acesso.', notFound: 'Não encontramos uma compra paga com esses dados. Confira o e-mail e o código do pedido.',
-      steps: [['Compre o guia', 'Na página do guia, pelo checkout da Cakto.'], ['Receba o acesso', 'Um link chega no seu e-mail logo após a confirmação.'], ['Escolha e baixe', 'Na biblioteca, escolha o guia e o idioma do PDF.']],
+      needCode: 'Informe também o código do pedido para liberar o acesso.', notFound: 'Não encontramos uma compra com esses dados. Confira o e-mail e os dígitos, ou fale com a gente pelo e-mail abaixo.',
+      steps: [['Compre o guia', 'Na página do guia, pelo checkout da Cakto.'], ['Receba o código', 'Digite seu e-mail aqui e use o código de 6 dígitos que chega na sua caixa de entrada.'], ['Escolha e baixe', 'Na biblioteca, escolha o guia e o idioma do PDF.']],
       help: 'Precisa de ajuda? Escreva para'
     },
     library: {
@@ -344,11 +350,17 @@ const ui = {
     receive: {
       title: 'Get my guides | Botânora', h1: 'Get your guides',
       lead: 'Bought a Botânora guide? Enter the email you used at checkout to open your library and download the PDFs in your preferred language. It works on a new device too: each device signs in once and stays connected.',
+      sendCode: 'Get my access code', emailHint: 'We send a 6-digit code to the email used at checkout. It works on any device.',
+      codeSent: 'If this email has purchases, we sent a code to', codeLabel: '6-digit code', enter: 'Open my library',
+      resend: 'Resend code', change: 'Use another email', noEmail: "I didn't get the email", resent: 'We sent a new code. Check your spam folder too.',
+      wrong: 'Wrong code. Check the 6 digits.', expiredCode: 'This code has expired. Tap Resend code.', rate: 'Too many attempts. Wait a few minutes and try again.',
+      backupIntro: 'No problem: confirm with the last 4 digits of the phone number you gave at checkout.', noMail: 'Confirm with the last 4 digits of the phone number you gave at checkout.',
+      phoneLabel: 'Last 4 digits of your phone',
       email: 'Purchase email', code: 'Order code', codeHint: 'It is in your purchase confirmation email (e.g. the Cakto order number).',
       codeOptional: 'optional if you receive Botânora emails',
       submit: 'Access my guides', sent: "Done! If this email has purchases, we've just sent you a sign-in link. It is valid for 24 hours and works once. Check your spam folder too.",
-      needCode: 'Please also enter your order code to unlock access.', notFound: "We couldn't find a paid purchase with these details. Check the email and order code.",
-      steps: [['Buy the guide', 'On the guide page, through Cakto checkout.'], ['Get access', 'A link arrives in your inbox right after payment.'], ['Choose and download', 'In your library, pick the guide and the PDF language.']],
+      needCode: 'Please also enter your order code to unlock access.', notFound: "We couldn't find a purchase with these details. Check the email and digits, or contact us at the email below.",
+      steps: [['Buy the guide', 'On the guide page, through Cakto checkout.'], ['Get your code', 'Enter your email here and use the 6-digit code that arrives in your inbox.'], ['Choose and download', 'In your library, pick the guide and the PDF language.']],
       help: 'Need help? Write to'
     },
     library: {

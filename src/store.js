@@ -125,13 +125,13 @@ function resolveFile(p, lang) {
 }
 
 // Pedido vindo de plataforma externa (Cakto), já pago
-function createExternalOrder({ product, name, email, amount, pdfLang, provider, externalId, refId, method }) {
+function createExternalOrder({ product, name, email, amount, pdfLang, provider, externalId, refId, method, phone4 }) {
   const dup = db.orders.find(o => o.provider === provider && o.externalId === externalId && o.product === product.slug);
   if (dup) return { order: dup, created: false };
   const order = {
     id: newOrderId(), token: id(16), product: product.slug, title: product.title.pt,
     amount, name: name || '', email: email.toLowerCase(), lang: pdfLang, pdfLang,
-    status: 'pending', provider, externalId, refId: refId || '', method: method || '',
+    status: 'pending', provider, externalId, refId: refId || '', method: method || '', phone4: phone4 || '',
     downloads: 0, createdAt: now(), paidAt: null
   };
   db.orders.push(order);

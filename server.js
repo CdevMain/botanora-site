@@ -104,16 +104,16 @@ const ENTER = { pt: 'entrar', en: 'enter' };
 function entryUrl(email, lang, hours) { return url(lang, 'library', ENTER[lang]) + '?t=' + access.issueLink(email, hours); }
 // same-origin: o navegador envia a origem nos formulários (com no-referrer ela vira "null" e a checagem de origem recusa)
 const libHeaders = extra => Object.assign({ 'Cache-Control': 'no-store', 'Referrer-Policy': 'same-origin', 'X-Robots-Tag': 'noindex' }, extra);
-async function sendAccess(email, lang, hours = 72) {
+async function sendAccess(email, lang, hours = 72, withCode = false) {
   if (!mailer.enabled()) return { skipped: true };
   const orders = store.paidOrdersFor(email);
   if (!orders.length) return { skipped: true };
   const titles = [...new Set(orders.map(o => { const p = store.getProduct(o.product); return p ? p.title[lang] : o.title; }))];
   const name = (orders.find(o => o.name) || {}).name || '';
-  const mail = mailer.accessEmail({ lang, name, titles, link: config.siteUrl + entryUrl(email, lang, hours), hours, receiveUrl: config.siteUrl + url(lang, 'receive') });
+  const mail = mailer.accessEmail({ lang, name, titles, link: config.siteUrl + entryUrl(email, lang, hours), hours, code: withCode ? access.issueCode(email) : '', receiveUrl: config.siteUrl + url(lang, 'receive') });
   return mailer.send({ to: email, ...mail });
 }
-function sendAccessLater(email, lang, hours) { sendAccess(email, lang, hours).catch(e => console.error('e-mail de acesso:', e.message)); }
+function sendAccessLater(email, lang, hours, withCode) { sendAccess(email, lang, hours, withCode).catch(e => console.error('e-mail de acesso:', e.message)); }
 
 function streamPdf(req, res, file, name) {
   const stat = fs.statSync(file);
@@ -290,25 +290,35 @@ async function apiPublic(req, res, pathname, ip, query) {
     return json(req, res, 200, { ok: true });
   }
 
-  // Página "Receber": e-mail (+ código do pedido) -> biblioteca
+  // Página "Receber": e-mail -> código de 6 dígitos no e-mail -> biblioteca.
+  // Sem e-mail configurado (ou se não chegar): e-mail + 4 últimos dígitos do celular da compra.
   if (pathname === '/api/access' && req.method === 'POST') {
-    if (!rateLimit(ip, 'access', 8, 600000)) return json(req, res, 429, { error: 'rate' });
+    if (!rateLimit(ip, 'access', 15, 600000)) return json(req, res, 429, { error: 'rate' });
     const b = await readJson(req);
     const lang = LANGS.includes(b.lang) ? b.lang : 'pt';
     const email = String(b.email || '').trim().toLowerCase();
-    const code = String(b.code || '').trim().toUpperCase().replace(/^#/, '');
     if (!EMAIL_RE.test(email)) return json(req, res, 400, { error: 'email' });
     const orders = store.paidOrdersFor(email);
+    const enter = () => json(req, res, 200, { redirect: url(lang, 'library') }, { 'Set-Cookie': access.cookieHeader(access.createSession(email, req)) });
+
+    // 2a. Código de 6 dígitos que chegou no e-mail
+    const code = String(b.code || '').replace(/\D/g, '');
     if (code) {
-      const ok = orders.some(o => [o.id, o.refId, o.externalId].filter(Boolean).map(x => String(x).toUpperCase()).includes(code));
-      if (!ok) return json(req, res, 404, { error: 'notfound' });
-      const tok = access.createSession(email, req);
-      return json(req, res, 200, { redirect: url(lang, 'library') }, { 'Set-Cookie': access.cookieHeader(tok) });
+      const r = access.verifyCode(email, code);
+      return r === 'ok' && orders.length ? enter() : json(req, res, 400, { error: r === 'wrong' ? 'wrong' : 'expired' });
     }
-    // Só com o e-mail: mandamos um link de uso único para a caixa de entrada da compra.
-    // A resposta é sempre a mesma, para não revelar quem comprou.
-    if (mailer.enabled()) { if (orders.length && rateLimit(email, 'accessmail', 3, 3600000)) sendAccessLater(email, lang, 24); return json(req, res, 200, { sent: true }); }
-    return json(req, res, 200, { needCode: true });
+    // 2b. Plano B: 4 últimos dígitos do celular informado na compra (ou o código do pedido da Cakto)
+    const phone = String(b.phone || '').replace(/\D/g, '');
+    const ref = String(b.order || '').trim().toUpperCase().replace(/^#/, '');
+    if (phone || ref) {
+      if (!rateLimit(email, 'backup', 5, 3600000)) return json(req, res, 429, { error: 'rate' });
+      const ok = orders.some(o => (phone.length === 4 && o.phone4 === phone) || (ref && [o.id, o.refId, o.externalId].filter(Boolean).map(x => String(x).toUpperCase()).includes(ref)));
+      return ok ? enter() : json(req, res, 404, { error: 'notfound' });
+    }
+    // 1. Só o e-mail: manda o código (e o botão de entrada) para a caixa da compra.
+    // A resposta é a mesma com ou sem compra, para não revelar quem comprou.
+    if (mailer.enabled() && orders.length && rateLimit(email, 'accessmail', 4, 3600000)) sendAccessLater(email, lang, 24, true);
+    return json(req, res, 200, { step: 'code', mail: mailer.enabled() });
   }
 
   // Entrar neste aparelho (botão da página de confirmação do link)
@@ -403,6 +413,7 @@ async function caktoWebhook(req, res) {
   const event = String(body.event || '');
   const d = body.data || {};
   const prod = d.product || {}, offer = d.offer || {}, cust = d.customer || {};
+  const phone4 = String(cust.phone || cust.cellphone || cust.mobile || cust.phoneNumber || '').replace(/\D/g, '').slice(-4);
   const ids = [prod.id, prod.short_id, offer.id].filter(Boolean).map(String);
   // Order bumps / combos: se vierem itens extras no mesmo evento, libera cada guia também
   for (const k of ['orderBumps', 'order_bumps', 'bumps', 'items', 'products', 'offers']) {
@@ -427,7 +438,7 @@ async function caktoWebhook(req, res) {
       langForMail = pdfLang;
       const r = store.createExternalOrder({
         product: p, name: cust.name, email, amount: Math.round(total / matches.length), pdfLang,
-        provider: 'cakto', externalId: String(d.id), refId: d.refId ? String(d.refId) : '', method: d.paymentMethodName || d.paymentMethod || ''
+        provider: 'cakto', externalId: String(d.id), refId: d.refId ? String(d.refId) : '', method: d.paymentMethodName || d.paymentMethod || '', phone4: phone4.length === 4 ? phone4 : ''
       });
       if (r.created) created.push(p.slug);
     }
