@@ -49,7 +49,7 @@ fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 // Copia os PDFs iniciais de seed/ (ex.: infusoes-autorais-pt.pdf)
 const seedPdfDir = path.join(config.root, 'seed');
-const GUIDES_V = 7;
+const GUIDES_V = 8;
 if (fs.existsSync(seedPdfDir)) {
   for (const f of fs.readdirSync(seedPdfDir)) {
     const dest = path.join(PDF_DIR, f);

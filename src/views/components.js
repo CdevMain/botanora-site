@@ -12,7 +12,7 @@ function coverSrc(slug, lang) {
   const key = slug + lang;
   if (!coverCache.has(key)) {
     const pick = [lang, lang === 'pt' ? 'en' : 'pt'].map(l => `${slug}-${l}.jpg`).find(f => fs.existsSync(path.join(COVER_DIR, f)));
-    coverCache.set(key, pick ? '/assets/img/covers/' + pick : null);
+    coverCache.set(key, pick ? '/assets/img/covers/' + pick + '?v=' + Math.round(fs.statSync(path.join(COVER_DIR, pick)).mtimeMs / 1000).toString(36) : null);
   }
   return coverCache.get(key);
 }
