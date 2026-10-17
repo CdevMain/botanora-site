@@ -63,6 +63,7 @@ function range(a, b, unit = '') {
 function affImage(a) {
   if (a.imageFile) return '/media/' + a.imageFile;
   if (a.image && /^https:\/\//.test(a.image)) return a.image;
+  if (a.autoImage) return '/media/' + a.autoImage;
   return null;
 }
 
@@ -72,7 +73,7 @@ function affCard(a, lang) {
   const title = a.title[lang] || a.title.pt;
   return `<article class="aff-card" data-cat="${esc(a.category)}">
     <a class="aff-media${img ? '' : ' aff-media-ico'}" href="/r/${esc(a.id)}" target="_blank" rel="sponsored nofollow noopener" tabindex="-1" aria-hidden="true">
-      ${img ? `<img src="${esc(img)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : icon(a.icon || 'teapot', 'aff-ico')}
+      ${img ? `<img src="${esc(img)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-aff-img>` : ''}${icon(a.icon || 'teapot', 'aff-ico')}
     </a>
     <div class="aff-body">
       <p class="aff-meta"><span>${esc(g.cats[a.category] || '')}</span><span class="aff-store aff-${esc(a.store)}">${esc(g.stores[a.store] || a.store)}</span></p>

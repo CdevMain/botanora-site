@@ -78,6 +78,10 @@ Cada página de produto mostra 6 páginas de amostra do guia (capa, abertura, su
 
 Páginas de chá (`/pt/guia/<chá>`), 20 receitas grátis (`/pt/receitas`), perguntas frequentes (`/pt/perguntas`), dados estruturados, `sitemap.xml`, `robots.txt` aberto para IAs, `/llms.txt`, versão Markdown de cada página (`.md` no fim da URL) e IndexNow automático. O plano completo, com o passo a passo do Search Console e ideias para crescer, está em `docs/seo-e-ia.md`. As receitas públicas saem dos guias com `python3 tools/guias/pdf/export_receitas.py`.
 
+## Fotos das recomendações
+
+Ao cadastrar ou trocar o link de uma recomendação, o site abre o anúncio do Mercado Livre ou da Amazon, pega a foto principal e guarda uma cópia em `data/uploads`. Recomendações sem foto são tentadas de novo 20 s após iniciar e uma vez por dia. Se não achar (ou a foto não carregar no navegador), o cartão mostra o ícone escolhido. Foto enviada ou por link no painel sempre tem prioridade. Por segurança, a busca só acessa domínios do Mercado Livre e da Amazon.
+
 ## Acesso do cliente (sem senha e sem link aberto)
 
 - **Link de entrada de uso único:** chega por e-mail (24 h quando pedido na página de receber, 3 dias após a compra). Abre uma página com o botão "Entrar neste aparelho"; só o clique gasta o link, então leitores de e-mail que abrem links sozinhos não estragam o acesso. Guardamos apenas o hash do link.

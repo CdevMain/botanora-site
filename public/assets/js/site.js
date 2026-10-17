@@ -156,6 +156,11 @@
     });
   });
 
+  // ---------- recomendações: se a foto não carregar, mostra o ícone ----------
+  const affFallback = img => { const box = img.closest('.aff-media'); if (box) box.classList.add('aff-media-ico'); img.remove(); };
+  document.addEventListener('error', e => { if (e.target.matches && e.target.matches('[data-aff-img]')) affFallback(e.target); }, true);
+  $$('[data-aff-img]').forEach(img => { if (img.complete && !img.naturalWidth) affFallback(img); });
+
   // ---------- acesso à biblioteca: e-mail -> código de 6 dígitos (plano B: celular) ----------
   const acc = $('[data-access]');
   if (acc) {

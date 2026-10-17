@@ -279,18 +279,36 @@
       <img class="pe-cover" src="/assets/img/covers/${p.slug}-pt.jpg" alt="" onerror="this.style.visibility='hidden'">
       <div class="pe-main">
         <div class="pe-head"><span class="pe-num">${String(p.order).padStart(2, '0')}</span><div class="pe-title"><b>${esc(p.title.pt)}</b><span>${esc(p.title.en)} · /${esc(p.slug)}</span></div><span class="pill pill-${p.status}">${statusName[p.status]}</span></div>
-        <div class="pe-fields">
-          <label>Preço (R$)<input name="price" type="number" min="1" step="0.01" value="${(p.price / 100).toFixed(2)}"></label>
-          <label>Status<span class="select"><select name="status">${['available', 'coming_soon', 'hidden'].map(s => `<option value="${s}"${p.status === s ? ' selected' : ''}>${statusName[s]}</option>`).join('')}</select></span></label>
-          <label>Páginas<input name="pages" type="number" min="1" value="${p.pages}"></label>
-          <label class="pe-cakto">Link do checkout na Cakto · PT <small>o botão Comprar leva para cá; sem link, o guia mostra a lista de espera</small><input name="checkoutPt" type="url" value="${esc((p.checkout || {}).pt || '')}" placeholder="https://pay.cakto.com.br/..."></label>
-          <label class="pe-cakto">Link do checkout na Cakto · EN <small>opcional, oferta da versão em inglês</small><input name="checkoutEn" type="url" value="${esc((p.checkout || {}).en || '')}" placeholder="https://pay.cakto.com.br/..."></label>
-          <label class="pe-cakto">IDs na Cakto <small>produto ou oferta · use <code>id:en</code> para entregar em inglês</small><input name="cakto" value="${esc((p.cakto || []).join(', '))}" placeholder="ex.: 8f2a1c, oferta-en:en"></label>
+        <div class="pe-sec">
+          <p class="pe-sec-t">Venda</p>
+          <div class="pe-row3">
+            <label>Preço (R$)<input name="price" type="number" min="1" step="0.01" value="${(p.price / 100).toFixed(2)}"></label>
+            <label>Status<span class="select"><select name="status">${['available', 'coming_soon', 'hidden'].map(s => `<option value="${s}"${p.status === s ? ' selected' : ''}>${statusName[s]}</option>`).join('')}</select></span></label>
+            <label>Páginas<input name="pages" type="number" min="1" value="${p.pages}"></label>
+          </div>
         </div>
-        <div class="pe-files">${fileBtn(p, 'pt')}${fileBtn(p, 'en')}<button class="btn primary" type="submit">Salvar</button></div>
+        <div class="pe-sec">
+          <p class="pe-sec-t">Checkout na Cakto <span>o botão Comprar leva para o link; sem link, o guia mostra a lista de espera</span></p>
+          <div class="pe-row2">
+            ${['pt', 'en'].map(l => { const v = (p.checkout || {})[l] || ''; return `<label><span>Link ${l.toUpperCase()}${l === 'en' ? ' <small>· opcional</small>' : ''}</span><span class="pe-link"><input name="checkout${l === 'pt' ? 'Pt' : 'En'}" type="url" value="${esc(v)}" placeholder="https://pay.cakto.com.br/..."><a class="pe-open${v ? '' : ' off'}" href="${esc(v || '#')}" target="_blank" rel="noopener" title="Testar o link">↗</a></span></label>`; }).join('')}
+          </div>
+          <details class="pe-adv"${(p.cakto || []).length ? ' open' : ''}><summary>Avançado: IDs extras na Cakto</summary>
+            <label><span>IDs de produto ou oferta <small>· só se precisar liberar este guia por outra oferta (combo, order bump). Use <code>id:en</code> para entregar em inglês.</small></span><input name="cakto" value="${esc((p.cakto || []).join(', '))}" placeholder="ex.: 8f2a1c, combo-colecao"></label>
+          </details>
+        </div>
+        <div class="pe-sec">
+          <p class="pe-sec-t">Arquivos</p>
+          <div class="pe-files">${fileBtn(p, 'pt')}${fileBtn(p, 'en')}<button class="btn primary" type="submit">Salvar</button></div>
+        </div>
       </div>
     </form>`).join('');
   }
+  // o botão ↗ acompanha o link digitado
+  $('#product-editor').addEventListener('input', e => {
+    const box = e.target.closest('.pe-link'); if (!box) return;
+    const v = e.target.value.trim(), a = $('.pe-open', box);
+    a.href = /^https:\/\//.test(v) ? v : '#'; a.classList.toggle('off', !/^https:\/\//.test(v));
+  });
   $('#product-editor').addEventListener('change', e => {
     const inp = e.target.closest('.file-btn input'); if (!inp) return;
     const lab = inp.closest('.file-btn'), f = inp.files[0];
@@ -335,7 +353,7 @@
       <label class="span2">Título (EN)<input name="title_en" maxlength="120" value="${esc(t.en || '')}"></label>
       <label class="span2">Por que recomendamos (PT)<textarea name="note_pt" rows="2" maxlength="300">${esc(n.pt || '')}</textarea></label>
       <label class="span2">Por que recomendamos (EN)<textarea name="note_en" rows="2" maxlength="300">${esc(n.en || '')}</textarea></label>
-      <label class="span2">Imagem por URL (https)<input name="image" value="${esc(a.image || '')}" placeholder="opcional, ou envie uma foto ao lado"></label>
+      <label class="span2">Imagem por URL (https)<input name="image" value="${esc(a.image || '')}" placeholder="opcional: sem foto, o site busca a do anúncio sozinho"></label>
     </div>`;
   }
   function affPayload(f) {
@@ -343,15 +361,26 @@
       title: { pt: f.title_pt.value, en: f.title_en.value }, note: { pt: f.note_pt.value, en: f.note_en.value }, active: f.active ? f.active.checked : true };
   }
   const imgBtn = has => `<label class="file-btn${has ? ' has-file' : ''}"><input type="file" name="img" accept="image/jpeg,image/png,image/webp"><span class="fb-lang">IMG</span><span class="fb-text"><b>${has ? 'Foto enviada' : 'Enviar foto'}</b><small>${has ? 'trocar foto' : 'JPG, PNG ou WEBP até 4 MB'}</small></span>${upIcon}</label>`;
+  // De onde vem a foto do cartão: enviada > link manual > automática > ícone
+  function photoStatus(a) {
+    if (a.imageFile) return '<span class="pill pill-paid">Foto enviada</span>';
+    if (a.image) return '<span class="pill pill-paid">Foto por link</span>';
+    if (a.autoImage) return `<span class="pill pill-available">Foto automática</span> <span class="muted">do anúncio, ${dt(a.autoImageAt)}</span>`;
+    return `<span class="pill pill-hidden">Ícone</span> <span class="muted">${a.autoImageErr ? 'não achei a foto: ' + esc(a.autoImageErr) : 'buscando a foto do anúncio…'}</span>`;
+  }
+  // miniatura quebrada: mostra o ícone
+  document.addEventListener('error', e => { if (e.target.matches && e.target.matches('img[data-thumb]')) { e.target.parentNode.classList.add('is-ico'); e.target.remove(); } }, true);
+  const photoToast = p => { if (p && p.ok === false) toast('Foto: ' + p.error + '. O site usa o ícone.', true); else if (p && p.ok) toast('Foto do anúncio encontrada.'); };
   async function loadAff() {
     const list = await api('/api/admin/affiliates');
     $('#aff-new').innerHTML = affFields() + `<div class="pe-files"><label class="toggle"><input type="checkbox" name="active" checked> Ativo no site</label><button class="btn primary" type="submit">Adicionar</button></div>`;
     $('#aff-list').innerHTML = list.length ? list.map(a => `<form class="pe-card aff-admin" data-id="${a.id}">
-      <div class="aff-thumb">${a.imageFile ? `<img src="/media/${a.imageFile}" alt="">` : a.image ? `<img src="${esc(a.image)}" alt="" referrerpolicy="no-referrer">` : `<span>${esc(a.icon)}</span>`}</div>
+      <div class="aff-thumb${a.imageFile || a.image || a.autoImage ? '' : ' is-ico'}">${a.imageFile ? `<img src="/media/${a.imageFile}" alt="" data-thumb>` : a.image ? `<img src="${esc(a.image)}" alt="" referrerpolicy="no-referrer" data-thumb>` : a.autoImage ? `<img src="/media/${a.autoImage}" alt="" data-thumb>` : ''}${a.iconSvg || ''}</div>
       <div class="pe-main">
         <div class="pe-head"><div class="pe-title"><b>${esc(a.title.pt)}</b><span>${a.store === 'amazon' ? 'Amazon' : 'Mercado Livre'} · ${catName[a.category] || ''} · <a href="/r/${a.id}" target="_blank" rel="noopener">/r/${a.id}</a></span></div>
           <span class="clicks"><b>${nf.format(a.clicks30)}</b> cliques em 30 dias · ${nf.format(a.clicks)} no total</span>
           <span class="pill ${a.active ? 'pill-available' : 'pill-hidden'}">${a.active ? 'Ativo' : 'Oculto'}</span></div>
+        <p class="aff-photo-status">${photoStatus(a)} <button class="btn-sm" type="button" data-autoimg="${a.id}">${a.autoImage ? 'Buscar foto de novo' : 'Buscar foto do anúncio'}</button></p>
         <details><summary>Editar</summary>${affFields(a)}</details>
         <div class="pe-files">${imgBtn(!!a.imageFile)}<label class="toggle"><input type="checkbox" name="active"${a.active ? ' checked' : ''}> Ativo no site</label>
           <button class="btn-sm danger" type="button" data-del="${a.id}">Excluir</button><button class="btn primary" type="submit">Salvar</button></div>
@@ -360,14 +389,22 @@
   }
   $('#aff-new').addEventListener('submit', async e => {
     e.preventDefault();
-    try { await api('/api/admin/affiliates', { method: 'POST', body: JSON.stringify(affPayload(e.target)) }); toast('Recomendação adicionada.'); loadAff(); }
+    const btn = $('button[type=submit]', e.target); btn.disabled = true; btn.textContent = 'Buscando foto…';
+    try { const r = await api('/api/admin/affiliates', { method: 'POST', body: JSON.stringify(affPayload(e.target)) }); toast('Recomendação adicionada.'); photoToast(r.photo); loadAff(); }
     catch (err) { toast(err.error === 'host' ? 'Use um link do Mercado Livre ou da Amazon.' : 'Preencha o link e o título.', true); }
+    finally { btn.disabled = false; btn.textContent = 'Adicionar'; }
   });
   $('#aff-list').addEventListener('change', e => {
     const inp = e.target.closest('.file-btn input'); if (!inp || !inp.files[0]) return;
     const lab = inp.closest('.file-btn'); lab.classList.add('is-picked'); $('b', lab).textContent = inp.files[0].name.slice(0, 24); $('small', lab).textContent = 'clique em Salvar';
   });
   $('#aff-list').addEventListener('click', async e => {
+    const ai = e.target.closest('[data-autoimg]');
+    if (ai) {
+      ai.disabled = true; ai.textContent = 'Buscando…';
+      try { const r = await api(`/api/admin/affiliates/${ai.dataset.autoimg}/auto-image`, { method: 'POST' }); photoToast(r); } catch (err) { toast(err.message, true); }
+      return loadAff();
+    }
     const d = e.target.closest('[data-del]'); if (!d) return;
     if (!confirm('Excluir esta recomendação?')) return;
     await api('/api/admin/affiliates/' + d.dataset.del, { method: 'DELETE' }); toast('Excluída.'); loadAff();
@@ -378,8 +415,8 @@
     try {
       const file = f.img.files[0];
       if (file) { const r = await fetch(`/api/admin/affiliates/${id}/image`, { method: 'POST', headers: { 'Content-Type': 'application/octet-stream' }, body: file }); if (!r.ok) throw new Error('Imagem inválida (use JPG, PNG ou WEBP).'); }
-      await api('/api/admin/affiliates/' + id, { method: 'PUT', body: JSON.stringify(affPayload(f)) });
-      toast('Recomendação salva.'); loadAff();
+      const r = await api('/api/admin/affiliates/' + id, { method: 'PUT', body: JSON.stringify(affPayload(f)) });
+      toast('Recomendação salva.'); photoToast(r.photo); loadAff();
     } catch (err) { toast(err.error === 'host' ? 'Use um link do Mercado Livre ou da Amazon.' : err.message, true); }
     finally { btn.disabled = false; }
   });

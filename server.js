@@ -10,6 +10,8 @@ const config = require('./src/config');
 const store = require('./src/store');
 const analytics = require('./src/analytics');
 const auth = require('./src/auth');
+const { icon: svgIcon } = require('./src/views/svg');
+const affImage = require('./src/affimage');
 const access = require('./src/access');
 const mailer = require('./src/mailer');
 const { LANGS, routes, url, ui } = require('./src/i18n');
@@ -598,9 +600,9 @@ async function apiAdmin(req, res, pathname, ip, query) {
     const since = Date.now() - 30 * 86400000;
     const clicks = {}, clicks30 = {};
     for (const e of store.events) if (e.type === 'ev' && e.name === 'aff_click' && e.props) { clicks[e.props.id] = (clicks[e.props.id] || 0) + 1; if (e.t >= since) clicks30[e.props.id] = (clicks30[e.props.id] || 0) + 1; }
-    return json(req, res, 200, store.db.affiliates.slice().sort((a, b) => (a.order || 99) - (b.order || 99)).map(a => ({ ...a, clicks: clicks[a.id] || 0, clicks30: clicks30[a.id] || 0 })));
+    return json(req, res, 200, store.db.affiliates.slice().sort((a, b) => (a.order || 99) - (b.order || 99)).map(a => ({ ...a, clicks: clicks[a.id] || 0, clicks30: clicks30[a.id] || 0, iconSvg: svgIcon(a.icon || 'teapot', 'aff-thumb-svg') })));
   }
-  const am = pathname.match(/^\/api\/admin\/affiliates(?:\/([a-z0-9-]+))?(\/image)?$/);
+  const am = pathname.match(/^\/api\/admin\/affiliates(?:\/([a-z0-9-]+))?(\/image|\/auto-image)?$/);
   if (am) {
     const clean = b => {
       const out = {};
@@ -623,13 +625,21 @@ async function apiAdmin(req, res, pathname, ip, query) {
       const a = Object.assign({ id, store: 'ml', category: 'preparo', icon: 'teapot', active: true, order: store.db.affiliates.length + 1, note: { pt: '', en: '' }, image: '' }, data);
       if (!a.title.en) a.title.en = a.title.pt;
       store.db.affiliates.push(a); store.save();
-      return json(req, res, 200, { ok: true, item: a });
+      const photo = a.image ? { ok: true } : await withTimeout(affImage.fetchFor(a), 20000);
+      return json(req, res, 200, { ok: true, item: a, photo });
     }
     const a = store.db.affiliates.find(x => x.id === am[1]);
     if (!a) return json(req, res, 404, { error: 'not found' });
-    if (!am[2] && req.method === 'PUT') { Object.assign(a, clean(await readJson(req))); if (!a.title.en) a.title.en = a.title.pt; store.save(); return json(req, res, 200, { ok: true, item: a }); }
-    if (!am[2] && req.method === 'DELETE') { store.db.affiliates = store.db.affiliates.filter(x => x !== a); store.save(); return json(req, res, 200, { ok: true }); }
-    if (am[2] && req.method === 'POST') {
+    if (am[2] === '/auto-image' && req.method === 'POST') return json(req, res, 200, await withTimeout(affImage.fetchFor(a), 25000));
+    if (!am[2] && req.method === 'PUT') {
+      const before = a.url + '|' + a.source;
+      Object.assign(a, clean(await readJson(req))); if (!a.title.en) a.title.en = a.title.pt; store.save();
+      // link mudou: busca a foto do novo anúncio
+      const photo = before !== a.url + '|' + a.source && !a.imageFile && !a.image ? await withTimeout(affImage.fetchFor(a), 20000) : null;
+      return json(req, res, 200, { ok: true, item: a, photo });
+    }
+    if (!am[2] && req.method === 'DELETE') { for (const f of [a.imageFile, a.autoImage]) if (f) { try { fs.unlinkSync(path.join(store.UPLOAD_DIR, f)); } catch (_) {} } store.db.affiliates = store.db.affiliates.filter(x => x !== a); store.save(); return json(req, res, 200, { ok: true }); }
+    if (am[2] === '/image' && req.method === 'POST') {
       const buf = await readBody(req, 4 * 1024 * 1024);
       const ext = buf.slice(0, 3).toString('hex') === 'ffd8ff' ? 'jpg' : buf.slice(1, 4).toString() === 'PNG' ? 'png' : buf.slice(8, 12).toString() === 'WEBP' ? 'webp' : null;
       if (!ext) return json(req, res, 400, { error: 'notimage' });
@@ -638,7 +648,7 @@ async function apiAdmin(req, res, pathname, ip, query) {
       fs.writeFileSync(path.join(store.UPLOAD_DIR, a.imageFile), buf); store.save();
       return json(req, res, 200, { ok: true });
     }
-    if (am[2] && req.method === 'DELETE') { if (a.imageFile) { try { fs.unlinkSync(path.join(store.UPLOAD_DIR, a.imageFile)); } catch (_) {} } a.imageFile = ''; store.save(); return json(req, res, 200, { ok: true }); }
+    if (am[2] === '/image' && req.method === 'DELETE') { if (a.imageFile) { try { fs.unlinkSync(path.join(store.UPLOAD_DIR, a.imageFile)); } catch (_) {} } a.imageFile = ''; store.save(); return json(req, res, 200, { ok: true }); }
   }
 
   const ex = pathname.match(/^\/api\/admin\/export\/(orders|subscribers|waitlist)\.csv$/);
@@ -652,6 +662,12 @@ async function apiAdmin(req, res, pathname, ip, query) {
 
   return json(req, res, 404, { error: 'not found' });
 }
+
+// Espera uma promessa por no máximo ms (a busca segue em segundo plano se passar disso)
+const withTimeout = (p, ms) => Promise.race([p, new Promise(r => setTimeout(() => r({ ok: false, error: 'ainda buscando, recarregue em instantes' }), ms))]);
+// Fotos das recomendações: tenta preencher as que faltam 20 s após iniciar e depois uma vez por dia
+setTimeout(() => affImage.fillMissing().catch(e => console.error('fotos:', e.message)), 20000).unref();
+setInterval(() => affImage.fillMissing().catch(e => console.error('fotos:', e.message)), 24 * 3600 * 1000).unref();
 
 // ---------- roteador ----------
 const server = http.createServer(async (req, res) => {
