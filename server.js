@@ -11,6 +11,7 @@ const store = require('./src/store');
 const analytics = require('./src/analytics');
 const auth = require('./src/auth');
 const { icon: svgIcon } = require('./src/views/svg');
+const reports = require('./src/reports');
 const pantry = require('./src/pantry');
 const affImage = require('./src/affimage');
 const access = require('./src/access');
@@ -497,6 +498,33 @@ async function apiAdmin(req, res, pathname, ip, query) {
     return json(req, res, 200, { ok: true }, { 'Set-Cookie': auth.cookieHeader('', false) });
   }
   if (pathname === '/api/admin/stats') return json(req, res, 200, analytics.stats(query.get('days')));
+
+  // Relatórios salvos (páginas HTML prontas para imprimir ou salvar em PDF)
+  if (pathname === '/api/admin/reports' && req.method === 'GET') return json(req, res, 200, reports.list());
+  if (pathname === '/api/admin/reports' && req.method === 'POST') {
+    const b = await readJson(req);
+    return json(req, res, 200, reports.create(['geral', 'vendas', 'completo'].includes(b.kind) ? b.kind : 'completo', b.days));
+  }
+  const rm = pathname.match(/^\/api\/admin\/reports\/([0-9a-z-]+)$/);
+  if (rm && req.method === 'GET') {
+    const f = reports.file(rm[1]);
+    if (!f) return send(req, res, 404, 'Relatório não encontrado', 'text/plain; charset=utf-8');
+    const headers = Object.assign({}, SECURITY_HEADERS, {
+      'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex',
+      'Content-Security-Policy': `default-src 'none'; style-src 'unsafe-inline'; script-src ${reports.PRINT_HASH}; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'`
+    });
+    if (query.get('download')) headers['Content-Disposition'] = `attachment; filename="botanora-relatorio-${rm[1]}.html"`;
+    res.writeHead(200, headers);
+    return res.end(fs.readFileSync(f));
+  }
+  if (rm && req.method === 'DELETE') return json(req, res, reports.remove(rm[1]) ? 200 : 404, { ok: true });
+  // Limpar os últimos 30 dias (salva um relatório completo antes)
+  if (pathname === '/api/admin/clear' && req.method === 'POST') {
+    const b = await readJson(req);
+    if (!b.events && !b.sales) return json(req, res, 400, { error: 'nothing' });
+    if (b.confirm !== 'LIMPAR') return json(req, res, 400, { error: 'confirm' });
+    return json(req, res, 200, reports.clear({ events: !!b.events, sales: !!b.sales, days: 30 }));
+  }
 
   // Painel ao vivo: o navegador fica escutando e recarrega os números quando algo muda
   if (pathname === '/api/admin/stream') {

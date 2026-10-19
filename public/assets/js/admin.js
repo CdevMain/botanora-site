@@ -219,13 +219,13 @@
   });
   function renderOrders() {
     const f = $('#order-filter').value;
-    const list = orders.filter(o => !f || o.status === f);
+    const list = orders.filter(o => f === 'archived' ? o.archived : !o.archived && (!f || o.status === f));
     $('#orders').innerHTML = list.length ? `<thead><tr><th>Pedido</th><th>Data</th><th>Cliente</th><th>Guia</th><th>PDF</th><th class="num">Valor</th><th>Origem</th><th>Status</th><th class="num">Downloads</th><th></th></tr></thead><tbody>${list.map(o => `<tr>
       <td data-l="Pedido"><code>${esc(o.id)}</code>${o.refId ? `<br><span class="muted">Cakto ${esc(o.refId)}</span>` : ''}</td><td data-l="Data">${dt(o.createdAt)}</td>
       <td data-l="Cliente">${esc(o.name)}<br><span class="muted">${esc(o.email)}</span></td>
       <td data-l="Guia">${esc(o.title)}</td><td data-l="PDF"><span class="lang-tag">${esc((o.pdfLang || 'pt').toUpperCase())}</span></td><td class="num" data-l="Valor">${brl(o.amount)}</td>
       <td data-l="Origem">${o.test ? '<span class="pill pill-pending">Teste</span>' : (providerName[o.provider] || o.provider)}${o.method === 'manual' ? ' <span class="muted">(manual)</span>' : ''}</td>
-      <td data-l="Status"><span class="pill pill-${o.status}">${statusName[o.status] || o.status}</span></td><td class="num" data-l="Downloads">${o.downloads}</td>
+      <td data-l="Status"><span class="pill pill-${o.status}">${statusName[o.status] || o.status}</span>${o.archived ? ' <span class="pill pill-hidden">Arquivado</span>' : ''}</td><td class="num" data-l="Downloads">${o.downloads}</td>
       <td><div class="row-actions">
         ${o.status === 'pending' ? `<button class="btn-sm primary" data-pay="${o.id}">Confirmar pagamento</button><button class="btn-sm" data-cancel="${o.id}">Cancelar</button>` : ''}
         ${o.status === 'paid' ? `<button class="btn-sm" data-resend="${o.id}">Enviar acesso</button>` : ''}
@@ -462,11 +462,71 @@
   }
 
   // inicialização
+  loadReports().catch(() => {});
   loadStats().then(() => {
     const h = location.hash.slice(1);
     const tab = $(`.tabs button[data-tab="${h}"]`);
     if (tab) tab.click();
   });
+  // ---------- relatórios ----------
+  const kindName = { geral: 'Visão geral', vendas: 'Vendas', completo: 'Completo' };
+  async function loadReports() {
+    const list = await api('/api/admin/reports');
+    const html = list.length ? `<thead><tr><th>Gerado em</th><th>Relatório</th><th>Período</th><th class="num">Visitantes</th><th class="num">Vendas</th><th class="num">Receita</th><th></th></tr></thead><tbody>${list.map(r => `<tr>
+      <td data-l="Gerado em">${dt(r.createdAt)}</td>
+      <td data-l="Relatório">${esc(kindName[r.kind] || r.kind)}${r.reason === 'clear' ? ' <span class="pill pill-pending">antes de limpar</span>' : ''}</td>
+      <td data-l="Período">${new Date(r.from).toLocaleDateString('pt-BR')} a ${new Date(r.to).toLocaleDateString('pt-BR')}</td>
+      <td class="num" data-l="Visitantes">${nf.format(r.summary.visitors)}</td><td class="num" data-l="Vendas">${nf.format(r.summary.paid)}</td><td class="num" data-l="Receita">${brl(r.summary.revenue)}</td>
+      <td><div class="row-actions"><a class="btn-sm" href="/api/admin/reports/${r.id}" target="_blank" rel="noopener">Abrir</a><a class="btn-sm" href="/api/admin/reports/${r.id}?download=1">Baixar</a><button class="btn-sm danger" type="button" data-report-del="${r.id}">Excluir</button></div></td>
+    </tr>`).join('')}</tbody>` : '<tbody><tr><td class="empty">Nenhum relatório salvo ainda. Use "Gerar relatório do período".</td></tr></tbody>';
+    $$('[data-report-list]').forEach(t => { t.innerHTML = html; });
+  }
+  document.addEventListener('click', async e => {
+    const gen = e.target.closest('[data-report]');
+    if (gen) {
+      // abre a aba já no clique (senão o navegador bloqueia) e preenche quando o relatório fica pronto
+      const w = window.open('about:blank', '_blank');
+      gen.disabled = true;
+      try {
+        const r = await api('/api/admin/reports', { method: 'POST', body: JSON.stringify({ kind: gen.dataset.report, days }) });
+        if (w) w.location = '/api/admin/reports/' + r.id;
+        toast('Relatório salvo em Relatórios salvos.'); loadReports();
+      } catch (err) { if (w) w.close(); toast('Não deu certo: ' + err.message, true); }
+      finally { gen.disabled = false; }
+      return;
+    }
+    const del = e.target.closest('[data-report-del]');
+    if (del) {
+      if (!confirm('Excluir este relatório?')) return;
+      await api('/api/admin/reports/' + del.dataset.reportDel, { method: 'DELETE' }); toast('Relatório excluído.'); loadReports();
+      return;
+    }
+    const clr = e.target.closest('[data-clear]');
+    if (clr) {
+      const f = $('#clear-form'); f.reset();
+      f.events.checked = clr.dataset.clear === 'overview'; f.sales.checked = clr.dataset.clear === 'sales';
+      $('#clear-dlg').showModal(); setTimeout(() => f.confirm.focus(), 50);
+    }
+  });
+  $('#clear-dlg [data-close]').addEventListener('click', () => $('#clear-dlg').close());
+  $('#clear-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = e.target, btn = $('button[type=submit]', f);
+    if (!f.events.checked && !f.sales.checked) return toast('Marque o que deseja limpar.', true);
+    if (f.confirm.value.trim().toUpperCase() !== 'LIMPAR') { f.confirm.focus(); return toast('Digite LIMPAR para confirmar.', true); }
+    btn.disabled = true;
+    try {
+      const r = await api('/api/admin/clear', { method: 'POST', body: JSON.stringify({ events: f.events.checked, sales: f.sales.checked, confirm: 'LIMPAR' }) });
+      $('#clear-dlg').close();
+      const parts = [];
+      if (f.events.checked) parts.push(`${nf.format(r.removed)} eventos apagados`);
+      if (f.sales.checked) parts.push(`${nf.format(r.archived)} pedidos arquivados`);
+      toast('Relatório salvo. ' + parts.join(', ') + '.');
+      loadStats(); loadReports(); if (current() === 'sales') loadOrders();
+    } catch (err) { toast('Não deu certo: ' + err.message, true); }
+    finally { btn.disabled = false; }
+  });
+
   // ---------- ao vivo ----------
   // O servidor avisa quando chega visita, venda, inscrição ou download; o painel recarrega o que está na tela.
   const liveEl = $('#live-sync');

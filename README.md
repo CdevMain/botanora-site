@@ -78,6 +78,11 @@ Cada página de produto mostra 6 páginas de amostra do guia (capa, abertura, su
 
 Páginas de chá (`/pt/guia/<chá>`), 20 receitas grátis (`/pt/receitas`), perguntas frequentes (`/pt/perguntas`), dados estruturados, `sitemap.xml`, `robots.txt` aberto para IAs, `/llms.txt`, versão Markdown de cada página (`.md` no fim da URL) e IndexNow automático. O plano completo, com o passo a passo do Search Console e ideias para crescer, está em `docs/seo-e-ia.md`. As receitas públicas saem dos guias com `python3 tools/guias/pdf/export_receitas.py`.
 
+## Relatórios e limpeza (painel)
+
+- **Gerar relatório do período** (Visão geral e Vendas): salva em `data/reports` uma página com os números do período escolhido, pronta para imprimir ou salvar em PDF. Fica listada em "Relatórios salvos", com Abrir, Baixar e Excluir.
+- **Limpar últimos 30 dias**: salva antes um relatório completo e depois, conforme o que for marcado, apaga as visitas e eventos dos últimos 30 dias e/ou arquiva os pedidos desse período. Pedidos arquivados saem dos números e da lista (filtro "Arquivados"), mas os clientes continuam com acesso aos guias.
+
 ## Fotos das recomendações
 
 Ao cadastrar ou trocar o link de uma recomendação, o site abre o anúncio do Mercado Livre ou da Amazon, pega a foto principal e guarda uma cópia em `data/uploads`. Recomendações sem foto são tentadas de novo 20 s após iniciar e uma vez por dia. Se não achar (ou a foto não carregar no navegador), o cartão mostra o ícone escolhido. Foto enviada ou por link no painel sempre tem prioridade. Por segurança, a busca só acessa domínios do Mercado Livre e da Amazon.

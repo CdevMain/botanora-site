@@ -99,7 +99,21 @@ if (fs.existsSync(EVENTS_FILE)) {
   const lines = fs.readFileSync(EVENTS_FILE, 'utf8').split('\n');
   for (const l of lines) { if (l) { try { events.push(JSON.parse(l)); } catch (_) { /* linha corrompida */ } } }
 }
-const eventStream = fs.createWriteStream(EVENTS_FILE, { flags: 'a' });
+let eventStream = fs.createWriteStream(EVENTS_FILE, { flags: 'a' });
+// Apaga eventos a partir de um momento (usado por "Limpar últimos 30 dias") e regrava o arquivo
+function purgeEventsSince(ts) {
+  const keep = events.filter(e => !(e.t >= ts));
+  const removed = events.length - keep.length;
+  if (!removed) return 0;
+  events.length = 0; events.push(...keep);
+  eventStream.end();
+  const tmp = EVENTS_FILE + '.tmp';
+  fs.writeFileSync(tmp, keep.map(e => JSON.stringify(e)).join('\n') + (keep.length ? '\n' : ''));
+  fs.renameSync(tmp, EVENTS_FILE);
+  eventStream = fs.createWriteStream(EVENTS_FILE, { flags: 'a' });
+  changes.emit('change', 'ev');
+  return removed;
+}
 function addEvent(ev) {
   events.push(ev);
   eventStream.write(JSON.stringify(ev) + '\n');
@@ -182,6 +196,6 @@ process.on('SIGINT', () => { flush(); process.exit(0); });
 process.on('SIGTERM', () => { flush(); process.exit(0); });
 
 module.exports = {
-  db, events, addEvent, save, flush, changes, getProduct, createExternalOrder, findOrder, markPaid,
+  db, events, addEvent, purgeEventsSince, save, flush, changes, getProduct, createExternalOrder, findOrder, markPaid,
   paidOrdersFor, addSubscriber, addWaitlist, pdfPath, fileLangs, hasFile, resolveFile, PDF_DIR, UPLOAD_DIR, LANGS
 };

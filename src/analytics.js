@@ -3,8 +3,8 @@
 // O IP nunca é gravado; o sal muda todo dia, então não há rastreio entre dias.
 const crypto = require('crypto');
 const store = require('./store');
-// Compras de teste (criadas no painel) não entram nos números
-const realOrders = () => store.db.orders.filter(o => !o.test);
+// Compras de teste (criadas no painel) e pedidos arquivados ("Limpar últimos 30 dias") não entram nos números
+const realOrders = () => store.db.orders.filter(o => !o.test && !o.archived);
 
 const BOT_RE = /bot|crawl|spider|slurp|facebookexternalhit|preview|monitor|curl|wget|python|axios|node-fetch|headless|lighthouse|pingdom|uptime/i;
 

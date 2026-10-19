@@ -68,6 +68,10 @@ function appPage() {
   </div>
 
   <section data-panel="overview">
+    <div class="panel-actions">
+      <button class="btn-sm" type="button" data-report="geral">Gerar relatório do período</button>
+      <button class="btn-sm danger" type="button" data-clear="overview">Limpar últimos 30 dias</button>
+    </div>
     <div class="kpis" id="kpis"></div>
     <div class="grid-2-1">
       <div class="card">
@@ -88,9 +92,17 @@ function appPage() {
       <div class="card"><div class="card-head"><h2>Engajamento com as ferramentas</h2></div><div id="engagement"></div></div>
       <div class="card"><div class="card-head"><h2>Resultados do quiz</h2></div><div id="quiz"></div></div>
     </div>
+    <div class="card">
+      <div class="card-head"><h2>Relatórios salvos</h2><p class="hint">Cada relatório é uma página pronta para imprimir ou salvar em PDF. Os criados antes de limpar ficam marcados.</p></div>
+      <div class="table-wrap"><table class="table" data-report-list></table></div>
+    </div>
   </section>
 
   <section data-panel="sales" hidden>
+    <div class="panel-actions">
+      <button class="btn-sm" type="button" data-report="vendas">Gerar relatório do período</button>
+      <button class="btn-sm danger" type="button" data-clear="sales">Limpar últimos 30 dias</button>
+    </div>
     <div class="kpis" id="kpis-sales"></div>
     <div class="card">
       <div class="card-head"><h2>Receita por dia</h2></div>
@@ -104,12 +116,16 @@ function appPage() {
     <div class="card">
       <div class="card-head"><h2>Pedidos</h2>
         <div class="head-actions">
-          <span class="select"><select id="order-filter" aria-label="Filtrar pedidos"><option value="">Todos</option><option value="pending">Pendentes</option><option value="paid">Pagos</option><option value="cancelled">Cancelados</option><option value="refunded">Reembolsados</option></select></span>
+          <span class="select"><select id="order-filter" aria-label="Filtrar pedidos"><option value="">Todos</option><option value="pending">Pendentes</option><option value="paid">Pagos</option><option value="cancelled">Cancelados</option><option value="refunded">Reembolsados</option><option value="archived">Arquivados</option></select></span>
           <a class="btn-sm" href="/api/admin/export/orders.csv">Exportar CSV</a>
           <button class="btn-sm" id="clear-tests" type="button" hidden>Apagar compras de teste</button>
         </div>
       </div>
       <div class="table-wrap"><table class="table" id="orders"></table></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h2>Relatórios salvos</h2><p class="hint">Cada relatório é uma página pronta para imprimir ou salvar em PDF. Os criados antes de limpar ficam marcados.</p></div>
+      <div class="table-wrap"><table class="table" data-report-list></table></div>
     </div>
   </section>
 
@@ -149,6 +165,16 @@ function appPage() {
   <section data-panel="integrations" hidden><div id="integrations"></div></section>
   <p class="foot-note">Métricas coletadas pelo próprio servidor, sem cookies e sem serviços de terceiros. Visitantes são contados por dia com identificador anônimo (o IP não é armazenado).</p>
 </main>
+<dialog class="clear-dlg" id="clear-dlg">
+  <form method="dialog" id="clear-form">
+    <h2>Limpar últimos 30 dias</h2>
+    <p class="hint">Antes de limpar, o painel salva automaticamente um <b>relatório completo</b> dos últimos 30 dias em Relatórios salvos.</p>
+    <label class="toggle"><input type="checkbox" name="events"> <span><b>Visitas e eventos</b><br><small>Tráfego, funil, origem, dispositivos, quiz, timers e cliques. Esses dados são apagados.</small></span></label>
+    <label class="toggle"><input type="checkbox" name="sales"> <span><b>Vendas</b><br><small>Os pedidos saem dos números e da lista (ficam em Arquivados). Os clientes <b>continuam</b> com acesso aos guias.</small></span></label>
+    <label class="clear-confirm"><span>Para confirmar, digite <b>LIMPAR</b></span><input name="confirm" autocomplete="off" placeholder="LIMPAR"></label>
+    <div class="clear-actions"><button class="btn-sm" type="button" data-close>Cancelar</button><button class="btn-sm danger-solid" type="submit" value="ok">Salvar relatório e limpar</button></div>
+  </form>
+</dialog>
 <div class="toast" id="toast" role="status"></div>`, true);
 }
 
