@@ -373,7 +373,7 @@ async function apiPublic(req, res, pathname, ip, query) {
   }
 
   // Webhook da Cakto
-  if (pathname === '/api/webhooks/cakto' && req.method === 'POST') return caktoWebhook(req, res);
+  if (CAKTO_PATHS.has(pathname.replace(/\/+$/, '')) && req.method === 'POST') return caktoWebhook(req, res, pathname);
 
   return json(req, res, 404, { error: 'not found' });
 }
@@ -419,18 +419,28 @@ function caktoMatches(ids) {
   }
   return out;
 }
-async function caktoWebhook(req, res) {
-  const raw = await readBody(req, 256 * 1024);
+// Webhook da Cakto. Aceita os dois formatos: "data" como objeto (webhook pela API)
+// ou como lista (Webhook V2, criado pelo painel da Cakto). Cada item é tratado como uma venda.
+async function caktoWebhook(req, res, pathname = '/api/webhooks/cakto') {
+  const raw = await readBody(req, 512 * 1024);
   let body;
   try { body = JSON.parse(raw.toString('utf8')); } catch (_) { return json(req, res, 400, { error: 'json' }); }
   const err = caktoVerify(req, raw, body);
-  if (err) { caktoLog({ event: body.event || '?', result: 'rejeitado: ' + err }); return json(req, res, 401, { error: err }); }
+  if (err) { caktoLog({ event: body.event || '?', path: pathname, result: 'rejeitado: ' + err }); return json(req, res, 401, { error: err }); }
   const event = String(body.event || '');
-  const d = body.data || {};
+  const items = (Array.isArray(body.data) ? body.data : [body.data || {}]).filter(x => x && typeof x === 'object').slice(0, 20);
+  if (!items.length) { caktoLog({ event, path: pathname, result: 'ignorado: sem dados' }); return json(req, res, 200, { ok: true }); }
+  const mail = new Map(); // e-mail -> idioma (um e-mail de acesso por cliente, mesmo com vários itens)
+  const results = items.map(d => caktoHandle(event, d, pathname, mail));
+  for (const [email, lang] of mail) sendAccessLater(email, lang);
+  return json(req, res, 200, { ok: true, results });
+}
+
+function caktoHandle(event, d, pathname, mail) {
   const prod = d.product || {}, offer = d.offer || {}, cust = d.customer || {};
   const phone4 = String(cust.phone || cust.cellphone || cust.mobile || cust.phoneNumber || '').replace(/\D/g, '').slice(-4);
   const ids = [prod.id, prod.short_id, offer.id].filter(Boolean).map(String);
-  // Order bumps / combos: se vierem itens extras no mesmo evento, libera cada guia também
+  // Order bumps / combos: se vierem itens extras no mesmo item, libera cada guia também
   for (const k of ['orderBumps', 'order_bumps', 'bumps', 'items', 'products', 'offers']) {
     if (Array.isArray(d[k])) for (const it of d[k].slice(0, 20)) {
       if (!it || typeof it !== 'object') continue;
@@ -438,28 +448,25 @@ async function caktoWebhook(req, res) {
       for (const v of [it.id, it.short_id, it.offer_id, it.product_id, ip.id, ip.short_id, io.id]) if (v) ids.push(String(v));
     }
   }
-  const base = { event, product: prod.name || '', productId: prod.id || '', shortId: prod.short_id || '', offerId: offer.id || '', offerName: offer.name || '', email: cust.email || '', ref: d.refId || d.id || '' };
+  const base = { event, path: pathname, product: prod.name || '', productId: prod.id || '', shortId: prod.short_id || '', offerId: offer.id || '', offerName: offer.name || '', email: cust.email || '', ref: d.refId || d.id || '' };
 
   if (event === 'purchase_approved') {
     const email = String(cust.email || '').trim().toLowerCase();
     const matches = caktoMatches(ids);
-    if (!EMAIL_RE.test(email) || !d.id) { caktoLog({ ...base, result: 'ignorado: sem e-mail ou id' }); return json(req, res, 200, { ok: true }); }
-    if (!matches.length) { caktoLog({ ...base, result: 'sem guia ligado: copie o ID no painel' }); return json(req, res, 200, { ok: true, unmatched: true }); }
+    if (!EMAIL_RE.test(email) || !d.id) { caktoLog({ ...base, result: 'ignorado: sem e-mail ou id' }); return { ignored: true }; }
+    if (!matches.length) { caktoLog({ ...base, result: 'sem guia ligado: confira o link de checkout do guia no painel' }); return { unmatched: true }; }
     const total = Math.round(Number(d.amount ?? d.baseAmount ?? offer.price ?? 0) * 100);
     const created = [];
-    let langForMail = 'pt';
     for (const { p, lang } of matches) {
       const pdfLang = lang || 'pt';
-      langForMail = pdfLang;
       const r = store.createExternalOrder({
         product: p, name: cust.name, email, amount: Math.round(total / matches.length), pdfLang,
         provider: 'cakto', externalId: String(d.id), refId: d.refId ? String(d.refId) : '', method: d.paymentMethodName || d.paymentMethod || '', phone4: phone4.length === 4 ? phone4 : ''
       });
-      if (r.created) created.push(p.slug);
+      if (r.created) { created.push(p.slug); mail.set(email, pdfLang); }
     }
     caktoLog({ ...base, result: created.length ? 'liberado: ' + created.join(', ') : 'duplicado (já liberado)' });
-    if (created.length) sendAccessLater(email, langForMail);
-    return json(req, res, 200, { ok: true, released: created });
+    return { released: created };
   }
 
   if (['refund', 'chargeback'].includes(event) && d.id) {
@@ -467,13 +474,12 @@ async function caktoWebhook(req, res) {
     list.forEach(o => { o.status = 'refunded'; o.refundedAt = Date.now(); });
     store.save();
     caktoLog({ ...base, result: list.length ? 'acesso revogado (' + list.length + ')' : 'pedido não encontrado' });
-    return json(req, res, 200, { ok: true });
+    return { refunded: list.length };
   }
 
   caktoLog({ ...base, result: 'evento sem ação' });
-  return json(req, res, 200, { ok: true });
+  return { ignored: true };
 }
-
 
 // ---------- API admin ----------
 function toCsv(rows, cols) {
@@ -709,6 +715,8 @@ const withTimeout = (p, ms) => Promise.race([p, new Promise(r => setTimeout(() =
 setTimeout(() => affImage.fillMissing().catch(e => console.error('fotos:', e.message)), 20000).unref();
 setInterval(() => affImage.fillMissing().catch(e => console.error('fotos:', e.message)), 24 * 3600 * 1000).unref();
 
+// Webhook da Cakto cadastrado em outro caminho (ex.: só o domínio): também é aceito
+const CAKTO_PATHS = new Set(['/', '/webhook', '/webhooks', '/webhook/cakto', '/webhooks/cakto', '/api/webhook/cakto', '/api/webhooks/cakto', '/cakto', '/api/cakto']);
 // ---------- roteador ----------
 const server = http.createServer(async (req, res) => {
   const u = new URL(req.url, 'http://localhost');
@@ -717,6 +725,7 @@ const server = http.createServer(async (req, res) => {
   try {
     if (pathname.startsWith('/api/admin/')) return await apiAdmin(req, res, pathname, ip, u.searchParams);
     if (pathname.startsWith('/api/')) return await apiPublic(req, res, pathname, ip, u.searchParams);
+    if (req.method === 'POST' && CAKTO_PATHS.has(pathname.replace(/\/+$/, '') || '/')) return await caktoWebhook(req, res, pathname);
     if (req.method !== 'GET' && req.method !== 'HEAD') return send(req, res, 405, 'Method not allowed', 'text/plain');
 
     if (pathname.startsWith('/assets/') && serveStatic(req, res, pathname)) return;
