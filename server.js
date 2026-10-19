@@ -170,7 +170,13 @@ function renderPublic(req, res, lang, rest, ip, query) {
   else if (key === 'quiz' && !sub) html = pages.quizPage(lang, products);
   else if (key === 'privacy' && !sub) html = pages.privacy(lang);
   else if (key === 'gear' && !sub) html = pages.gear(lang);
-  else if (key === 'receive' && !sub) html = pages.receive(lang, { email: (query.get('email') || '').slice(0, 120) });
+  else if (key === 'receive' && !sub) {
+    // Volta do checkout da Cakto (?compra=ok / ?paid=1): quem já está conectado neste aparelho vai direto para a biblioteca
+    const paid = ['compra', 'paid', 'obrigado', 'thanks'].some(k => query.has(k));
+    if (paid && access.sessionEmail(req)) return redirect(res, url(lang, 'library'));
+    const email = (query.get('email') || query.get('customer_email') || '').slice(0, 120);
+    return send(req, res, 200, pages.receive(lang, { email, paid }), undefined, libHeaders());
+  }
   else if (key === 'library' && !sub) {
     // A biblioteca só abre com a sessão deste aparelho (cookie), nunca por link
     const email = access.sessionEmail(req);

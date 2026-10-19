@@ -576,11 +576,11 @@ ${pageHero({ eyebrow: g.eyebrow, h1: g.h1, lead: g.lead })}
 }
 
 // ---------------- RECEBER ----------------
-function receive(lang, { notice = '', email = '' } = {}) {
+function receive(lang, { notice = '', email = '', paid = false } = {}) {
   const t = ui[lang], r = t.receive;
   const note = { expired: t.library.expired, used: t.library.used, out: t.library.out, login: t.library.login }[notice];
   const body = `
-${pageHero({ eyebrow: 'Botânora', h1: r.h1, lead: r.lead, art: false })}
+${pageHero({ eyebrow: 'Botânora', h1: paid ? r.paidTitle : r.h1, lead: paid ? r.paid : r.lead, art: false })}
 <section class="section band-paper">
   <div class="wrap receive-grid">
     <form class="buy-box stack-form access-form" data-access novalidate data-msg='${esc(JSON.stringify({ wrong: r.wrong, expired: r.expiredCode, notfound: r.notFound, rate: r.rate, err: t.newsletter.err, resent: r.resent, noMail: r.noMail }))}'>

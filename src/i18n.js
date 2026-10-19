@@ -174,6 +174,7 @@ const ui = {
     },
     receive: {
       title: 'Receber meus guias | Botânora', h1: 'Receba seus guias',
+      paidTitle: 'Pagamento aprovado. Obrigado!', paid: 'Seu guia já está liberado. Informe o e-mail usado na compra e toque no botão abaixo: chega um código de 6 dígitos para você entrar na biblioteca e baixar o PDF. Se for Pix, a confirmação pode levar alguns segundos.',
       lead: 'Comprou um guia Botânora? Informe o e-mail usado na compra para entrar na sua biblioteca e baixar os PDFs no idioma que preferir. Vale para um aparelho novo também: cada aparelho entra uma vez e fica conectado.',
       sendCode: 'Receber código de acesso', emailHint: 'Enviamos um código de 6 dígitos para o e-mail usado na compra. Funciona em qualquer aparelho.',
       codeSent: 'Se houver compras neste e-mail, enviamos um código para', codeLabel: 'Código de 6 dígitos', enter: 'Entrar na biblioteca',
@@ -349,6 +350,7 @@ const ui = {
     },
     receive: {
       title: 'Get my guides | Botânora', h1: 'Get your guides',
+      paidTitle: 'Payment approved. Thank you!', paid: 'Your guide is ready. Enter the email you used at checkout and tap the button below: you will get a 6-digit code to open your library and download the PDF. With Pix, confirmation can take a few seconds.',
       lead: 'Bought a Botânora guide? Enter the email you used at checkout to open your library and download the PDFs in your preferred language. It works on a new device too: each device signs in once and stays connected.',
       sendCode: 'Get my access code', emailHint: 'We send a 6-digit code to the email used at checkout. It works on any device.',
       codeSent: 'If this email has purchases, we sent a code to', codeLabel: '6-digit code', enter: 'Open my library',
