@@ -6,6 +6,8 @@ const { cover, productCard, evidenceBadge, range, esc, affCard } = require('./co
 const { teas, coffeeRef } = require('../content/teas');
 const { benefits } = require('../content/benefits');
 const { quiz, quizMap } = require('../content/quiz');
+const discover = require('../content/discover');
+const { terms } = require('../content/legal');
 const config = require('../config');
 const store = require('../store');
 const mailer = require('../mailer');
@@ -98,13 +100,49 @@ function home(lang, products) {
     <h1 class="display hero-title reveal"><span>${esc(h.h1a)}</span> <em>${esc(h.h1b)}</em></h1>
     <p class="lead reveal">${esc(h.lead)}</p>
     <div class="hero-ctas reveal">
-      <a class="btn btn-gold" href="${url(lang, 'quiz')}">${esc(h.ctaQuiz)}</a>
-      <a class="btn btn-ghost" href="${url(lang, 'guide')}">${esc(h.ctaGuide)}</a>
-      <a class="link-arrow hero-mine" href="${url(lang, 'library')}">${icon('book', 'ico-sm')} ${esc(h.ctaMine)} ${icon('arrow', 'ico-sm')}</a>
+      <a class="btn btn-gold" href="${url(lang, 'quiz')}" data-event="home_cta_quiz">${esc(h.ctaQuiz)}</a>
+      <a class="btn btn-ghost" href="${url(lang, 'shop')}" data-event="home_cta_shop">${esc(h.ctaGuide)}</a>
+      <a class="link-arrow hero-mine" href="${url(lang, 'library')}" data-event="home_cta_library">${icon('book', 'ico-sm')} ${esc(h.ctaMine)} ${icon('arrow', 'ico-sm')}</a>
     </div>
     <dl class="hero-stats reveal">
       ${h.stats.map(([n, l]) => `<div><dt>${n}</dt><dd>${esc(l)}</dd></div>`).join('')}
     </dl>
+  </div>
+</section>
+
+<section class="section band-paper paths-band" aria-labelledby="pt-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow eyebrow-dark">${esc(h.pathsEyebrow)}</p>
+      <h2 id="pt-title" class="h2">${esc(h.pathsTitle)}</h2>
+      <p class="muted">${esc(h.pathsText)}</p>
+    </div>
+    <ul class="path-grid">
+      ${discover.interests.map(it => {
+        const gs = it.guides.map(sl => products.find(p => p.slug === sl && p.status !== 'hidden')).filter(Boolean);
+        const free = url(lang, ...it.free);
+        return `<li class="path-card">
+        ${icon(it.icon, 'ico-lg')}
+        <h3 class="h4"><a href="${free}" data-event="path_free" data-path="${it.id}">${esc(it.title[lang])}</a></h3>
+        <p>${esc(it.text[lang])}</p>
+        <p class="path-free"><a class="link-arrow" href="${free}" data-event="path_free" tabindex="-1" aria-hidden="true">${esc(it.freeLabel[lang])} ${icon('arrow', 'ico-sm')}</a></p>
+        ${gs.length ? `<p class="path-guides"><span class="label">${esc(h.pathGuide)}</span> ${gs.map(g => `<a href="${url(lang, 'shop', g.slug)}" data-event="path_guide" data-path="${it.id}">${esc(g.title[lang])}</a>`).join('<span aria-hidden="true"> · </span>')}</p>` : ''}
+      </li>`; }).join('')}
+    </ul>
+  </div>
+</section>
+
+<section class="section band-paper-2" aria-labelledby="sh-title">
+  <div class="wrap">
+    <div class="section-head section-head-row">
+      <div>
+        <p class="eyebrow eyebrow-dark">${esc(h.shopEyebrow)}</p>
+        <h2 id="sh-title" class="h2">${esc(h.shopTitle)}</h2>
+        <p class="muted">${esc(h.shopText)}</p>
+      </div>
+      <a class="link-arrow" href="${url(lang, 'shop')}" data-event="home_all_guides">${esc(h.shopCta)} ${icon('arrow', 'ico-sm')}</a>
+    </div>
+    <div class="product-grid">${featured.map(p => productCard(p, lang)).join('')}</div>
   </div>
 </section>
 
@@ -178,19 +216,7 @@ function home(lang, products) {
   </div>
 </section>
 
-<section class="section band-paper" aria-labelledby="sh-title">
-  <div class="wrap">
-    <div class="section-head section-head-row">
-      <div>
-        <p class="eyebrow eyebrow-dark">${esc(h.shopEyebrow)}</p>
-        <h2 id="sh-title" class="h2">${esc(h.shopTitle)}</h2>
-        <p class="muted">${esc(h.shopText)}</p>
-      </div>
-      <a class="link-arrow" href="${url(lang, 'shop')}">${esc(h.shopCta)} ${icon('arrow', 'ico-sm')}</a>
-    </div>
-    <div class="product-grid">${featured.map(p => productCard(p, lang)).join('')}</div>
-  </div>
-</section>
+
 
 ${activeAff().length ? `<section class="section band-paper-2 gear-band" aria-labelledby="gr-title">
   <div class="wrap">
@@ -207,7 +233,19 @@ ${activeAff().length ? `<section class="section band-paper-2 gear-band" aria-lab
   </div>
 </section>` : ''}
 
-<section class="section band-paper quiz-band">
+<section class="section band-paper about-band" aria-labelledby="ab-title">
+  <div class="wrap split">
+    <div class="split-text">
+      <p class="eyebrow eyebrow-dark">${esc(h.aboutEyebrow)}</p>
+      <h2 id="ab-title" class="h2">${esc(h.aboutTitle)}</h2>
+      <p class="muted">${esc(h.aboutText)}</p>
+      <a class="link-arrow" href="${url(lang, 'benefits')}">${esc(t.nav.benefits)} ${icon('arrow', 'ico-sm')}</a>
+    </div>
+    <ul class="about-points">${h.aboutPoints.map(([a, b]) => `<li>${icon('check', 'ico-sm')}<div><strong>${esc(a)}</strong><p class="muted">${esc(b)}</p></div></li>`).join('')}</ul>
+  </div>
+</section>
+
+<section class="section band-paper-2 quiz-band">
   <div class="wrap">
     <div class="quiz-cta">
       ${icon('cup', 'ico-xl')}
@@ -346,6 +384,7 @@ ${pageHero({ eyebrow: b.eyebrow, h1: b.h1, lead: b.lead })}
           <div class="chip-row">${x.teas.map(id => { const tea = teaById(id); return `<a class="chip chip-sm" href="${url(lang, 'guide')}#${id}">${icon(tea.icon, 'ico-sm')}${esc(tea.name[lang])}</a>`; }).join('')}</div>
         </div>
         <p class="caution"><strong>${esc(b.caution)}:</strong> ${esc(x.caution[lang])}</p>
+        ${(() => { const g = discover.benefitGuides[x.id] && store.getProduct(discover.benefitGuides[x.id]); return g && g.status !== 'hidden' ? `<p class="benefit-guide"><span class="label">${esc(t.home.pathGuide)}</span> <a href="${url(lang, 'shop', g.slug)}" data-event="cta">${esc(g.title[lang])}: ${esc(g.subtitle[lang])}</a></p>` : ''; })()}
       </article>`).join('')}
     </div>
     <p class="disclaimer">${esc(b.disclaimer)}</p>
@@ -441,7 +480,8 @@ ${pageHero({ eyebrow: q.eyebrow, h1: q.h1, lead: q.lead, art: false })}
     map: Object.fromEntries(Object.entries(quizMap).map(([k, v]) => {
       const p = products.find(pp => pp.slug === v.product);
       const bn = benefits.find(bb => bb.id === v.benefit);
-      return [k, { product: p && p.status !== 'hidden' ? { title: p.title[lang], url: url(lang, 'shop', p.slug), cover: cover(p, lang, 'cover-sm') } : null, benefit: { title: bn.title[lang], url: url(lang, 'benefits') + '#' + bn.id } }];
+      const recs = require('./seo').recipesForTea(k).slice(0, 2).map(r => ({ name: r.name[lang], tag: r.tag[lang], url: url(lang, 'recipes', r.slug[lang]) }));
+      return [k, { product: p && p.status !== 'hidden' ? { title: p.title[lang], sub: p.subtitle[lang], url: url(lang, 'shop', p.slug), cover: cover(p, lang, 'cover-sm') } : null, benefit: { title: bn.title[lang], url: url(lang, 'benefits') + '#' + bn.id }, recipes: recs, teaUrl: url(lang, 'guide', k) }];
     })),
     urls: { guide: url(lang, 'guide'), brewing: url(lang, 'brewing') },
     l: Object.assign({ temp: t.guide.temp, time: t.guide.time }, q)
@@ -453,6 +493,7 @@ ${pageHero({ eyebrow: q.eyebrow, h1: q.h1, lead: q.lead, art: false })}
 function shop(lang, products) {
   const t = ui[lang], s = t.shop;
   const list = visible(products);
+  const tags = Object.keys(discover.tagLabels).filter(tg => list.some(p => discover.infoFor(p.slug).tags.includes(tg)));
   const body = `
 ${pageHero({ eyebrow: s.eyebrow, h1: s.h1, lead: s.lead })}
 <section class="band-paper perks-band">
@@ -460,7 +501,17 @@ ${pageHero({ eyebrow: s.eyebrow, h1: s.h1, lead: s.lead })}
 </section>
 <section class="section band-paper">
   <div class="wrap">
+    ${tags.length > 1 ? `<div class="filter-row shop-filter" role="group" aria-label="${esc(s.filterLabel)}" data-filter-scope=".product-grid-full .product-card" data-filter-attr="tags" data-filter-count="${esc(s.shown)}" data-filter-event="shop_filter">
+      <button class="chip is-active" data-filter="all" aria-pressed="true">${esc(s.filterAll)}</button>
+      ${tags.map(tg => `<button class="chip" data-filter="${tg}" aria-pressed="false">${esc(discover.tagLabels[tg][lang])}</button>`).join('')}
+      <p class="filter-count tiny muted" role="status" aria-live="polite"></p>
+    </div>` : ''}
     <div class="product-grid product-grid-full">${list.map(p => productCard(p, lang)).join('')}</div>
+    <aside class="not-sure">
+      ${icon('cup', 'ico-lg')}
+      <div><h2 class="h4">${esc(s.notSure)}</h2><p class="muted">${esc(s.notSureText)}</p></div>
+      <a class="btn btn-dark btn-sm" href="${url(lang, 'quiz')}" data-event="shop_quiz">${esc(s.notSureCta)}</a>
+    </aside>
   </div>
 </section>`;
   return layout({
@@ -474,7 +525,14 @@ function product(lang, p, products) {
   const t = ui[lang], s = t.shop, pr = t.product;
   const soon = p.status !== 'available' || !hasCheckout(p); // sem link da Cakto, mostra a lista de espera
   const pv = previewFor(p.slug, lang);
-  const related = visible(products).filter(x => x.slug !== p.slug).sort((a, b) => (a.status === 'available' ? -1 : 1) - (b.status === 'available' ? -1 : 1)).slice(0, 3);
+  const related = discover.relatedProducts(p, visible(products), 3);
+  const info = discover.infoFor(p.slug);
+  const fq = pr.faq, both = store.fileLangs(p).length > 1;
+  const pFaq = [
+    fq.receive, fq.devices, [fq.langs[0], fq.langs[1].replace('{l}', p.lang[lang] + (both ? '. ' + pr.bothLangs.replace(/\.$/, '') : ''))],
+    pv ? [fq.preview[0], fq.preview[1].replace('{n}', pv.items.length)] : null,
+    soon ? null : fq.pay, fq.other.map(x => x.replace('{d}', config.maxDevices)), fq.help.map(x => x.replace('{e}', config.contactEmail))
+  ].filter(Boolean);
   const body = `
 <section class="band-night product-hero">
   <div class="wrap product-layout">
@@ -484,14 +542,19 @@ function product(lang, p, products) {
       <p class="product-meta"><span class="badge ${soon ? 'badge-soon' : 'badge-ok'}">${soon ? esc(s.soon) : esc(s.available)}</span></p>
       <h1 class="display display-md">${esc(p.title[lang])}</h1>
       <p class="lead">${esc(p.subtitle[lang])}</p>
+      ${info.forWho ? `<p class="for-who"><span class="label">${esc(pr.forWho)}</span> ${esc(info.forWho[lang])}</p>` : ''}
       ${soon ? '' : `<p class="price price-lg">${money(p.price, lang)}</p>`}
+      <div class="product-ctas">
+        <a class="btn ${soon ? 'btn-ghost' : 'btn-gold'}" href="#comprar" data-event="${soon ? 'waitlist_jump' : 'buy_jump'}" data-product="${esc(p.slug)}">${soon ? esc(s.waitlist) : esc(pr.buyNow)}</a>
+        ${pv ? `<button type="button" class="btn btn-ghost" data-preview-open="0">${icon('book', 'ico-sm')} ${esc(pr.previewFree)}</button>` : ''}
+      </div>
       <p class="muted-light">${esc(p.description[lang])}</p>
       <dl class="product-specs">
         <div><dt>${esc(pr.format)}</dt><dd>${esc(pr.formatValue)}</dd></div>
         <div><dt>${esc(s.pages)}</dt><dd>${p.pages}</dd></div>
         <div><dt>${esc(pr.language)}</dt><dd>${esc(p.lang[lang])}</dd></div>
+        <div><dt>${esc(pr.delivery)}</dt><dd>${esc(pr.deliveryValue)}</dd></div>
       </dl>
-      ${pv ? `<p class="product-preview-cta"><button type="button" class="btn btn-ghost btn-sm" data-preview-open="0">${icon('book', 'ico-sm')} ${esc(pr.preview.open)}</button></p>` : ''}
     </div>
   </div>
 </section>
@@ -520,6 +583,12 @@ ${freeRecipes(lang, p)}
   <div><span class="buy-bar-title">${esc(p.title[lang])}</span>${soon ? `<span class="buy-bar-sub">${esc(s.soon)}</span>` : `<strong>${money(p.price, lang)}</strong>`}</div>
   <a class="btn ${soon ? 'btn-ghost' : 'btn-gold'} btn-sm" href="#comprar" tabindex="-1">${soon ? esc(s.waitlist.split(' ')[0]) : esc(s.buy)}</a>
 </div>
+<section class="section band-paper" aria-labelledby="pfaq-title">
+  <div class="wrap narrow">
+    <h2 id="pfaq-title" class="h3">${esc(pr.faqTitle)}</h2>
+    <div class="faq-list">${pFaq.map(([q, a]) => `<details class="faq-item"><summary><h3>${esc(q)}</h3></summary><p>${esc(a)}</p></details>`).join('')}</div>
+  </div>
+</section>
 ${related.length ? `<section class="section band-paper-2">
   <div class="wrap">
     <h2 class="h3">${esc(pr.related)}</h2>
@@ -528,12 +597,12 @@ ${related.length ? `<section class="section band-paper-2">
 </section>` : ''}`;
   return layout({
     lang, key: 'shop', paths: pathsFor('shop', p.slug), title: `${p.title[lang]}: ${p.subtitle[lang]} | Botânora`, description: p.description[lang], body, dark: true, bodyClass: 'page-product', markdown: url(lang, 'shop', p.slug) + '.md',
-    jsonLd: {
+    jsonLd: [{
       '@context': 'https://schema.org', '@type': 'Product', name: p.title[lang], description: p.description[lang], brand: { '@type': 'Brand', name: 'Botânora' },
       sku: 'BOT-' + String(p.order).padStart(2, '0'), category: lang === 'pt' ? 'Guia digital em PDF' : 'Digital PDF guide', image: [config.siteUrl + `/assets/img/covers/${p.slug}-${lang}.jpg`],
       inLanguage: ['pt-BR', 'en'], additionalProperty: [{ '@type': 'PropertyValue', name: lang === 'pt' ? 'Páginas' : 'Pages', value: p.pages }],
       offers: { '@type': 'Offer', price: (p.price / 100).toFixed(2), priceCurrency: 'BRL', availability: soon ? 'https://schema.org/PreOrder' : 'https://schema.org/InStock', url: config.siteUrl + url(lang, 'shop', p.slug) }
-    }
+    }, { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: pFaq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }]
   });
 }
 
@@ -689,10 +758,18 @@ function privacy(lang) {
   return layout({ lang, key: 'privacy', paths: pathsFor('privacy'), title: t.title, description: t.body[0], body, dark: true });
 }
 
+function termsPage(lang) {
+  const t = terms[lang];
+  const fill = x => x.replace(/\{email\}/g, config.contactEmail).replace('{devices}', config.maxDevices).replace('{days}', config.accessDays);
+  const body = `${pageHero({ eyebrow: 'Botânora', h1: t.h1, lead: t.lead, art: false })}
+<section class="section band-paper"><div class="wrap prose">${t.sections.map(([h, p]) => `<h2 class="h4">${esc(h)}</h2><p>${h === t.sections[6][0] ? `${esc(fill(p).replace(/\.$/, ''))}: <a href="${url(lang, 'privacy')}">${esc(ui[lang].footer.privacy)}</a>.` : esc(fill(p))}</p>`).join('')}</div></section>`;
+  return layout({ lang, key: 'terms', paths: pathsFor('terms'), title: t.title, description: t.lead, body, dark: true });
+}
+
 function notFound(lang) {
   const t = ui[lang].notFound;
   const body = `<section class="band-night nf">${sprig({ cls: 'hero-sprig', width: 520, height: 320, leaves: 7, seed: 11 })}<div class="wrap"><p class="eyebrow">404</p><h1 class="display">${esc(t.h1)}</h1><p class="lead">${esc(t.text)}</p><a class="btn btn-gold" href="${url(lang, 'home')}">${esc(t.cta)}</a></div></section>`;
   return layout({ lang, key: '', paths: pathsFor('home'), title: t.title, description: t.text, body, dark: true, noindex: true });
 }
 
-module.exports = { home, guide, benefitsPage, brewing, gear, quizPage, shop, product, receive, library, privacy, notFound, libraryEnter };
+module.exports = { home, guide, benefitsPage, brewing, gear, quizPage, shop, product, receive, library, privacy, termsPage, notFound, libraryEnter };

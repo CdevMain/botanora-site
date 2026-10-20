@@ -23,6 +23,7 @@ const T = {
     rIndexTitle: 'Receitas de chá grátis | Botânora', rIndexH1: 'Receitas de chá', rIndexEyebrow: 'Receitas grátis',
     rIndexLead: 'Receitas testadas, com medidas, temperatura e tempo: chás quentes e gelados, lattes, doces e salgados com chá. Comece pelo que você tem em casa.',
     pantryEyebrow: 'Com o que você tem', pantryH2: 'Marque o que tem em casa', pantryLead: 'Escolha os ingredientes e mostramos a melhor receita que dá para fazer agora. Água e gelo já contam.',
+    save: 'Salvar receita', saved: 'Receita salva', savedTitle: 'Suas receitas salvas', savedNote: 'Ficam guardadas só neste navegador, sem conta e sem cadastro.',
     pantryLabel: 'Receita de despensa', pantryGroup: 'Receitas de despensa', pantryGroupText: 'Combinações simples para fazer com o que já tem em casa.',
     pMore: 'Gostou? Vá além com o guia', pMoreText: n => `O guia completo tem ${n} páginas, com receitas exclusivas, técnica e tabelas, em português e inglês.`,
     pUi: { selected: n => n === 1 ? '1 ingrediente marcado' : `${n} ingredientes marcados`, none: 'Nenhum ingrediente marcado', clear: 'Limpar', empty: 'Marque pelo menos um ingrediente para ver a receita.', nothing: 'Ainda não temos receita com essa combinação. Tente marcar mais um ou dois ingredientes.', best: 'Melhor opção agora', ready: 'Você tem tudo', missOne: 'Falta só', miss: 'Falta', youHave: 'Você tem', open: 'Ver modo de preparo', more: 'Também dá para fazer', guides: 'Nos guias completos', guideHave: (a, b) => `você tem ${a} de ${b} ingredientes`, guideReady: 'dá para fazer com o que você tem', guideCta: 'Ver o guia', hot: 'Quente', iced: 'Gelado', caf: 'com cafeína', nocaf: 'sem cafeína', loading: 'Procurando…', see: 'Ver receita' },
@@ -44,6 +45,7 @@ const T = {
     rIndexTitle: 'Free tea recipes | Botânora', rIndexH1: 'Tea recipes', rIndexEyebrow: 'Free recipes',
     rIndexLead: 'Tested recipes with amounts, temperature and time: hot and iced teas, lattes, sweets and savoury dishes with tea. Start with what you have at home.',
     pantryEyebrow: 'With what you have', pantryH2: 'Tick what you have at home', pantryLead: 'Pick your ingredients and we show the best recipe you can make right now. Water and ice are already counted.',
+    save: 'Save recipe', saved: 'Recipe saved', savedTitle: 'Your saved recipes', savedNote: 'Kept in this browser only, no account or sign-up needed.',
     pantryLabel: 'Pantry recipe', pantryGroup: 'Pantry recipes', pantryGroupText: 'Simple combinations to make with what you already have.',
     pMore: 'Enjoyed it? Go further with the guide', pMoreText: n => `The full guide has ${n} pages, with exclusive recipes, technique and tables, in Portuguese and English.`,
     pUi: { selected: n => n === 1 ? '1 ingredient ticked' : `${n} ingredients ticked`, none: 'No ingredients ticked', clear: 'Clear', empty: 'Tick at least one ingredient to see a recipe.', nothing: 'No recipe for this combination yet. Try ticking one or two more ingredients.', best: 'Best option right now', ready: 'You have everything', missOne: 'Only missing', miss: 'Missing', youHave: 'You have', open: 'See the method', more: 'You can also make', guides: 'In the full guides', guideHave: (a, b) => `you have ${a} of ${b} ingredients`, guideReady: 'you can make it with what you have', guideCta: 'See the guide', hot: 'Hot', iced: 'Iced', caf: 'caffeinated', nocaf: 'caffeine-free', loading: 'Searching…', see: 'See recipe' },
@@ -110,7 +112,7 @@ function guideCta(lang, p) {
 
 function recipeCard(r, lang) {
   const t = T[lang];
-  return `<a class="recipe-card" href="${recipePaths(r)[lang]}">
+  return `<a class="recipe-card" href="${recipePaths(r)[lang]}" data-recipe="${esc(r.slug.pt)}">
   <span class="label">${r.pantry ? esc(t.pantryLabel) : `${esc(t.fromGuide)} ${String(r.guideNumber).padStart(2, '0')}`}</span>
   <h3>${esc(r.name[lang])}</h3><p>${esc(r.tag[lang])}</p>
   <span class="recipe-card-meta">${icon('clock', 'ico-sm')} ${esc(r.time[lang])} · ${r.iced ? esc(t.iced) : esc(t.hot)} · ${r.caffeine ? esc(t.caf) : esc(t.nocaf)}</span>
@@ -193,6 +195,9 @@ function recipesIndex(lang) {
   recipes.filter(r => !r.pantry).forEach(r => { (groups[r.guide] = groups[r.guide] || []).push(r); });
   const pantryList = recipes.filter(r => r.pantry);
   const body = `${pageHero({ eyebrow: t.rIndexEyebrow, h1: t.rIndexH1, lead: t.rIndexLead })}
+<section class="section band-paper saved-band" data-saved-list hidden><div class="wrap">
+  <h2 class="h3">${esc(t.savedTitle)}</h2><p class="tiny muted">${esc(t.savedNote)}</p><div class="recipe-grid" data-saved-grid></div>
+</div></section>
 ${pantrySection(lang)}
 <section class="section band-paper-2"><div class="wrap">
   <div class="recipe-group"><h2 class="label">${esc(t.pantryGroup)}</h2><p class="muted recipe-group-text">${esc(t.pantryGroupText)}</p><div class="recipe-grid">${pantryList.map(r => recipeCard(r, lang)).join('')}</div></div>
@@ -220,6 +225,7 @@ ${crumbs(lang, crumbItems)}
         <span>${icon(r.iced ? 'ice' : 'thermo', 'ico-sm')} ${r.iced ? esc(t.iced) : esc(t.hot)}</span><span>${icon(r.caffeine ? 'spark' : 'moon', 'ico-sm')} ${r.caffeine ? esc(t.caf) : esc(t.nocaf)}</span>
         <span>${icon('scale', 'ico-sm')} ${esc(r.level[lang])}</span>
       </div>
+      <p class="recipe-save-row"><button type="button" class="btn btn-ghost btn-sm recipe-save" data-save-recipe="${esc(r.slug.pt)}" aria-pressed="false" data-on="${esc(t.saved)}" data-off="${esc(t.save)}">${icon('leaf', 'ico-sm')} <span>${esc(t.save)}</span></button> <span class="tiny muted">${esc(t.savedNote)}</span></p>
       <h2 class="h3">${esc(t.ingredients)}</h2>
       <table class="ing-table"><tbody>${r.ingredients.map(i => `<tr><td>${esc(i.qty[lang])}</td><td>${esc(i.item[lang])}</td></tr>`).join('')}</tbody></table>
       <h2 class="h3">${esc(t.method)}</h2>
@@ -316,4 +322,4 @@ function llmsTxt(full = false) {
   return L.join('\n');
 }
 
-module.exports = { teaPage, recipesIndex, recipePage, faqPage, mdTea, mdRecipe, mdFaq, mdRecipes, mdProduct, llmsTxt, recipes, recipeBySlug, recipePaths, teaById };
+module.exports = { recipesForTea, teaPage, recipesIndex, recipePage, faqPage, mdTea, mdRecipe, mdFaq, mdRecipes, mdProduct, llmsTxt, recipes, recipeBySlug, recipePaths, teaById };

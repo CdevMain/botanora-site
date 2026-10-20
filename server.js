@@ -169,6 +169,7 @@ function renderPublic(req, res, lang, rest, ip, query) {
   else if (key === 'brewing' && !sub) html = pages.brewing(lang);
   else if (key === 'quiz' && !sub) html = pages.quizPage(lang, products);
   else if (key === 'privacy' && !sub) html = pages.privacy(lang);
+  else if (key === 'terms' && !sub) html = pages.termsPage(lang);
   else if (key === 'gear' && !sub) html = pages.gear(lang);
   else if (key === 'receive' && !sub) {
     // Volta do checkout da Cakto (?compra=ok / ?paid=1): quem já está conectado neste aparelho vai direto para a biblioteca
@@ -237,7 +238,7 @@ function publicUrls() {
   const list = [];
   const add = (pt, en, lastmod) => list.push({ pt, en, lastmod });
   const both = (key, ...rest) => add(url('pt', key, ...rest), url('en', key, ...rest));
-  ['home', 'guide', 'benefits', 'brewing', 'recipes', 'faq', 'gear', 'quiz', 'shop', 'privacy'].forEach(k => both(k));
+  ['home', 'guide', 'benefits', 'brewing', 'recipes', 'faq', 'gear', 'quiz', 'shop', 'privacy', 'terms'].forEach(k => both(k));
   require('./src/content/teas').teas.forEach(t => both('guide', t.id));
   seo.recipes.forEach(r => { const p = seo.recipePaths(r); add(p.pt, p.en); });
   store.db.products.filter(p => p.status !== 'hidden').forEach(p => both('shop', p.slug));
@@ -272,7 +273,9 @@ async function apiPublic(req, res, pathname, ip, query) {
   if (pathname === '/api/event' && req.method === 'POST') {
     if (!rateLimit(ip, 'event', 120, 60000)) return json(req, res, 429, { error: 'rate' });
     const b = await readJson(req, 4096);
-    const allowed = ['quiz_start', 'quiz_complete', 'timer_start', 'timer_done', 'lang_switch', 'download', 'cta', 'preview_open', 'preview_page', 'preview_zoom', 'checkout'];
+    const allowed = ['quiz_start', 'quiz_complete', 'timer_start', 'timer_done', 'lang_switch', 'download', 'cta', 'preview_open', 'preview_page', 'preview_zoom', 'checkout',
+      'home_cta_quiz', 'home_cta_shop', 'home_cta_library', 'home_all_guides', 'path_free', 'path_guide', 'shop_filter', 'shop_quiz', 'buy_jump', 'waitlist_jump',
+      'quiz_restart', 'quiz_reco', 'quiz_recipe', 'quiz_tea', 'quiz_brew', 'quiz_benefit', 'recipe_save', 'recipe_unsave'];
     if (b.type === 'engage') analytics.trackEngage(req, ip, b.path, b.ms);
     else if (allowed.includes(b.name)) {
       const props = {};

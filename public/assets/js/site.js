@@ -283,7 +283,13 @@
     const row = btn.closest('.filter-row');
     const scope = row.dataset.filterScope || '.benefit-card', attr = row.dataset.filterAttr || 'evidence';
     $$('[data-filter]', row).forEach(b => { b.classList.toggle('is-active', b === btn); b.setAttribute('aria-pressed', b === btn); });
-    $$(scope).forEach(c => { c.hidden = btn.dataset.filter !== 'all' && c.dataset[attr] !== btn.dataset.filter; });
+    // o atributo pode ter vários valores separados por espaço (ex.: temas de um guia)
+    const v = btn.dataset.filter;
+    let shown = 0;
+    $$(scope).forEach(c => { c.hidden = v !== 'all' && !String(c.dataset[attr] || '').split(' ').includes(v); if (!c.hidden) shown++; });
+    const count = $('.filter-count', row);
+    if (count && row.dataset.filterCount) count.textContent = v === 'all' ? '' : row.dataset.filterCount.replace('{n}', shown);
+    if (row.dataset.filterEvent) track(row.dataset.filterEvent, { value: v });
   }));
 
   // ---------- preparo + timer ----------
@@ -360,51 +366,86 @@
     const arrow = '<svg class="ico-sm" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 24 H40 M30 14 L40 24 L30 34"/></svg>';
     let answers = [];
     const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    // Último resultado fica só neste navegador (sem conta, sem servidor)
+    const KEY = 'btn_quiz_' + document.body.dataset.lang;
+    const load = () => { try { const v = JSON.parse(localStorage.getItem(KEY) || 'null'); return v && Array.isArray(v.a) && v.a.length === Q.length && v.a.every((k, i) => Q[i].options[k]) ? v : null; } catch (_) { return null; } };
+    const save = a => { try { localStorage.setItem(KEY, JSON.stringify({ a, at: Date.now() })); } catch (_) {} };
+    const pick = a => { const score = {}; a.forEach((k, i) => { const s = Q[i].options[k].score; for (const t in s) score[t] = (score[t] || 0) + s[t]; }); return Object.keys(score).sort((x, y) => score[y] - score[x])[0]; };
     function step() {
       const i = answers.length;
-      if (i >= Q.length) return result();
-      const q = Q[i];
+      if (i >= Q.length) return result(true);
+      const q = Q[i], last = !i && load();
       qc.innerHTML = `<div class="quiz-step">
-        <div class="quiz-progress">${Q.map((_, k) => `<i${k <= i ? ' class="on"' : ''}></i>`).join('')}</div>
+        ${last ? `<p class="quiz-last">${esc(L.last)} <strong>${esc(DATA.teas[pick(last.a)].name)}</strong>. <button type="button" class="link-btn" data-last>${esc(L.lastSee)}</button></p>` : ''}
+        <div class="quiz-progress" aria-hidden="true">${Q.map((_, k) => `<i${k <= i ? ' class="on"' : ''}></i>`).join('')}</div>
         <p class="label">${esc(L.step)} ${i + 1} ${esc(L.of)} ${Q.length}</p>
-        <h2 class="quiz-q">${esc(q.q)}</h2>
-        <div class="quiz-opts">${q.options.map((o, k) => `<button class="quiz-opt" data-k="${k}">${esc(o.label)}${arrow}</button>`).join('')}</div>
-        ${i ? `<button class="quiz-back">← ${esc(L.back)}</button>` : ''}
+        <h2 class="quiz-q" tabindex="-1">${esc(q.q)}</h2>
+        <div class="quiz-opts">${q.options.map((o, k) => `<button type="button" class="quiz-opt" data-k="${k}">${esc(o.label)}${arrow}</button>`).join('')}</div>
+        ${i ? `<button type="button" class="quiz-back">← ${esc(L.back)}</button>` : ''}
       </div>`;
-      const first = $('.quiz-opt', qc); if (i && first) first.focus();
+      if (i) { const h = $('.quiz-q', qc); if (h) h.focus(); }
     }
-    function result() {
-      const score = {};
-      answers.forEach((k, i) => { const s = Q[i].options[k].score; for (const t in s) score[t] = (score[t] || 0) + s[t]; });
-      const id = Object.keys(score).sort((a, b) => score[b] - score[a])[0];
+    function result(fresh) {
+      const id = pick(answers);
       const tea = DATA.teas[id], m = DATA.map[id];
-      track('quiz_complete', { tea: id });
+      if (fresh) { save(answers); track('quiz_complete', { tea: id }); }
       qc.innerHTML = `<div class="quiz-result">
         <div>
           ${tea.icon}
           <p class="label">${esc(L.result)}</p>
-          <h2 class="display">${esc(tea.name)}</h2>
+          <h2 class="display" tabindex="-1">${esc(tea.name)}</h2>
           <p class="italic muted">${esc(tea.tagline)}</p>
           <p>${esc(tea.body)}</p>
+          <div class="quiz-why"><p class="label">${esc(L.why)}</p><p class="muted">${esc(L.whyText)}</p>
+            <ul>${answers.map((k, i) => `<li>${esc(Q[i].options[k].label)}</li>`).join('')}</ul></div>
           <dl class="spec-row"><div><dt>${esc(L.temp)}</dt><dd>${esc(tea.temp)}</dd></div><div><dt>${esc(L.time)}</dt><dd>${esc(tea.time)}</dd></div></dl>
           <div class="quiz-links">
-            <a class="btn btn-dark" href="${DATA.urls.brewing}?tea=${id}">${esc(L.brew)}</a>
-            <a class="link-arrow" href="${DATA.urls.guide}#${id}">${esc(L.seeGuide)} ${arrow}</a>
-            <a class="link-arrow" href="${m.benefit.url}">${esc(L.benefit)}: ${esc(m.benefit.title)} ${arrow}</a>
-            <button class="quiz-back" data-again>↺ ${esc(L.again)}</button>
+            <a class="btn btn-dark" href="${DATA.urls.brewing}?tea=${id}" data-event="quiz_brew">${esc(L.brew)}</a>
+            <a class="link-arrow" href="${m.teaUrl}" data-event="quiz_tea">${esc(L.seeGuide)} ${arrow}</a>
+            <a class="link-arrow" href="${m.benefit.url}" data-event="quiz_benefit">${esc(L.benefit)}: ${esc(m.benefit.title)} ${arrow}</a>
           </div>
+          ${m.recipes && m.recipes.length ? `<div class="quiz-recipes"><p class="label">${esc(L.recipes)}</p>${m.recipes.map(r => `<a class="recipe-card" href="${r.url}" data-event="quiz_recipe"><h3>${esc(r.name)}</h3><p>${esc(r.tag)}</p></a>`).join('')}</div>` : ''}
+          <p class="tiny muted quiz-saved">${esc(L.saved)}</p>
+          <button type="button" class="quiz-back" data-again>↺ ${esc(L.again)}</button>
         </div>
-        ${m.product ? `<aside class="quiz-side"><a href="${m.product.url}" style="text-decoration:none">${m.product.cover}<p class="label">${esc(L.product)}</p><p class="h4">${esc(m.product.title)}</p></a></aside>` : ''}
+        ${m.product ? `<aside class="quiz-side"><a href="${m.product.url}" class="quiz-side-cover" data-event="quiz_reco" tabindex="-1" aria-hidden="true">${m.product.cover}</a><p class="label">${esc(L.product)}</p><p class="h4">${esc(m.product.title)}</p><p class="tiny muted">${esc(m.product.sub)}</p><a class="btn btn-dark btn-sm" href="${m.product.url}" data-event="quiz_reco">${esc(L.productSee)}</a></aside>` : ''}
       </div>`;
-      const top = qc.getBoundingClientRect().top + scrollY - 100; if (top < scrollY) scrollTo({ top, behavior: 'smooth' });
+      const h = $('.quiz-result .display', qc); if (h) h.focus({ preventScroll: true });
+      const top = qc.getBoundingClientRect().top + scrollY - 100; if (top < scrollY) scrollTo({ top, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     }
     qc.addEventListener('click', e => {
       const opt = e.target.closest('.quiz-opt');
       if (opt) { if (!answers.length) track('quiz_start'); answers.push(Number(opt.dataset.k)); step(); return; }
-      if (e.target.closest('[data-again]')) { answers = []; step(); return; }
+      if (e.target.closest('[data-last]')) { const v = load(); if (v) { answers = v.a.slice(); result(false); } return; }
+      if (e.target.closest('[data-again]')) { answers = []; track('quiz_restart'); step(); return; }
       if (e.target.closest('.quiz-back')) { answers.pop(); step(); }
     });
     step();
+  }
+
+  // ---------- receitas salvas (só neste navegador) ----------
+  const SKEY = 'btn_saved_recipes';
+  const getSaved = () => { try { const v = JSON.parse(localStorage.getItem(SKEY) || '[]'); return Array.isArray(v) ? v.filter(x => typeof x === 'string').slice(0, 200) : []; } catch (_) { return []; } };
+  const setSaved = v => { try { localStorage.setItem(SKEY, JSON.stringify(v)); return true; } catch (_) { return false; } };
+  const saveBtn = $('[data-save-recipe]');
+  if (saveBtn) {
+    const id = saveBtn.dataset.saveRecipe, label = $('span', saveBtn);
+    const paint = on => { saveBtn.setAttribute('aria-pressed', on); saveBtn.classList.toggle('is-on', on); label.textContent = on ? saveBtn.dataset.on : saveBtn.dataset.off; };
+    paint(getSaved().includes(id));
+    saveBtn.addEventListener('click', () => {
+      const list = getSaved(), on = !list.includes(id);
+      if (!setSaved(on ? [id, ...list] : list.filter(x => x !== id))) return;
+      paint(on); track(on ? 'recipe_save' : 'recipe_unsave', { recipe: id });
+    });
+  }
+  const savedBox = $('[data-saved-list]');
+  if (savedBox) {
+    const grid = $('[data-saved-grid]', savedBox), done = new Set();
+    getSaved().forEach(id => {
+      const card = $(`.recipe-card[data-recipe="${CSS.escape(id)}"]`);
+      if (card && !done.has(id)) { done.add(id); grid.appendChild(card.cloneNode(true)); }
+    });
+    if (done.size) savedBox.hidden = false;
   }
 
   // ---------- prévia do guia (com zoom) ----------

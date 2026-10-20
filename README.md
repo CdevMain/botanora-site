@@ -36,14 +36,19 @@ data/                     criado automaticamente: banco, eventos e PDFs (fora do
 
 | PT | EN | |
 |---|---|---|
-| `/pt` | `/en` | Home: espectro de oxidação interativo, benefícios, preparo, guias |
+| `/pt` | `/en` | Home: proposta de valor, "Por onde começar" (6 caminhos: conteúdo grátis + guia do tema), guias, espectro de oxidação, benefícios, preparo, sobre |
 | `/pt/guia` | `/en/guide` | 9 tipos de chá, comparativo e gráfico de cafeína |
 | `/pt/beneficios` | `/en/benefits` | 6 benefícios com nível de evidência, filtro e cuidados |
 | `/pt/preparo` | `/en/brewing` | Calculadora de dose + timer com aviso sonoro e notificação |
-| `/pt/quiz` | `/en/quiz` | "Qual chá é para você?" com recomendação de guia |
-| `/pt/loja` | `/en/shop` | Os 10 guias em PDF, compra ou lista de espera |
+| `/pt/quiz` | `/en/quiz` | "Qual chá é para você?": voltar, refazer, "por que este chá", receitas grátis, guia recomendado; último resultado guardado no navegador |
+| `/pt/loja` | `/en/shop` | Os 10 guias em PDF com filtro por tema; página de cada guia com "para quem é", prévia, dúvidas frequentes e guias relacionados por tema |
+| `/pt/termos` | `/en/terms` | Termos de uso (licença pessoal, pagamento na Cakto, acesso, reembolso pelo CDC) |
 | `/pt/receber` | `/en/receive` | Página de receber: e-mail → código de 6 dígitos (ou 4 últimos dígitos do celular da compra) → biblioteca |
 | `/pt/biblioteca` | `/en/library` | Biblioteca do cliente: só abre no aparelho conectado; escolhe o guia e o idioma do PDF |
+
+## Descoberta e temas dos guias
+
+`src/content/discover.js` liga interesses, benefícios e guias: temas de cada guia (filtro da loja e relacionados), "para quem é" e os caminhos da home. Ao lançar um guia novo, adicione o slug lá. Receitas salvas e o último resultado do quiz ficam só no navegador (localStorage), sem conta.
 
 ## Vendas
 

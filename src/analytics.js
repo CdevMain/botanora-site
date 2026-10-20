@@ -221,6 +221,8 @@ function stats(days = 30) {
       langSwitch: named('lang_switch'),
       downloads: named('download'),
       previewOpen: named('preview_open'),
+      quizReco: named('quiz_reco'), recipeSave: named('recipe_save'),
+      paths: named('path_free') + named('path_guide'), buyJump: named('buy_jump'),
       affClicks: named('aff_click')
     },
     quizResults: countBy(cur.ev.filter(e => e.type === 'ev' && e.name === 'quiz_complete'), e => e.props && e.props.tea),

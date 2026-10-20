@@ -165,6 +165,8 @@
       <div><span>Downloads de PDF</span><b>${nf.format(e.downloads)}</b></div><div><span>Trocas de idioma</span><b>${nf.format(e.langSwitch)}</b></div>
       <div><span>Cliques em recomendações</span><b>${nf.format(e.affClicks || 0)}</b></div><div><span>Inscritos (total)</span><b>${nf.format(stats.totals.subscribers)}</b></div>
       <div><span>Prévias abertas</span><b>${nf.format(e.previewOpen || 0)}</b></div><div><span>Pedidos (total)</span><b>${nf.format(stats.totals.orders)}</b></div>
+      <div><span>Cliques no guia do quiz</span><b>${nf.format(e.quizReco || 0)}</b></div><div><span>Receitas salvas</span><b>${nf.format(e.recipeSave || 0)}</b></div>
+      <div><span>Cliques em "Por onde começar"</span><b>${nf.format(e.paths || 0)}</b></div><div><span>Cliques em "Comprar" no topo do guia</span><b>${nf.format(e.buyJump || 0)}</b></div>
     </div>`;
     const teaName = { branco: 'Chá branco', verde: 'Chá verde', matcha: 'Matcha', oolong: 'Oolong', preto: 'Chá preto', puer: 'Pu-erh', mate: 'Erva-mate', rooibos: 'Rooibos', ervas: 'Ervas e flores' };
     $('#quiz').innerHTML = bars(stats.quizResults, { label: x => teaName[x.key] || x.key, empty: 'Nenhum quiz concluído no período.' });

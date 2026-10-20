@@ -86,6 +86,7 @@ ${body}
       <input id="nl-email" type="email" name="email" required autocomplete="email" placeholder="${esc(t.newsletter.placeholder)}">
       <button class="btn btn-gold" type="submit">${esc(t.newsletter.button)}</button>
       <p class="form-msg" role="status" data-ok="${esc(t.newsletter.ok)}" data-err="${esc(t.newsletter.err)}"></p>
+      <p class="nl-consent tiny muted-light">${esc(t.newsletter.consent)} <a href="${url(lang, 'privacy')}">${esc(t.newsletter.privacy)}</a></p>
     </form>
   </div>
 </section>
@@ -105,7 +106,7 @@ ${body}
     </div>
     <div>
       <h3 class="label">${esc(t.footer.legal)}</h3>
-      <ul><li><a href="${url(lang, 'privacy')}">${esc(t.footer.privacy)}</a></li>${config.gaId || config.clarityId ? `<li><button type="button" class="link-btn" data-consent-open>${esc(t.footer.cookies)}</button></li>` : ''}</ul>
+      <ul><li><a href="${url(lang, 'privacy')}">${esc(t.footer.privacy)}</a></li><li><a href="${url(lang, 'terms')}">${esc(t.footer.terms)}</a></li>${config.gaId || config.clarityId ? `<li><button type="button" class="link-btn" data-consent-open>${esc(t.footer.cookies)}</button></li>` : ''}</ul>
       <p class="tiny muted-light">${esc(t.footer.analytics)}</p>
     </div>
   </div>

@@ -34,17 +34,20 @@ function cover(p, lang, cls = '', eager = false) {
 
 function productCard(p, lang) {
   const t = ui[lang].shop;
+  const { infoFor, tagLabels } = require('../content/discover');
+  const info = infoFor(p.slug);
   const href = url(lang, 'shop', p.slug);
   const soon = p.status !== 'available';
-  return `<article class="product-card${soon ? ' is-soon' : ''}">
+  const topic = info.tags[0] && tagLabels[info.tags[0]] ? tagLabels[info.tags[0]][lang] : '';
+  return `<article class="product-card${soon ? ' is-soon' : ''}" data-tags="${esc(info.tags.join(' '))}">
     <a href="${href}" class="product-cover-link" tabindex="-1" aria-hidden="true">${cover(p, lang)}</a>
     <div class="product-body">
-      <p class="product-meta"><span class="badge ${soon ? 'badge-soon' : 'badge-ok'}">${soon ? esc(t.soon) : esc(t.available)}</span><span>${p.pages} ${esc(t.pages)}</span></p>
+      <p class="product-meta">${soon ? `<span class="badge badge-soon">${esc(t.soon)}</span>` : topic ? `<span class="product-topic">${esc(topic)}</span>` : ''}<span>${esc(t.format)} · ${p.pages} ${esc(t.pages)}</span></p>
       <h3 class="product-title"><a href="${href}">${esc(p.title[lang])}</a></h3>
       <p class="product-sub">${esc(p.subtitle[lang])}</p>
       <div class="product-foot">
         ${soon ? `<a class="link-arrow" href="${href}">${esc(t.waitlist)} ${icon('arrow', 'ico-sm')}</a>`
-        : `<span class="price">${money(p.price, lang)}</span><a class="btn btn-dark btn-sm" href="${href}">${esc(t.buy)}</a>`}
+        : `<span class="price">${money(p.price, lang)}</span><a class="btn btn-dark btn-sm" href="${href}" aria-label="${esc(t.see + ': ' + p.title[lang])}">${esc(t.see)}</a>`}
       </div>
     </div>
   </article>`;

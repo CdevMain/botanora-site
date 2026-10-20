@@ -15,7 +15,8 @@ const routes = {
   gear: { pt: 'utensilios', en: 'gear' },
   library: { pt: 'biblioteca', en: 'library' },
   recipes: { pt: 'receitas', en: 'recipes' },
-  faq: { pt: 'perguntas', en: 'questions' }
+  faq: { pt: 'perguntas', en: 'questions' },
+  terms: { pt: 'termos', en: 'terms' }
 };
 
 function url(lang, key, ...rest) {
@@ -37,24 +38,29 @@ const ui = {
       receive: 'Receber meus guias',
       about: 'Uma central independente sobre chás: o que são, como prepará-los bem e o que a ciência diz sobre seus benefícios. E guias em PDF para ir mais fundo.',
       learn: 'Aprenda', shop: 'Loja', legal: 'Transparência',
-      privacy: 'Privacidade', disclaimer: 'O conteúdo é educativo e não substitui orientação médica ou nutricional.',
+      privacy: 'Privacidade', terms: 'Termos de uso', disclaimer: 'O conteúdo é educativo e não substitui orientação médica ou nutricional.',
       analytics: 'Métricas próprias sem cookies. Google Analytics e Microsoft Clarity só com a sua permissão.',
       cookies: 'Preferências de cookies',
       rights: 'Todos os direitos reservados.'
     },
     consent: { text: 'Usamos cookies do Google Analytics e do Microsoft Clarity para entender como o site é usado e melhorá-lo. Eles só são ativados se você aceitar.', more: 'Saiba mais', accept: 'Aceitar', reject: 'Só os necessários', label: 'Aviso de cookies' },
     newsletter: {
-      title: 'Uma carta por mês sobre chá',
-      text: 'Receitas da estação, um tipo de chá explicado a fundo e aviso quando cada novo guia for lançado.',
+      title: 'Cartas da Botânora',
+      text: 'Receitas novas, um tipo de chá explicado a fundo e aviso quando um guia novo for lançado. Sem spam.',
+      consent: 'Ao se inscrever, você aceita receber e-mails da Botânora e pode sair quando quiser.', privacy: 'Política de privacidade',
       placeholder: 'seu@email.com', button: 'Inscrever', ok: 'Pronto! Você está na lista.', err: 'Não deu certo. Confira o e-mail.'
     },
     home: {
       title: 'Botânora | Chás, benefícios e guias de preparo',
       description: 'Central sobre chás: tipos, benefícios com base em evidência, guia de preparo com timer e guias em PDF.',
-      eyebrow: 'Central do chá',
-      h1a: 'Tudo o que uma folha', h1b: 'pode fazer por você',
-      lead: 'Entenda os tipos de chá, prepare cada um no ponto certo e descubra o que a ciência realmente diz sobre seus benefícios.',
-      ctaQuiz: 'Descobrir meu chá', ctaGuide: 'Explorar os tipos', ctaMine: 'Já comprei: ver meus guias',
+      eyebrow: 'Chás, receitas e guias ilustrados',
+      h1a: 'Descubra o universo do chá,', h1b: 'uma xícara de cada vez',
+      lead: 'Aprenda a preparar, explorar e combinar chás e infusões com guias ilustrados, receitas autorais e conhecimento botânico acessível.',
+      ctaQuiz: 'Descobrir meu chá', ctaGuide: 'Explorar os guias em PDF',
+      pathsEyebrow: 'Por onde começar', pathsTitle: 'O que você quer descobrir hoje?', pathsText: 'Cada caminho começa num conteúdo grátis. Se quiser ir mais fundo, mostramos o guia que trata do assunto.', pathGuide: 'Para ir mais fundo',
+      aboutEyebrow: 'Sobre a Botânora', aboutTitle: 'Conteúdo feito com cuidado, sem promessas milagrosas',
+      aboutText: 'A Botânora é uma central independente sobre chás e infusões. Explicamos o que cada chá é, como prepará-lo bem e o que a ciência diz, separando evidência de tradição.',
+      aboutPoints: [['Evidência antes de promessa', 'Cada benefício mostra o nível de evidência científica e os cuidados. Chá não substitui tratamento.'], ['Receitas para fazer em casa', 'Medidas, temperatura e tempo em cada receita, com ingredientes fáceis de encontrar.'], ['Independente e transparente', 'Não vendemos chá. Quando um link de utensílio é de afiliado, avisamos.']], ctaMine: 'Já comprei: ver meus guias',
       stats: [['9', 'estilos de chá e tisanas'], ['6', 'benefícios com evidência'], ['10', 'guias em PDF']],
       spectrumEyebrow: 'Uma planta, muitos chás',
       spectrumTitle: 'O que muda é a oxidação',
@@ -131,14 +137,16 @@ const ui = {
       description: 'Responda quatro perguntas e descubra o chá que combina com sua rotina.',
       eyebrow: 'Quiz', h1: 'Qual chá é para você?', lead: 'Quatro perguntas. Uma recomendação feita para a sua rotina.',
       step: 'Pergunta', of: 'de', back: 'Voltar', result: 'Seu chá é', again: 'Refazer o quiz',
-      seeGuide: 'Ver no guia', benefit: 'Benefício relacionado', product: 'Guia recomendado', brew: 'Como preparar'
+      seeGuide: 'Ver no guia', benefit: 'Benefício relacionado', product: 'Guia recomendado', brew: 'Como preparar',
+      why: 'Por que este chá', whyText: 'Pelas suas respostas:', last: 'Seu último resultado foi', lastSee: 'Ver de novo', recipes: 'Receitas grátis para provar', productSee: 'Conhecer o guia', saved: 'Guardamos este resultado só neste navegador para você voltar depois.'
     },
     shop: {
       title: 'Guias em PDF sobre chá | Botânora',
       description: 'Dez guias ilustrados sobre chás: receitas, tipos, preparo, ervas, blends e harmonização.',
       eyebrow: 'Biblioteca Botânora', h1: 'Guias em PDF',
       lead: 'Cadernos ilustrados para ler no celular, no tablet ou imprimir. Pagamento único, download imediato após a confirmação.',
-      available: 'Disponível', soon: 'Em breve', pages: 'páginas', buy: 'Comprar', details: 'Ver detalhes',
+      available: 'Disponível', soon: 'Em breve', pages: 'páginas', buy: 'Comprar', details: 'Ver detalhes', see: 'Ver o guia', format: 'PDF',
+      filterLabel: 'Filtrar por tema', filterAll: 'Todos', notSure: 'Não sabe por onde começar?', notSureText: 'Responda o quiz em 30 segundos e receba a indicação de um chá e do guia que combina com ele.', notSureCta: 'Fazer o quiz', shown: '{n} guias',
       waitlist: 'Avise-me no lançamento', waitlistDone: 'Combinado! Avisaremos você.',
       perks: [['Download imediato', 'Após a confirmação do pagamento'], ['Leia em qualquer tela', 'PDF otimizado para celular e impressão'], ['Pagamento seguro', 'Checkout da Cakto, com acesso automático']],
       all: 'Todos os guias'
@@ -151,7 +159,18 @@ const ui = {
       pay: 'Comprar o PDF em {l}', payOne: 'Comprar o guia', bothLangs: 'Você recebe o PDF em português e em inglês.', fee: '+ R$ 0,99 de taxa da Cakto, cobrada no checkout.', langNames: { pt: 'português', en: 'inglês' }, secure: 'O pagamento é feito na Cakto, em ambiente seguro. Não temos acesso aos dados do seu cartão.',
       otherLang: 'Prefere o PDF em {l}? Comprar essa versão', steps: ['Você conclui a compra na Cakto.', 'O acesso chega no e-mail usado na compra.', 'Na biblioteca você baixa o PDF, também em outro aparelho.'],
       soonText: 'Este guia está em produção. Entre na lista e seja avisado no lançamento, com condição especial para a lista.',
-      related: 'Você também pode gostar', back: 'Voltar à loja',
+      related: 'Guias sobre temas próximos', back: 'Voltar à loja',
+      forWho: 'Para quem é', buyNow: 'Comprar meu guia', previewFree: 'Ver prévia gratuita', delivery: 'Entrega', deliveryValue: 'Digital, por e-mail',
+      faqTitle: 'Dúvidas sobre este guia',
+      faq: {
+        receive: ['Como recebo o guia?', 'Depois que a Cakto confirma o pagamento, chega um e-mail com o acesso. Na biblioteca da Botânora você baixa o PDF e pode voltar quando quiser com o e-mail da compra e um código de 6 dígitos.'],
+        devices: ['Funciona no celular?', 'Sim. É um PDF em formato A4 que abre em qualquer leitor de PDF, no celular, no tablet ou no computador, e pode ser impresso.'],
+        langs: ['Em quais idiomas está disponível?', '{l}.'],
+        preview: ['Posso ver antes de comprar?', 'Sim. A prévia gratuita mostra {n} páginas do guia, do jeito que você vai receber.'],
+        pay: ['Como funciona o pagamento?', 'O pagamento é feito no checkout da Cakto, com as formas de pagamento disponíveis lá. A Cakto cobra uma taxa de serviço de R$ 0,99. A Botânora não tem acesso aos dados do seu cartão.'],
+        other: ['Posso baixar em outro aparelho?', 'Sim. Em "Meus guias", informe o e-mail da compra, receba o código e entre no novo aparelho. Cada e-mail pode ficar conectado em até {d} aparelhos.'],
+        help: ['E se eu tiver algum problema?', 'Escreva para {e} informando o e-mail usado na compra.']
+      },
       preview: { open: 'Ler uma prévia', eyebrow: 'Prévia gratuita', title: 'Folheie antes de comprar', text: '{n} páginas de amostra do guia, do jeito que você vai receber. Toque numa página para ler em tamanho grande e use o zoom para ver os detalhes.', page: 'Página {p} de {t}', of: 'de', close: 'Fechar', prev: 'Página anterior', next: 'Próxima página', buy: 'Quero o guia completo', zoom: 'Zoom', zoomIn: 'Aumentar zoom', zoomOut: 'Diminuir zoom', zoomReset: 'Voltar ao tamanho normal', zoomHint: 'Dê dois cliques (ou toque duas vezes) na página para ampliar. Com zoom, arraste para mover. No celular, use dois dedos.', langNote: 'Prévia em português. O guia também está disponível em inglês.' }
     },
     privacy: {
@@ -213,24 +232,29 @@ const ui = {
       receive: 'Get my guides',
       about: 'An independent hub about tea: what it is, how to brew it well and what the science says about its benefits. Plus PDF guides to go deeper.',
       learn: 'Learn', shop: 'Shop', legal: 'Transparency',
-      privacy: 'Privacy', disclaimer: 'Content is educational and does not replace medical or nutritional advice.',
+      privacy: 'Privacy', terms: 'Terms of use', disclaimer: 'Content is educational and does not replace medical or nutritional advice.',
       analytics: 'Our own cookie-free analytics. Google Analytics and Microsoft Clarity only with your permission.',
       cookies: 'Cookie preferences',
       rights: 'All rights reserved.'
     },
     consent: { text: 'We use Google Analytics and Microsoft Clarity cookies to understand how the site is used and improve it. They are only enabled if you accept.', more: 'Learn more', accept: 'Accept', reject: 'Necessary only', label: 'Cookie notice' },
     newsletter: {
-      title: 'One letter a month about tea',
-      text: 'Seasonal recipes, one tea style explained in depth, and a note when each new guide launches.',
+      title: 'Letters from Botânora',
+      text: 'New recipes, one tea style explained in depth, and a note when a new guide launches. No spam.',
+      consent: 'By subscribing you agree to receive emails from Botânora and can leave at any time.', privacy: 'Privacy policy',
       placeholder: 'you@email.com', button: 'Subscribe', ok: "Done! You're on the list.", err: "That didn't work. Check the email."
     },
     home: {
       title: 'Botânora | Tea, benefits and brewing guides',
       description: 'A tea hub: types, evidence-based benefits, a brewing guide with timer, and PDF guides.',
-      eyebrow: 'The tea hub',
-      h1a: 'Everything a single leaf', h1b: 'can do for you',
-      lead: 'Understand the types of tea, brew each one just right and find out what the science really says about the benefits.',
-      ctaQuiz: 'Find my tea', ctaGuide: 'Explore the types', ctaMine: 'Already bought? See my guides',
+      eyebrow: 'Teas, recipes and illustrated guides',
+      h1a: 'Discover the world of tea,', h1b: 'one cup at a time',
+      lead: 'Learn to brew, explore and pair teas and infusions with illustrated guides, original recipes and approachable botanical know-how.',
+      ctaQuiz: 'Find my tea', ctaGuide: 'Explore the PDF guides',
+      pathsEyebrow: 'Where to start', pathsTitle: 'What would you like to discover today?', pathsText: 'Every path starts with free content. If you want to go deeper, we show you the guide that covers it.', pathGuide: 'To go deeper',
+      aboutEyebrow: 'About Botânora', aboutTitle: 'Content made with care, no miracle claims',
+      aboutText: 'Botânora is an independent hub about tea and infusions. We explain what each tea is, how to brew it well and what the science says, keeping evidence and tradition apart.',
+      aboutPoints: [['Evidence before promises', 'Every benefit shows its level of scientific evidence and the cautions. Tea is not a treatment.'], ['Recipes you can make at home', 'Measures, temperature and time in every recipe, with easy-to-find ingredients.'], ['Independent and transparent', 'We do not sell tea. When a gear link is an affiliate link, we say so.']], ctaMine: 'Already bought? See my guides',
       stats: [['9', 'tea styles and tisanes'], ['6', 'evidence-rated benefits'], ['10', 'PDF guides']],
       spectrumEyebrow: 'One plant, many teas',
       spectrumTitle: 'Oxidation makes the difference',
@@ -307,14 +331,16 @@ const ui = {
       description: 'Answer four questions and find the tea that fits your routine.',
       eyebrow: 'Quiz', h1: 'Which tea is for you?', lead: 'Four questions. One recommendation built around your routine.',
       step: 'Question', of: 'of', back: 'Back', result: 'Your tea is', again: 'Retake the quiz',
-      seeGuide: 'See it in the guide', benefit: 'Related benefit', product: 'Recommended guide', brew: 'How to brew'
+      seeGuide: 'See it in the guide', benefit: 'Related benefit', product: 'Recommended guide', brew: 'How to brew',
+      why: 'Why this tea', whyText: 'Based on your answers:', last: 'Your last result was', lastSee: 'See it again', recipes: 'Free recipes to try', productSee: 'See the guide', saved: 'We keep this result in this browser only, so you can come back to it.'
     },
     shop: {
       title: 'Tea PDF guides | Botânora',
       description: 'Ten illustrated tea guides: recipes, tea types, brewing, herbs, blending and pairing.',
       eyebrow: 'The Botânora library', h1: 'PDF guides',
       lead: 'Illustrated handbooks to read on your phone, tablet or in print. One-time payment, instant download once payment is confirmed.',
-      available: 'Available', soon: 'Coming soon', pages: 'pages', buy: 'Buy', details: 'View details',
+      available: 'Available', soon: 'Coming soon', pages: 'pages', buy: 'Buy', details: 'View details', see: 'See guide', format: 'PDF',
+      filterLabel: 'Filter by topic', filterAll: 'All', notSure: 'Not sure where to start?', notSureText: 'Take the 30-second quiz to get a tea recommendation and the guide that goes with it.', notSureCta: 'Take the quiz', shown: '{n} guides',
       waitlist: 'Notify me at launch', waitlistDone: "Great! We'll let you know.",
       perks: [['Instant download', 'Once payment is confirmed'], ['Read on any screen', 'PDF optimised for mobile and print'], ['Secure payment', 'Cakto checkout, with automatic access']],
       all: 'All guides'
@@ -327,7 +353,18 @@ const ui = {
       pay: 'Buy the PDF in {l}', payOne: 'Buy the guide', bothLangs: 'You get the PDF in both English and Portuguese.', fee: '+ R$0.99 Cakto fee, charged at checkout.', langNames: { pt: 'Portuguese', en: 'English' }, secure: 'Payment is handled by Cakto in a secure environment. We never see your card details.',
       otherLang: 'Prefer the PDF in {l}? Buy that version', steps: ['You complete your purchase on Cakto.', 'Access arrives at the email used at checkout.', 'Download the PDF from your library, on any device.'],
       soonText: 'This guide is in production. Join the list to hear at launch, with a special offer for the list.',
-      related: 'You may also like', back: 'Back to the shop',
+      related: 'Guides on related topics', back: 'Back to the shop',
+      forWho: 'Who it is for', buyNow: 'Buy my guide', previewFree: 'See the free preview', delivery: 'Delivery', deliveryValue: 'Digital, by email',
+      faqTitle: 'Questions about this guide',
+      faq: {
+        receive: ['How do I get the guide?', 'Once Cakto confirms the payment, you get an email with access. In the Botânora library you download the PDF and can come back any time with your purchase email and a 6-digit code.'],
+        devices: ['Does it work on my phone?', 'Yes. It is an A4 PDF that opens in any PDF reader, on a phone, tablet or computer, and it can be printed.'],
+        langs: ['Which languages is it available in?', '{l}.'],
+        preview: ['Can I look inside before buying?', 'Yes. The free preview shows {n} pages of the guide, exactly as you will receive it.'],
+        pay: ['How does payment work?', 'Payment happens at the Cakto checkout, with the payment methods available there. Cakto charges a R$ 0.99 service fee. Botânora never sees your card details.'],
+        other: ['Can I download it on another device?', 'Yes. In "My guides", enter your purchase email, get the code and sign in on the new device. Each email can stay signed in on up to {d} devices.'],
+        help: ['What if something goes wrong?', 'Write to {e} with the email you used to buy.']
+      },
       preview: { open: 'Read a preview', eyebrow: 'Free preview', title: 'Look inside before you buy', text: '{n} sample pages from the guide, exactly as you will receive it. Tap a page to read it full size and zoom in to see the details.', page: 'Page {p} of {t}', of: 'of', close: 'Close', prev: 'Previous page', next: 'Next page', buy: 'Get the full guide', zoom: 'Zoom', zoomIn: 'Zoom in', zoomOut: 'Zoom out', zoomReset: 'Back to normal size', zoomHint: 'Double-click (or double-tap) the page to zoom in. When zoomed, drag to move around. On a phone, pinch with two fingers.', langNote: 'Preview in English. The guide is also available in Portuguese.' }
     },
     privacy: {
