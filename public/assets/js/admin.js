@@ -55,6 +55,17 @@
     if (loaders[tab]) Promise.resolve(loaders[tab]()).catch(err => toast(err.need ? 'Sem permissão: ' + (err.label || err.need) : 'Não deu certo: ' + err.message, true));
   }
   $$('.sidenav [data-tab]').forEach(b => b.addEventListener('click', () => openTab(b.dataset.tab)));
+  // Menu lateral recolhido (só ícones), lembrado neste navegador
+  const collapseBtn = $('.nav-collapse');
+  const setCollapsed = on => {
+    document.body.classList.toggle('nav-mini', on);
+    collapseBtn.setAttribute('aria-pressed', on);
+    collapseBtn.title = on ? 'Expandir menu' : 'Recolher menu';
+    $('span', collapseBtn).textContent = on ? 'Expandir menu' : 'Recolher menu';
+    try { localStorage.setItem('btn_admin_mini', on ? '1' : '0'); } catch (_) {}
+  };
+  try { if (localStorage.getItem('btn_admin_mini') === '1') setCollapsed(true); } catch (_) {}
+  collapseBtn.addEventListener('click', () => setCollapsed(!document.body.classList.contains('nav-mini')));
   $('.nav-toggle').addEventListener('click', () => { const o = !document.body.classList.contains('nav-open'); document.body.classList.toggle('nav-open', o); $('.nav-toggle').setAttribute('aria-expanded', o); });
   // Mostra só as áreas e abas que o usuário pode usar
   function applyPerms() {

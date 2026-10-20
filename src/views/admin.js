@@ -59,9 +59,10 @@ function appPage() {
 </header>
 <div class="layout">
 <aside class="sidenav" id="sidenav" aria-label="Áreas do painel">
+  <button type="button" class="nav-collapse" aria-pressed="false" title="Recolher menu">${icon('arrow', 'ico')}<span>Recolher menu</span></button>
   <nav>${AREAS.map(([id, ic, title, desc, tabs]) => `<div class="area" data-area="${id}">
-    <button type="button" class="area-head" data-tab="${tabs[0][0]}" data-perm="${tabs[0][2]}">${icon(ic, 'area-ico')}<span><b>${title}</b><small>${desc}</small></span><span class="area-count" data-count="${id}" hidden></span></button>
-    ${tabs.length > 1 ? `<div class="area-tabs">${tabs.map(([t, label, perm]) => `<button type="button" data-tab="${t}" data-perm="${perm}" role="tab" aria-selected="false">${label}<span class="tab-count" data-count-tab="${t}" hidden></span></button>`).join('')}</div>` : ''}
+    <button type="button" class="area-head" data-tab="${tabs[0][0]}" data-perm="${tabs[0][2]}" title="${title}" aria-label="${title}">${icon(ic, 'area-ico')}<span><b>${title}</b><small>${desc}</small></span><span class="area-count" data-count="${id}" hidden></span></button>
+    ${tabs.length > 1 ? `<div class="area-tabs"><p class="area-fly-title">${title}</p>${tabs.map(([t, label, perm]) => `<button type="button" data-tab="${t}" data-perm="${perm}" role="tab" aria-selected="false">${label}<span class="tab-count" data-count-tab="${t}" hidden></span></button>`).join('')}</div>` : ''}
   </div>`).join('')}</nav>
 </aside>
 <main class="app">
