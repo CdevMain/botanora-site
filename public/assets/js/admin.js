@@ -33,7 +33,7 @@
   };
   function toast(t, err) { const el = $('#toast'); el.textContent = t; el.className = 'toast show' + (err ? ' err' : ''); clearTimeout(el._t); el._t = setTimeout(() => el.className = 'toast', 2600); }
 
-  const titles = { overview: 'Visão geral', sales: 'Vendas', products: 'Produtos', gear: 'Recomendações', audience: 'Público', integrations: 'Integrações' };
+  const titles = { overview: 'Visão geral', sales: 'Vendas', products: 'Produtos', reviews: 'Avaliações', gear: 'Recomendações', audience: 'Público', integrations: 'Integrações' };
   $$('.tabs button').forEach(b => b.addEventListener('click', () => {
     $$('.tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
     $$('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== b.dataset.tab; });
@@ -44,6 +44,7 @@
     if (b.dataset.tab === 'sales') { loadOrders(); renderTestBuy(); }
     if (b.dataset.tab === 'integrations') loadIntegrations();
     if (b.dataset.tab === 'gear') loadAff();
+    if (b.dataset.tab === 'reviews') loadReviews();
   }));
   $$('.range button').forEach(b => b.addEventListener('click', () => {
     $$('.range button').forEach(x => x.classList.toggle('on', x === b));
@@ -455,6 +456,65 @@
     if (e.target.id === 'int-refresh') loadIntegrations();
   });
 
+  // ---------- avaliações ----------
+  let reviewsData = [];
+  const rvStatus = { pending: 'Em análise', approved: 'Publicada', rejected: 'Recusada' };
+  const rvPill = { pending: 'pill-pending', approved: 'pill-paid', rejected: 'pill-refunded' };
+  const starTxt = n => '★'.repeat(n) + '☆'.repeat(5 - n);
+  async function loadReviews(countOnly) {
+    reviewsData = await api('/api/admin/reviews');
+    const pend = reviewsData.filter(r => r.status === 'pending').length, c = $('#reviews-count');
+    c.textContent = pend; c.hidden = !pend;
+    if (!countOnly) renderReviews();
+  }
+  function renderReviews() {
+    const f = $('#review-filter').value;
+    const list = reviewsData.filter(r => !f || r.status === f);
+    $('#review-list').innerHTML = list.length ? list.map(r => `<article class="rv-item" data-id="${r.id}">
+      <header class="rv-top"><strong>${esc(r.title)}</strong> <span class="pill ${rvPill[r.status]}">${rvStatus[r.status]}</span>${r.test ? ' <span class="pill">Teste</span>' : ''}${r.edited ? ' <span class="pill">Editada</span>' : ''}${r.buyer ? '' : ' <span class="pill pill-refunded" title="O e-mail não tem mais compra paga deste guia">Sem compra ativa</span>'}</header>
+      <p class="rv-stars" title="${r.rating}/5">${starTxt(r.rating)} <span class="muted">${r.rating}/5</span></p>
+      <p class="rv-who"><b>${esc(r.name)}</b> · ${esc(r.email)} · ${r.lang.toUpperCase()} · enviada ${dt(r.createdAt)}${r.updatedAt !== r.createdAt ? ' · editada ' + dt(r.updatedAt) : ''}</p>
+      <p class="rv-text">${esc(r.text)}</p>
+      ${r.rejectReason ? `<p class="hint">Motivo da recusa: ${esc(r.rejectReason)}</p>` : ''}
+      <p class="hint">Edições usadas: ${r.edits} de ${r.max} · ${r.ups} ${r.ups === 1 ? 'pessoa achou útil' : 'pessoas acharam útil'}</p>
+      <div class="rv-actions">
+        ${r.status !== 'approved' ? '<button class="btn-sm primary" data-rv="approve">Aprovar e publicar</button>' : ''}
+        ${r.status !== 'rejected' ? '<button class="btn-sm" data-rv="reject-open">Recusar…</button>' : ''}
+        <button class="btn-sm" data-rv="reset"${r.edits ? '' : ' disabled'} title="Devolve as 2 edições ao cliente">Zerar edições</button>
+        <button class="btn-sm danger" data-rv="delete">Excluir</button>
+      </div>
+      <form class="rv-reject" hidden>
+        <label>Motivo (vai no e-mail para o cliente)<textarea name="reason" rows="2" maxlength="400" placeholder="Ex.: o comentário cita outra loja / tem um link / fala de outro produto."></textarea></label>
+        <div class="rv-actions"><button class="btn-sm primary" type="submit">Recusar e enviar e-mail</button><button class="btn-sm" type="button" data-rv="reject-cancel">Cancelar</button></div>
+      </form>
+    </article>`).join('') : '<p class="empty">Nenhuma avaliação neste filtro.</p>';
+  }
+  const mailNote = m => m === 'sent' ? ' E-mail enviado ao cliente.' : m === 'disabled' ? ' (envio de e-mail desligado)' : m && m.startsWith('error') ? ' Falha no e-mail: ' + m.slice(7) : '';
+  $('#review-filter').addEventListener('change', renderReviews);
+  $('#review-list').addEventListener('click', async e => {
+    const b = e.target.closest('[data-rv]'); if (!b) return;
+    const item = b.closest('.rv-item'), id = item.dataset.id, act = b.dataset.rv;
+    if (act === 'reject-open') { $('.rv-reject', item).hidden = false; $('textarea', item).focus(); return; }
+    if (act === 'reject-cancel') { $('.rv-reject', item).hidden = true; return; }
+    if (act === 'delete' && !confirmDelete()) return;
+    b.disabled = true;
+    try {
+      if (act === 'delete') { await api('/api/admin/reviews/' + id, { method: 'DELETE' }); toast('Avaliação excluída.'); }
+      else { const r = await api(`/api/admin/reviews/${id}/${act}`, { method: 'POST', body: '{}' }); toast((act === 'approve' ? 'Publicada no site.' : 'Edições zeradas: o cliente pode editar de novo.') + mailNote(r.mail)); }
+      await loadReviews();
+    } catch (err) { toast('Não deu certo: ' + err.message, true); b.disabled = false; }
+  });
+  function confirmDelete() { return window.confirm('Excluir esta avaliação de vez? O cliente poderá escrever outra.'); }
+  $('#review-list').addEventListener('submit', async e => {
+    e.preventDefault();
+    const item = e.target.closest('.rv-item'), btn = $('button[type=submit]', e.target);
+    btn.disabled = true;
+    try {
+      const r = await api(`/api/admin/reviews/${item.dataset.id}/reject`, { method: 'POST', body: JSON.stringify({ reason: e.target.reason.value }) });
+      toast('Recusada.' + mailNote(r.mail)); await loadReviews();
+    } catch (err) { toast('Não deu certo: ' + err.message, true); btn.disabled = false; }
+  });
+
   // ---------- público ----------
   async function loadAudience() {
     const a = await api('/api/admin/audience');
@@ -465,6 +525,7 @@
 
   // inicialização
   loadReports().catch(() => {});
+  loadReviews(true).catch(() => {});
   loadStats().then(() => {
     const h = location.hash.slice(1);
     const tab = $(`.tabs button[data-tab="${h}"]`);
@@ -543,6 +604,7 @@
       if (tab === 'overview' || tab === 'sales' || lastKinds.has('ev')) await loadStats();
       if (tab === 'sales' && lastKinds.has('db')) await loadOrders();
       if (tab === 'audience' && lastKinds.has('db')) await loadAudience();
+      if (lastKinds.has('db')) await loadReviews(tab !== 'reviews');
       lastKinds = new Set();
       liveEl.textContent = 'Ao vivo · ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       liveEl.classList.add('flash'); setTimeout(() => liveEl.classList.remove('flash'), 900);

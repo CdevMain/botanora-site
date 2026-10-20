@@ -50,6 +50,14 @@ data/                     criado automaticamente: banco, eventos e PDFs (fora do
 
 `src/content/discover.js` liga interesses, benefícios e guias: temas de cada guia (filtro da loja e relacionados), "para quem é" e os caminhos da home. Ao lançar um guia novo, adicione o slug lá. Receitas salvas e o último resultado do quiz ficam só no navegador (localStorage), sem conta.
 
+## Avaliações dos clientes
+
+- Quem comprou avalia pela biblioteca (nota de 1 a 5, nome que aparece e comentário). Uma avaliação por e-mail e guia.
+- Depois de enviada, pode ser editada **2 vezes** (`MAX_EDITS` em `src/reviews.js`). Cada envio volta para "em análise". Corrigir uma avaliação recusada não gasta edição.
+- Painel → **Avaliações**: aprovar e publicar, recusar com motivo, zerar edições, excluir. O número de pendentes aparece na aba.
+- E-mails (Resend): aprovada (link para a avaliação no guia), recusada (motivo + link para corrigir na biblioteca) e aviso de nova avaliação para o `CONTACT_EMAIL`.
+- Na página do guia: média, "Compra verificada", botão **Útil** (um voto por visitante, guardado como hash) e dados estruturados `AggregateRating`. Avaliações de compras de teste nunca aparecem; reembolso tira a avaliação do ar.
+
 ## Vendas
 
 - **Toda venda acontece na Cakto.** Em **Painel → Produtos**, cole em cada guia o link do checkout da Cakto (PT e, se houver, EN). O botão Comprar da página do guia leva para esse link. Guia sem link mostra a lista de espera.

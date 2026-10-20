@@ -43,6 +43,7 @@ function appPage() {
     <button role="tab" data-tab="overview" aria-selected="true">Visão geral</button>
     <button role="tab" data-tab="sales" aria-selected="false">Vendas</button>
     <button role="tab" data-tab="products" aria-selected="false">Produtos</button>
+    <button role="tab" data-tab="reviews" aria-selected="false">Avaliações <span class="tab-count" id="reviews-count" hidden></span></button>
     <button role="tab" data-tab="gear" aria-selected="false">Recomendações</button>
     <button role="tab" data-tab="audience" aria-selected="false">Público</button>
     <button role="tab" data-tab="integrations" aria-selected="false">Integrações</button>
@@ -160,6 +161,15 @@ function appPage() {
     <div class="card">
       <div class="card-head"><h2>Recomendações no site</h2><p class="hint">Aparecem em Utensílios, na home (as 4 primeiras ativas) e no Preparo (categoria Preparo). Ordem menor aparece primeiro.</p></div>
       <div id="aff-list" class="product-editor"></div>
+    </div>
+  </section>
+  <section data-panel="reviews" hidden>
+    <div class="card">
+      <div class="card-head"><h2>Avaliações dos clientes</h2>
+        <span class="select"><select id="review-filter" aria-label="Filtrar avaliações"><option value="pending">Em análise</option><option value="approved">Publicadas</option><option value="rejected">Recusadas</option><option value="">Todas</option></select></span>
+        <p class="hint">Só quem comprou consegue avaliar, pela biblioteca. Nada aparece no site antes de você aprovar. Cada avaliação pode ser editada 2 vezes depois de enviada (cada edição volta para análise); corrigir uma recusada não gasta edição. Aprovar ou recusar envia um e-mail ao cliente.</p>
+      </div>
+      <div id="review-list" class="review-admin"></div>
     </div>
   </section>
   <section data-panel="integrations" hidden><div id="integrations"></div></section>

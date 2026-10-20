@@ -328,3 +328,20 @@ details[open] summary { margin-bottom: 10px; }
 .clear-confirm { display: grid; gap: 6px; font-size: 13px; }
 .clear-confirm input { padding: 10px 12px; border: 1px solid var(--line); background: var(--paper); font-size: 15px; letter-spacing: .12em; }
 .clear-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+/* Avaliações */
+.tab-count { display: inline-block; min-width: 18px; padding: 1px 6px; margin-left: 4px; border-radius: 10px; background: var(--warn); color: #fff; font-size: 11px; line-height: 16px; text-align: center; }
+.tab-count[hidden] { display: none; }
+.review-admin { display: grid; gap: 12px; }
+.rv-item { border: 1px solid var(--line); background: #fff; padding: 16px 18px; }
+.rv-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.rv-top strong { font: 500 19px var(--serif); margin-right: 4px; }
+.rv-stars { margin: 6px 0 2px; color: var(--warn); letter-spacing: 2px; }
+.rv-who { margin: 0 0 8px; font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.rv-text { margin: 0 0 8px; white-space: pre-line; overflow-wrap: anywhere; }
+.rv-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.rv-reject { margin-top: 12px; }
+.rv-reject label { display: grid; gap: 6px; font-size: 13px; }
+.rv-reject textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--line); font: inherit; }
+.btn-sm.danger { color: var(--bad); }
+.btn-sm:disabled { opacity: .45; cursor: default; }

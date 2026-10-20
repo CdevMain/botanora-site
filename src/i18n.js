@@ -180,6 +180,7 @@ const ui = {
         'Se você aceitar, usamos o Google Analytics (estatísticas de visitas) e o Microsoft Clarity (mapas de calor e gravações anônimas de navegação, sem o que você digita em formulários) para entender como o site é usado e melhorá-lo. Você pode mudar a escolha a qualquer momento em "Preferências de cookies", no rodapé.',
         'Para medir o uso do site, registramos a página visitada, a origem da visita, o tipo de dispositivo e um identificador anônimo gerado a partir do seu IP e navegador combinados com um código que muda todos os dias. O IP não é armazenado.',
         'Quando você compra um guia, entra numa lista de espera ou assina a newsletter, guardamos nome e e-mail apenas para entregar o que você pediu. Você pode pedir a exclusão a qualquer momento pelo e-mail de contato.',
+        'Se você avaliar um guia, o nome que escolher, a nota e o comentário ficam públicos na página do guia depois da aprovação. O e-mail nunca é exibido. Para apagar uma avaliação, escreva para o e-mail de contato.',
         'Os pagamentos são processados pela Cakto. Não temos acesso aos dados do seu cartão.'
       ]
     },
@@ -207,6 +208,24 @@ const ui = {
       needCode: 'Informe também o código do pedido para liberar o acesso.', notFound: 'Não encontramos uma compra com esses dados. Confira o e-mail e os dígitos, ou fale com a gente pelo e-mail abaixo.',
       steps: [['Compre o guia', 'Na página do guia, pelo checkout da Cakto.'], ['Receba o código', 'Digite seu e-mail aqui e use o código de 6 dígitos que chega na sua caixa de entrada.'], ['Escolha e baixe', 'Na biblioteca, escolha o guia e o idioma do PDF.']],
       help: 'Precisa de ajuda? Escreva para'
+    },
+    reviews: {
+      title: 'Avaliações de quem comprou', none: 'Este guia ainda não tem avaliações publicadas. Quem comprou pode avaliar pela biblioteca, em Meus guias.',
+      verified: 'Compra verificada', edited: 'editada', count: n => n === 1 ? '1 avaliação' : `${n} avaliações`, of5: 'de 5',
+      up: 'Útil', upTitle: 'Marcar como útil', upCount: n => n === 1 ? '1 pessoa achou útil' : `${n} pessoas acharam útil`,
+      note: 'Só quem comprou o guia pode avaliar, e cada avaliação é lida antes de ser publicada.',
+      // biblioteca
+      yours: 'Sua avaliação', write: 'Avaliar este guia', edit: 'Editar avaliação', fix: 'Corrigir e reenviar',
+      status: { pending: 'Em análise', approved: 'Publicada', rejected: 'Não aprovada' },
+      pendingNote: 'Recebemos sua avaliação. Ela aparece na página do guia depois da aprovação, e você recebe um e-mail.',
+      rejectedNote: 'Sua avaliação não foi aprovada. Corrigir e reenviar não conta como edição.', reason: 'Motivo',
+      left: n => n === 1 ? 'Resta 1 edição.' : n ? `Restam ${n} edições.` : 'Você já usou as edições desta avaliação.',
+      rules: max => `Depois de enviada, a avaliação pode ser editada ${max} vezes. Cada envio passa por aprovação.`,
+      rating: 'Sua nota', stars: n => n === 1 ? '1 estrela' : `${n} estrelas`, name: 'Nome que aparece', nameHint: 'Ex.: Mariana C. Seu e-mail nunca aparece.',
+      text: 'Seu comentário', textHint: 'O que você achou do guia? Entre 20 e 1.200 caracteres.',
+      public: 'Ao enviar, você concorda que seu nome, nota e comentário fiquem públicos na página do guia depois da aprovação.',
+      send: 'Enviar avaliação', save: 'Enviar edição', cancel: 'Cancelar', sent: 'Enviado! Sua avaliação está em análise.',
+      err: { rating: 'Escolha uma nota de 1 a 5 estrelas.', name: 'Informe um nome com pelo menos 2 letras.', text: 'Escreva um comentário com pelo menos 20 caracteres.', limit: 'Você já usou as edições desta avaliação. Se precisar mudar algo, fale com a gente.', same: 'Nada mudou na avaliação.', login: 'Sua sessão expirou. Entre de novo na biblioteca.', rate: 'Muitas tentativas. Aguarde alguns minutos.', generic: 'Não deu certo. Tente de novo.' }
     },
     library: {
       title: 'Minha biblioteca | Botânora', h1: 'Sua biblioteca', lead: 'Escolha o guia e o idioma do PDF. Você pode baixar quantas vezes precisar dentro do limite do pedido.',
@@ -374,6 +393,7 @@ const ui = {
         'If you accept, we use Google Analytics (visit statistics) and Microsoft Clarity (heatmaps and anonymous session recordings, without what you type into forms) to understand how the site is used and improve it. You can change your choice at any time under "Cookie preferences" in the footer.',
         'To measure site usage we record the page visited, the referrer, the device type and an anonymous identifier derived from your IP and browser combined with a code that changes every day. Your IP is never stored.',
         'When you buy a guide, join a waitlist or subscribe to the newsletter, we keep your name and email only to deliver what you asked for. You can request deletion at any time via the contact email.',
+        'If you review a guide, the name you choose, your rating and your comment become public on the guide page once approved. Your email is never shown. To delete a review, write to the contact email.',
         'Payments are processed by Cakto. We never see your card details.'
       ]
     },
@@ -401,6 +421,23 @@ const ui = {
       needCode: 'Please also enter your order code to unlock access.', notFound: "We couldn't find a purchase with these details. Check the email and digits, or contact us at the email below.",
       steps: [['Buy the guide', 'On the guide page, through Cakto checkout.'], ['Get your code', 'Enter your email here and use the 6-digit code that arrives in your inbox.'], ['Choose and download', 'In your library, pick the guide and the PDF language.']],
       help: 'Need help? Write to'
+    },
+    reviews: {
+      title: 'Reviews from buyers', none: 'This guide has no published reviews yet. Buyers can review it from their library, under My guides.',
+      verified: 'Verified purchase', edited: 'edited', count: n => n === 1 ? '1 review' : `${n} reviews`, of5: 'out of 5',
+      up: 'Helpful', upTitle: 'Mark as helpful', upCount: n => n === 1 ? '1 person found this helpful' : `${n} people found this helpful`,
+      note: 'Only people who bought the guide can review it, and every review is read before it is published.',
+      yours: 'Your review', write: 'Review this guide', edit: 'Edit review', fix: 'Fix and resend',
+      status: { pending: 'Under review', approved: 'Published', rejected: 'Not approved' },
+      pendingNote: 'We got your review. It appears on the guide page once approved, and we will email you.',
+      rejectedNote: 'Your review was not approved. Fixing and resending does not count as an edit.', reason: 'Reason',
+      left: n => n === 1 ? '1 edit left.' : n ? `${n} edits left.` : 'You have used all edits for this review.',
+      rules: max => `Once sent, your review can be edited ${max} times. Every submission is moderated.`,
+      rating: 'Your rating', stars: n => n === 1 ? '1 star' : `${n} stars`, name: 'Display name', nameHint: 'E.g. Mariana C. Your email is never shown.',
+      text: 'Your comment', textHint: 'What did you think of the guide? Between 20 and 1,200 characters.',
+      public: 'By sending, you agree that your name, rating and comment will be public on the guide page once approved.',
+      send: 'Send review', save: 'Send edit', cancel: 'Cancel', sent: 'Sent! Your review is being checked.',
+      err: { rating: 'Pick a rating from 1 to 5 stars.', name: 'Enter a name with at least 2 letters.', text: 'Write a comment with at least 20 characters.', limit: 'You have used all edits for this review. If you need to change something, get in touch.', same: 'Nothing changed in the review.', login: 'Your session expired. Sign in to the library again.', rate: 'Too many attempts. Wait a few minutes.', generic: "That didn't work. Try again." }
     },
     library: {
       title: 'My library | Botânora', h1: 'Your library', lead: 'Pick a guide and the PDF language. You can download as often as you need within your order limit.',

@@ -44,6 +44,7 @@ function productCard(p, lang) {
     <div class="product-body">
       <p class="product-meta">${soon ? `<span class="badge badge-soon">${esc(t.soon)}</span>` : topic ? `<span class="product-topic">${esc(topic)}</span>` : ''}<span>${esc(t.format)} · ${p.pages} ${esc(t.pages)}</span></p>
       <h3 class="product-title"><a href="${href}">${esc(p.title[lang])}</a></h3>
+      ${(() => { const sm = require('../reviews').summary(p.slug); const rv = ui[lang].reviews; return sm.count ? `<p class="product-rating">${stars(sm.avg, `${fmtAvg(sm.avg, lang)} ${rv.of5}`, 'stars-sm')} <span>${fmtAvg(sm.avg, lang)} (${sm.count})</span></p>` : ''; })()}
       <p class="product-sub">${esc(p.subtitle[lang])}</p>
       <div class="product-foot">
         ${soon ? `<a class="link-arrow" href="${href}">${esc(t.waitlist)} ${icon('arrow', 'ico-sm')}</a>`
@@ -52,6 +53,13 @@ function productCard(p, lang) {
     </div>
   </article>`;
 }
+
+// Estrelas (somente leitura). n pode ter decimal: arredonda para a estrela inteira mais próxima
+function stars(n, label, cls = '') {
+  const k = Math.round(n);
+  return `<span class="stars ${cls}" role="img" aria-label="${esc(label)}">${[1, 2, 3, 4, 5].map(i => `<span${i <= k ? ' class="on"' : ''} aria-hidden="true">★</span>`).join('')}</span>`;
+}
+const fmtAvg = (n, lang) => n.toLocaleString(lang === 'pt' ? 'pt-BR' : 'en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
 function evidenceBadge(level, lang) {
   const label = ui[lang].benefits.evidence[level];
@@ -87,4 +95,4 @@ function affCard(a, lang) {
   </article>`;
 }
 
-module.exports = { affCard, affImage, coverSrc, cover, productCard, evidenceBadge, range, esc };
+module.exports = { stars, fmtAvg, affCard, affImage, coverSrc, cover, productCard, evidenceBadge, range, esc };

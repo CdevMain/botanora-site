@@ -55,6 +55,60 @@ ${code ? `<p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;
   return { subject: code ? t.codeSubject(code) : t.subject, html, text };
 }
 
+// E-mails da avaliação: aprovada, recusada (com convite para corrigir) e aviso ao admin
+const RT = {
+  pt: {
+    approvedSubject: g => `Sua avaliação de ${g} foi publicada`,
+    approvedBody: g => `Obrigado por avaliar o guia ${g}. Sua avaliação já está publicada na página do guia e vai ajudar outras pessoas a escolher.`,
+    approvedCta: 'Ver minha avaliação',
+    rejectedSubject: g => `Sua avaliação de ${g} precisa de um ajuste`,
+    rejectedBody: g => `Lemos sua avaliação do guia ${g}, mas ela não pôde ser publicada como está.`,
+    reason: 'Motivo',
+    rejectedHow: 'Você pode corrigir e reenviar pela sua biblioteca, no mesmo guia. Essa correção não conta como uma das suas edições.',
+    rejectedCta: 'Corrigir minha avaliação',
+    yours: 'Sua avaliação'
+  },
+  en: {
+    approvedSubject: g => `Your review of ${g} is live`,
+    approvedBody: g => `Thank you for reviewing ${g}. Your review is now live on the guide page and will help others choose.`,
+    approvedCta: 'See my review',
+    rejectedSubject: g => `Your review of ${g} needs a change`,
+    rejectedBody: g => `We read your review of ${g}, but it could not be published as it is.`,
+    reason: 'Reason',
+    rejectedHow: 'You can fix it and send it again from your library, on the same guide. This fix does not count as one of your edits.',
+    rejectedCta: 'Fix my review',
+    yours: 'Your review'
+  }
+};
+function shell(lang, inner) {
+  const t = T[lang] || T.pt;
+  return `<!doctype html><html><body style="margin:0;background:#f4efe4;font-family:Georgia,'Times New Roman',serif;color:#16212a">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4efe4;padding:32px 12px"><tr><td align="center">
+<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#111a21;color:#f4efe4">
+<tr><td style="padding:36px 40px 8px;text-align:center"><img src="${config.siteUrl}/assets/img/icon-192.png" width="56" height="56" alt="Botânora" style="border:0"><p style="font-family:Arial,sans-serif;letter-spacing:6px;font-size:13px;color:#d6b44c;margin:14px 0 0">BOTÂNORA</p></td></tr>
+<tr><td style="padding:24px 40px 30px">${inner}</td></tr>
+<tr><td style="padding:18px 40px;border-top:1px solid #2a3640;font-family:Arial,sans-serif;font-size:12px;color:#6f7a82;text-align:center">${esc(t.foot)}</td></tr>
+</table></td></tr></table></body></html>`;
+}
+const P = s => `<p style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#d9d3c6;margin:0 0 18px">${s}</p>`;
+const BTN = (href, label) => `<p style="text-align:center;margin:8px 0 6px"><a href="${esc(href)}" style="display:inline-block;background:#d6b44c;color:#111a21;text-decoration:none;font-family:Arial,sans-serif;font-size:13px;letter-spacing:3px;padding:16px 28px">${esc(label.toUpperCase())}</a></p>`;
+function reviewEmail({ lang, status, name, guide, rating, text, reason, link }) {
+  const t = T[lang] || T.pt, r = RT[lang] || RT.pt;
+  const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+  const quote = `<div style="border-left:2px solid #d6b44c;padding:4px 0 4px 16px;margin:0 0 22px"><p style="font-family:Arial,sans-serif;font-size:11px;letter-spacing:3px;color:#d6b44c;margin:0 0 6px">${esc(r.yours.toUpperCase())}</p><p style="color:#d6b44c;margin:0 0 6px;font-size:18px">${stars}</p><p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#d9d3c6;margin:0;white-space:pre-line">${esc(text)}</p></div>`;
+  const hello = `<h1 style="font-weight:normal;font-size:28px;margin:0 0 14px">${esc(t.hello(name))}</h1>`;
+  if (status === 'approved') {
+    const html = shell(lang, hello + P(esc(r.approvedBody(guide))) + quote + BTN(link, r.approvedCta));
+    return { subject: r.approvedSubject(guide), html, text: `${t.hello(name)}\n\n${r.approvedBody(guide)}\n\n${stars}\n${text}\n\n${r.approvedCta}: ${link}` };
+  }
+  const html = shell(lang, hello + P(esc(r.rejectedBody(guide))) + (reason ? P(`<strong style="color:#f4efe4">${esc(r.reason)}:</strong> ${esc(reason)}`) : '') + quote + P(esc(r.rejectedHow)) + BTN(link, r.rejectedCta));
+  return { subject: r.rejectedSubject(guide), html, text: `${t.hello(name)}\n\n${r.rejectedBody(guide)}\n${reason ? `\n${r.reason}: ${reason}\n` : ''}\n${stars}\n${text}\n\n${r.rejectedHow}\n\n${r.rejectedCta}: ${link}` };
+}
+function reviewAdminEmail({ guide, name, email, rating, text, edited, panel }) {
+  const html = shell('pt', `<h1 style="font-weight:normal;font-size:24px;margin:0 0 14px">${edited ? 'Avaliação editada' : 'Nova avaliação'} para aprovar</h1>` + P(`${esc(guide)} · ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)} · ${esc(name)} (${esc(email)})`) + P(esc(text).replace(/\n/g, '<br>')) + BTN(panel, 'Abrir o painel'));
+  return { subject: `${edited ? 'Avaliação editada' : 'Nova avaliação'}: ${guide} (${rating}/5)`, html, text: `${guide} · ${rating}/5 · ${name} (${email})\n\n${text}\n\n${panel}` };
+}
+
 async function send({ to, subject, html, text }) {
   if (!enabled()) return { skipped: true };
   const res = await fetch('https://api.resend.com/emails', {
@@ -66,4 +120,4 @@ async function send({ to, subject, html, text }) {
   return res.json();
 }
 
-module.exports = { enabled, send, accessEmail };
+module.exports = { enabled, send, accessEmail, reviewEmail, reviewAdminEmail };

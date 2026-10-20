@@ -992,3 +992,54 @@ html.pv-lock { overflow: hidden; }
 }
 .benefit-guide { margin: 14px 0 0; font-size: 15px; }
 .benefit-guide .label { margin-right: 8px; }
+
+/* ---------- Avaliações ---------- */
+.stars { display: inline-flex; gap: 2px; color: rgba(22, 33, 42, .2); font-size: 18px; line-height: 1; vertical-align: -2px; }
+.stars .on { color: var(--gold-3); }
+.band-night .stars { color: rgba(244, 239, 228, .22); }
+.band-night .stars .on { color: var(--gold); }
+.stars-sm { font-size: 14px; }
+.product-rating { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 13px; color: var(--muted); }
+.hero-rating { margin: -8px 0 18px; }
+.hero-rating a { display: inline-flex; align-items: center; gap: 10px; color: rgba(244, 239, 228, .82); text-decoration: none; font-size: 14.5px; }
+.hero-rating a:hover span { text-decoration: underline; }
+.reviews-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; margin-bottom: 18px; }
+.reviews-head .h3 { margin: 0; }
+.reviews-avg { display: flex; align-items: center; gap: 10px; margin: 0; }
+.reviews-avg strong { font: 500 24px var(--serif); }
+.review-list { display: grid; gap: 14px; margin-bottom: 18px; }
+.review { background: #fbf8f0; border: 1px solid var(--line); padding: 22px 24px; }
+.review-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.review-name { font: 500 19px var(--serif); }
+.review-verified { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ok); }
+.review-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 6px 0 10px; font-size: 13px; color: var(--muted); }
+.review-text { margin: 0 0 14px; white-space: pre-line; overflow-wrap: anywhere; }
+.review-up { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 40px; background: transparent; font-size: 13px; letter-spacing: .06em; cursor: pointer; transition: border-color .2s, background .2s; }
+.review-up:hover { border-color: var(--gold-3); }
+.review-up[aria-pressed="true"] { background: var(--night); border-color: var(--night); color: var(--paper); }
+.review-up:disabled { opacity: .6; cursor: wait; }
+.reviews-note { margin-top: 16px; }
+
+/* Biblioteca: minha avaliação */
+.lib-review { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+.lib-review-status { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 8px; }
+.lib-review-status .label { margin: 0; }
+.lib-review-text { margin: 0 0 8px; font-size: 15px; white-space: pre-line; overflow-wrap: anywhere; color: var(--ink); }
+.lib-review-reject { color: #a3412b; margin: 0 0 8px; }
+.lib-review-edit { margin-top: 10px; }
+.lib-review-edit > summary { list-style: none; display: inline-flex; }
+.lib-review-edit > summary::-webkit-details-marker { display: none; }
+.lib-review-edit[open] > summary { display: none; }
+.review-form { margin-top: 6px; max-width: 560px; }
+.review-form textarea { width: 100%; padding: 13px 16px; border: 1px solid var(--line); background: var(--paper); border-radius: var(--radius); font-size: 16px; font-weight: 300; resize: vertical; }
+.review-form textarea:focus { outline: none; border-color: var(--gold-3); box-shadow: 0 0 0 3px rgba(214, 180, 76, .2); }
+.review-form .tiny { margin: 0; }
+.star-input { border: 0; padding: 0; margin: 0 0 4px; }
+.star-input legend { font-size: 14px; margin-bottom: 4px; padding: 0; }
+.star-row { display: inline-flex; flex-direction: row-reverse; gap: 2px; }
+.star-row input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.review-form .star-row label { margin: 0; letter-spacing: 0; text-transform: none; font-size: 32px; color: rgba(22, 33, 42, .2); }
+.star-row label { cursor: pointer; font-size: 30px; line-height: 1; padding: 4px 3px; color: rgba(22, 33, 42, .2); transition: color .15s; }
+.star-row label:hover, .star-row label:hover ~ label, .star-row input:checked ~ label { color: var(--gold-3); }
+.star-row input:focus-visible + label { outline: 2px solid var(--gold); outline-offset: 2px; }
+@media (max-width: 600px) { .review { padding: 18px 16px; } }

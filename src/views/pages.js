@@ -2,7 +2,8 @@
 const { ui, url, money, routes } = require('../i18n');
 const { layout, pageHero } = require('./layout');
 const { sprig, icon } = require('./svg');
-const { cover, productCard, evidenceBadge, range, esc, affCard } = require('./components');
+const { cover, productCard, evidenceBadge, range, esc, affCard, stars, fmtAvg } = require('./components');
+const reviews = require('../reviews');
 const { teas, coffeeRef } = require('../content/teas');
 const { benefits } = require('../content/benefits');
 const { quiz, quizMap } = require('../content/quiz');
@@ -520,6 +521,64 @@ ${pageHero({ eyebrow: s.eyebrow, h1: s.h1, lead: s.lead })}
   });
 }
 
+// ---------------- AVALIAÇÕES ----------------
+const SHOW_REVIEWS = 6;
+function reviewsSection(lang, p) {
+  const rv = ui[lang].reviews, list = reviews.publicFor(p.slug), sm = reviews.summary(p.slug);
+  const date = ts => new Date(ts).toLocaleDateString(ui[lang].locale, { month: 'long', year: 'numeric' });
+  return `<section class="section band-paper-2 reviews-band" id="avaliacoes" aria-labelledby="rv-title">
+  <div class="wrap narrow">
+    <div class="reviews-head">
+      <h2 id="rv-title" class="h3">${esc(rv.title)}</h2>
+      ${sm.count ? `<p class="reviews-avg">${stars(sm.avg, `${fmtAvg(sm.avg, lang)} ${rv.of5}`)} <strong>${fmtAvg(sm.avg, lang)}</strong> <span class="muted">${esc(rv.of5)} · ${esc(rv.count(sm.count))}</span></p>` : ''}
+    </div>
+    ${list.length ? `<div class="review-list" data-reviews>${list.map((r, i) => `<article class="review" id="r-${r.id}"${i >= SHOW_REVIEWS ? ' hidden data-more' : ''}>
+      <header class="review-head"><strong class="review-name">${esc(r.name)}</strong><span class="review-verified">${icon('check', 'ico-sm')} ${esc(rv.verified)}</span></header>
+      <p class="review-meta">${stars(r.rating, rv.stars(r.rating), 'stars-sm')} <span>${esc(date(r.approvedAt || r.createdAt))}${r.edited ? ' · ' + esc(rv.edited) : ''}</span></p>
+      <p class="review-text">${esc(r.text)}</p>
+      <button type="button" class="review-up" data-up="${r.id}" aria-pressed="false" title="${esc(rv.upTitle)}"><span aria-hidden="true">▲</span> ${esc(rv.up)} <span class="review-up-n" aria-label="${esc(rv.upCount(r.ups || 0))}">${r.ups || 0}</span></button>
+    </article>`).join('')}</div>
+    ${list.length > SHOW_REVIEWS ? `<button type="button" class="btn btn-ghost btn-sm" data-reviews-more>${esc(rv.count(list.length))}</button>` : ''}`
+    : `<p class="muted">${esc(rv.none)}</p>`}
+    <p class="tiny muted reviews-note">${esc(rv.note)}</p>
+  </div>
+</section>`;
+}
+
+// Bloco da biblioteca: ver, escrever ou editar a própria avaliação
+function libReview(lang, email, p) {
+  const rv = ui[lang].reviews, r = reviews.mine(email, p.slug);
+  const order = reviews.purchaseOf(email, p.slug);
+  const canEdit = !r || r.status === 'rejected' || reviews.editsLeft(r) > 0;
+  const label = !r ? rv.write : r.status === 'rejected' ? rv.fix : rv.edit;
+  const v = r || { rating: 0, name: reviews.suggestName(order), text: '' };
+  const msg = Object.assign({ sent: rv.sent }, rv.err);
+  return `<div class="lib-review" id="avaliar-${esc(p.slug)}">
+    ${r ? `<p class="lib-review-status"><span class="label">${esc(rv.yours)}</span> <span class="badge ${r.status === 'approved' ? 'badge-ok' : 'badge-soon'}">${esc(rv.status[r.status])}</span> ${stars(r.rating, rv.stars(r.rating), 'stars-sm')}</p>
+    <p class="lib-review-text">${esc(r.text)}</p>
+    ${r.status === 'pending' ? `<p class="tiny muted">${esc(rv.pendingNote)}</p>` : ''}
+    ${r.status === 'rejected' ? `<p class="tiny lib-review-reject">${esc(rv.rejectedNote)}${r.rejectReason ? ` <strong>${esc(rv.reason)}:</strong> ${esc(r.rejectReason)}` : ''}</p>` : ''}
+    ${r.status !== 'rejected' ? `<p class="tiny muted">${esc(rv.left(reviews.editsLeft(r)))}</p>` : ''}` : ''}
+    ${canEdit ? `<details class="lib-review-edit"${r && r.status === 'rejected' ? ' open' : ''}>
+      <summary class="btn btn-ghost btn-sm">${esc(label)}</summary>
+      <form class="stack-form review-form" data-review data-slug="${esc(p.slug)}" data-lang="${lang}" data-msg='${esc(JSON.stringify(msg))}' novalidate>
+        <fieldset class="star-input"><legend>${esc(rv.rating)}</legend>
+          <div class="star-row">${[5, 4, 3, 2, 1].map(n => `<input type="radio" id="st-${esc(p.slug)}-${n}" name="rating" value="${n}"${v.rating === n ? ' checked' : ''}><label for="st-${esc(p.slug)}-${n}" title="${esc(rv.stars(n))}"><span aria-hidden="true">★</span><span class="sr">${esc(rv.stars(n))}</span></label>`).join('')}</div>
+        </fieldset>
+        <label for="rn-${esc(p.slug)}">${esc(rv.name)}</label>
+        <input id="rn-${esc(p.slug)}" name="name" maxlength="40" required value="${esc(v.name)}" autocomplete="nickname">
+        <p class="tiny muted">${esc(rv.nameHint)}</p>
+        <label for="rt-${esc(p.slug)}">${esc(rv.text)}</label>
+        <textarea id="rt-${esc(p.slug)}" name="text" rows="5" minlength="20" maxlength="1200" required>${esc(v.text)}</textarea>
+        <p class="tiny muted">${esc(rv.textHint)} ${esc(rv.rules(reviews.MAX_EDITS))}</p>
+        <p class="tiny muted">${esc(rv.public)}</p>
+        <button class="btn btn-dark" type="submit">${esc(r ? rv.save : rv.send)}</button>
+        <p class="form-msg" role="status"></p>
+      </form>
+    </details>` : ''}
+  </div>`;
+}
+
 // ---------------- PRODUTO ----------------
 function product(lang, p, products) {
   const t = ui[lang], s = t.shop, pr = t.product;
@@ -527,6 +586,7 @@ function product(lang, p, products) {
   const pv = previewFor(p.slug, lang);
   const related = discover.relatedProducts(p, visible(products), 3);
   const info = discover.infoFor(p.slug);
+  const rsum = reviews.summary(p.slug), rlist = reviews.publicFor(p.slug);
   const fq = pr.faq, both = store.fileLangs(p).length > 1;
   const pFaq = [
     fq.receive, fq.devices, [fq.langs[0], fq.langs[1].replace('{l}', p.lang[lang] + (both ? '. ' + pr.bothLangs.replace(/\.$/, '') : ''))],
@@ -542,6 +602,7 @@ function product(lang, p, products) {
       <p class="product-meta"><span class="badge ${soon ? 'badge-soon' : 'badge-ok'}">${soon ? esc(s.soon) : esc(s.available)}</span></p>
       <h1 class="display display-md">${esc(p.title[lang])}</h1>
       <p class="lead">${esc(p.subtitle[lang])}</p>
+      ${rsum.count ? `<p class="hero-rating"><a href="#avaliacoes">${stars(rsum.avg, `${fmtAvg(rsum.avg, lang)} ${t.reviews.of5}`, 'stars-sm')} <span>${fmtAvg(rsum.avg, lang)} · ${esc(t.reviews.count(rsum.count))}</span></a></p>` : ''}
       ${info.forWho ? `<p class="for-who"><span class="label">${esc(pr.forWho)}</span> ${esc(info.forWho[lang])}</p>` : ''}
       ${soon ? '' : `<p class="price price-lg">${money(p.price, lang)}</p>`}
       <div class="product-ctas">
@@ -583,6 +644,7 @@ ${freeRecipes(lang, p)}
   <div><span class="buy-bar-title">${esc(p.title[lang])}</span>${soon ? `<span class="buy-bar-sub">${esc(s.soon)}</span>` : `<strong>${money(p.price, lang)}</strong>`}</div>
   <a class="btn ${soon ? 'btn-ghost' : 'btn-gold'} btn-sm" href="#comprar" tabindex="-1">${soon ? esc(s.waitlist.split(' ')[0]) : esc(s.buy)}</a>
 </div>
+${reviewsSection(lang, p)}
 <section class="section band-paper" aria-labelledby="pfaq-title">
   <div class="wrap narrow">
     <h2 id="pfaq-title" class="h3">${esc(pr.faqTitle)}</h2>
@@ -601,7 +663,11 @@ ${related.length ? `<section class="section band-paper-2">
       '@context': 'https://schema.org', '@type': 'Product', name: p.title[lang], description: p.description[lang], brand: { '@type': 'Brand', name: 'Botânora' },
       sku: 'BOT-' + String(p.order).padStart(2, '0'), category: lang === 'pt' ? 'Guia digital em PDF' : 'Digital PDF guide', image: [config.siteUrl + `/assets/img/covers/${p.slug}-${lang}.jpg`],
       inLanguage: ['pt-BR', 'en'], additionalProperty: [{ '@type': 'PropertyValue', name: lang === 'pt' ? 'Páginas' : 'Pages', value: p.pages }],
-      offers: { '@type': 'Offer', price: (p.price / 100).toFixed(2), priceCurrency: 'BRL', availability: soon ? 'https://schema.org/PreOrder' : 'https://schema.org/InStock', url: config.siteUrl + url(lang, 'shop', p.slug) }
+      offers: { '@type': 'Offer', price: (p.price / 100).toFixed(2), priceCurrency: 'BRL', availability: soon ? 'https://schema.org/PreOrder' : 'https://schema.org/InStock', url: config.siteUrl + url(lang, 'shop', p.slug) },
+      ...(rsum.count ? {
+        aggregateRating: { '@type': 'AggregateRating', ratingValue: rsum.avg, reviewCount: rsum.count, bestRating: 5, worstRating: 1 },
+        review: rlist.slice(0, 5).map(r => ({ '@type': 'Review', author: { '@type': 'Person', name: r.name }, datePublished: new Date(r.approvedAt || r.createdAt).toISOString().slice(0, 10), reviewBody: r.text, reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5, worstRating: 1 } }))
+      } : {})
     }, { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: pFaq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }]
   });
 }
@@ -742,6 +808,7 @@ ${pageHero({ eyebrow: email, h1: lb.h1, lead: lb.lead, art: false })}
             </fieldset>
             <button class="btn btn-dark" type="submit" data-event="download"${left ? '' : ' disabled'}>${icon('download', 'ico-sm')} ${esc(lb.download)}</button>
           </form>` : `<p class="badge badge-soon">${esc(lb.soon)}</p>`}
+          ${libReview(lang, email, p)}
         </div>
       </article>`;
     }).join('')}</div>` : `<p class="empty-state">${esc(lb.empty)}</p>`}

@@ -448,6 +448,59 @@
     if (done.size) savedBox.hidden = false;
   }
 
+  // ---------- avaliações: enviar/editar (biblioteca) ----------
+  $$('form[data-review]').forEach(f => {
+    const M = JSON.parse(f.dataset.msg || '{}'), msg = $('.form-msg', f), btn = $('button[type=submit]', f);
+    f.addEventListener('submit', async e => {
+      e.preventDefault();
+      const rating = Number((f.querySelector('input[name=rating]:checked') || {}).value || 0);
+      const body = { slug: f.dataset.slug, lang: f.dataset.lang, rating, name: f.name.value, text: f.text.value };
+      const bad = !rating ? 'rating' : body.name.trim().length < 2 ? 'name' : body.text.trim().length < 20 ? 'text' : '';
+      if (bad) { msg.textContent = M[bad]; msg.className = 'form-msg is-err'; return; }
+      btn.disabled = true; msg.className = 'form-msg'; msg.textContent = '…';
+      try {
+        const r = await fetch('/api/library/review', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok) { msg.textContent = M[j.error] || (r.status === 429 ? M.rate : r.status === 401 ? M.login : M.generic); msg.className = 'form-msg is-err'; btn.disabled = false; return; }
+        msg.textContent = M.sent; msg.className = 'form-msg is-ok';
+        setTimeout(() => { location.replace(location.pathname + '#avaliado-' + f.dataset.slug); location.reload(); }, 1200);
+      } catch (_) { msg.textContent = M.generic; msg.className = 'form-msg is-err'; btn.disabled = false; }
+    });
+  });
+  // link do e-mail de recusa: abre o formulário do guia certo
+  // #avaliar-<guia>: abre o formulário (link do e-mail); #avaliado-<guia>: só mostra o resultado do envio
+  const rh = /^#(avaliar|avaliado)-(.+)$/.exec(location.hash);
+  if (rh) {
+    const box = document.getElementById('avaliar-' + decodeURIComponent(rh[2]));
+    const d = box && $('details', box);
+    if (d && rh[1] === 'avaliar') d.open = true;
+    if (box) box.scrollIntoView({ block: 'center' });
+  }
+
+  // ---------- avaliações: "útil" e "ver todas" (página do guia) ----------
+  const UKEY = 'btn_review_ups';
+  const getUps = () => { try { const v = JSON.parse(localStorage.getItem(UKEY) || '[]'); return Array.isArray(v) ? v : []; } catch (_) { return []; } };
+  const setUps = v => { try { localStorage.setItem(UKEY, JSON.stringify(v.slice(-300))); } catch (_) {} };
+  const mineUps = new Set(getUps());
+  $$('[data-up]').forEach(b => {
+    if (mineUps.has(b.dataset.up)) b.setAttribute('aria-pressed', 'true');
+    b.addEventListener('click', async () => {
+      b.disabled = true;
+      try {
+        const r = await fetch('/api/reviews/up', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: b.dataset.up }) });
+        if (r.ok) {
+          const j = await r.json();
+          b.setAttribute('aria-pressed', j.on); $('.review-up-n', b).textContent = j.ups;
+          j.on ? mineUps.add(b.dataset.up) : mineUps.delete(b.dataset.up); setUps([...mineUps]);
+          if (j.on) track('review_up', { id: b.dataset.up });
+        }
+      } catch (_) {}
+      b.disabled = false;
+    });
+  });
+  const moreBtn = $('[data-reviews-more]');
+  if (moreBtn) moreBtn.addEventListener('click', () => { $$('.review[data-more]').forEach(r => { r.hidden = false; }); moreBtn.remove(); track('review_open'); });
+
   // ---------- prévia do guia (com zoom) ----------
   const pvDlg = $('[data-preview]');
   if (pvDlg) {

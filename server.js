@@ -16,6 +16,7 @@ const pantry = require('./src/pantry');
 const affImage = require('./src/affimage');
 const access = require('./src/access');
 const mailer = require('./src/mailer');
+const reviews = require('./src/reviews');
 const { LANGS, routes, url, ui } = require('./src/i18n');
 const pages = require('./src/views/pages');
 const seo = require('./src/views/seo');
@@ -275,7 +276,7 @@ async function apiPublic(req, res, pathname, ip, query) {
     const b = await readJson(req, 4096);
     const allowed = ['quiz_start', 'quiz_complete', 'timer_start', 'timer_done', 'lang_switch', 'download', 'cta', 'preview_open', 'preview_page', 'preview_zoom', 'checkout',
       'home_cta_quiz', 'home_cta_shop', 'home_cta_library', 'home_all_guides', 'path_free', 'path_guide', 'shop_filter', 'shop_quiz', 'buy_jump', 'waitlist_jump',
-      'quiz_restart', 'quiz_reco', 'quiz_recipe', 'quiz_tea', 'quiz_brew', 'quiz_benefit', 'recipe_save', 'recipe_unsave'];
+      'quiz_restart', 'quiz_reco', 'quiz_recipe', 'quiz_tea', 'quiz_brew', 'quiz_benefit', 'recipe_save', 'recipe_unsave', 'review_up', 'review_open'];
     if (b.type === 'engage') analytics.trackEngage(req, ip, b.path, b.ms);
     else if (allowed.includes(b.name)) {
       const props = {};
@@ -362,6 +363,33 @@ async function apiPublic(req, res, pathname, ip, query) {
     if (f.get('all') === '1' && email) access.endAllSessions(email); else access.endSession(req);
     res.writeHead(303, Object.assign({ Location: url(lang, 'library') + '?m=out', 'Set-Cookie': access.cookieHeader('') }, libHeaders(), SECURITY_HEADERS));
     return res.end();
+  }
+
+  // Avaliação do guia (só quem comprou, pela sessão da biblioteca)
+  if (pathname === '/api/library/review' && req.method === 'POST') {
+    const email = access.sessionEmail(req);
+    if (!email) return json(req, res, 401, { error: 'login' });
+    if (!rateLimit(ip, 'review', 12, 600000)) return json(req, res, 429, { error: 'rate' });
+    const b = await readJson(req, 8192);
+    const lang = LANGS.includes(b.lang) ? b.lang : 'pt';
+    const p = store.getProduct(String(b.slug || ''));
+    if (!p) return json(req, res, 404, { error: 'product' });
+    const r = reviews.submit(email, p.slug, b, lang);
+    if (r.error) return json(req, res, r.error === 'not_buyer' ? 403 : 400, { error: r.error, max: reviews.MAX_EDITS });
+    analytics.trackEvent(req, ip, 'review_submit', { product: p.slug, kind: r.created ? 'new' : 'edit', path: '/library' });
+    if (mailer.enabled() && config.contactEmail) {
+      const m = mailer.reviewAdminEmail({ guide: p.title.pt, name: r.review.name, email, rating: r.review.rating, text: r.review.text, edited: !r.created, panel: config.siteUrl + '/admin#reviews' });
+      mailer.send({ to: config.contactEmail, ...m }).catch(e => console.error('e-mail de avaliação (admin):', e.message));
+    }
+    return json(req, res, 200, { ok: true, status: r.review.status, left: reviews.editsLeft(r.review), free: !!r.free });
+  }
+  // "Útil" numa avaliação publicada (um voto por visitante, liga/desliga)
+  if (pathname === '/api/reviews/up' && req.method === 'POST') {
+    if (!rateLimit(ip, 'up', 40, 600000)) return json(req, res, 429, { error: 'rate' });
+    const b = await readJson(req, 512);
+    const r = reviews.up(String(b.id || ''), reviews.voterKey(ip, req.headers['user-agent']));
+    if (!r) return json(req, res, 404, { error: 'review' });
+    return json(req, res, 200, r);
   }
 
   // Download pela biblioteca (sessão do aparelho + guia + idioma)
@@ -576,9 +604,40 @@ async function apiAdmin(req, res, pathname, ip, query) {
     const before = store.db.orders.length;
     const gone = store.db.orders.filter(o => o.test).map(o => o.email);
     store.db.orders = store.db.orders.filter(o => !o.test);
+    if (Array.isArray(store.db.reviews)) store.db.reviews = store.db.reviews.filter(r => !r.test);
     for (const e of new Set(gone)) if (!store.paidOrdersFor(e).length) access.endAllSessions(e);
     store.save();
     return json(req, res, 200, { removed: before - store.db.orders.length });
+  }
+  // Avaliações: aprovar, recusar (com e-mail), zerar edições, excluir
+  if (pathname === '/api/admin/reviews' && req.method === 'GET') {
+    return json(req, res, 200, reviews.list().map(r => {
+      const p = store.getProduct(r.product);
+      return { id: r.id, product: r.product, title: p ? p.title.pt : r.product, email: r.email, name: r.name, rating: r.rating, text: r.text, status: r.status, lang: r.lang,
+        edits: r.edits || 0, left: reviews.editsLeft(r), max: reviews.MAX_EDITS, ups: r.ups || 0, test: !!r.test, edited: !!r.edited, rejectReason: r.rejectReason || '',
+        createdAt: r.createdAt, updatedAt: r.updatedAt, approvedAt: r.approvedAt || null, buyer: !!reviews.purchaseOf(r.email, r.product) };
+    }));
+  }
+  const rv = pathname.match(/^\/api\/admin\/reviews\/([a-f0-9]{6,24})(?:\/(approve|reject|reset))?$/);
+  if (rv) {
+    const [, id, act] = rv;
+    if (req.method === 'DELETE' && !act) return reviews.remove(id) ? json(req, res, 200, { ok: true }) : json(req, res, 404, { error: 'review' });
+    if (req.method !== 'POST' || !act) return json(req, res, 405, { error: 'method' });
+    const b = act === 'reject' ? await readJson(req, 4096) : {};
+    const r = act === 'approve' ? reviews.approve(id) : act === 'reject' ? reviews.reject(id, b.reason) : reviews.resetEdits(id);
+    if (!r) return json(req, res, 404, { error: 'review' });
+    let mail = 'none';
+    if (act !== 'reset') {
+      const p = store.getProduct(r.product), lang = r.lang === 'en' ? 'en' : 'pt';
+      const order = reviews.purchaseOf(r.email, r.product);
+      const link = config.siteUrl + (act === 'approve' ? url(lang, 'shop', r.product) + '#avaliacoes' : url(lang, 'library') + '#avaliar-' + r.product);
+      if (!mailer.enabled()) mail = 'disabled';
+      else {
+        try { await mailer.send({ to: r.email, ...mailer.reviewEmail({ lang, status: r.status, name: (order && order.name) || r.name, guide: p ? p.title[lang] : r.product, rating: r.rating, text: r.text, reason: r.rejectReason, link }) }); mail = 'sent'; }
+        catch (e) { mail = 'error: ' + e.message; }
+      }
+    }
+    return json(req, res, 200, { ok: true, status: r.status, left: reviews.editsLeft(r), mail });
   }
   if (pathname === '/api/admin/orders') {
     return json(req, res, 200, store.db.orders.slice().reverse().slice(0, 500).map(o => ({ ...o, token: undefined, devices: access.devicesFor(o.email) })));
