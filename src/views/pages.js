@@ -90,7 +90,12 @@ const activeAff = () => (store.db.affiliates || []).filter(a => a.active).sort((
 function home(lang, products) {
   const t = ui[lang], h = t.home;
   const spectrum = ['verde', 'branco', 'oolong', 'preto', 'puer'].map(teaById);
-  const featured = visible(products).slice(0, 4);
+  // Mais comprados primeiro (vendas reais: pagas, sem testes nem arquivadas); empate: mais avaliações, melhor nota, ordem do catálogo
+  const sold = {};
+  for (const o of store.db.orders) if (o.status === 'paid' && !o.test && !o.archived) sold[o.product] = (sold[o.product] || 0) + 1;
+  const featured = visible(products).filter(p => p.status === 'available').map(p => ({ p, n: sold[p.slug] || 0, r: reviews.summary(p.slug) }))
+    .sort((a, b) => b.n - a.n || b.r.count - a.r.count || b.r.avg - a.r.avg || a.p.order - b.p.order)
+    .slice(0, 4).map(x => x.p);
   const brewRows = ['branco', 'verde', 'oolong', 'preto', 'mate', 'ervas'].map(teaById);
 
   const body = `
