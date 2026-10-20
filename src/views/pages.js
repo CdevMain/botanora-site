@@ -8,6 +8,7 @@ const { teas, coffeeRef } = require('../content/teas');
 const { benefits } = require('../content/benefits');
 const { quiz, quizMap } = require('../content/quiz');
 const discover = require('../content/discover');
+const daily = require('../daily');
 const { terms } = require('../content/legal');
 const config = require('../config');
 const store = require('../store');
@@ -111,10 +112,36 @@ function home(lang, products) {
   </div>
 </section>
 
-<section class="section band-paper paths-band" aria-labelledby="pt-title">
+${(() => { const dp = daily.plan(daily.dayKey(), lang); const PI = { morning: 'sun', afternoon: 'sunset', night: 'moon' };
+  const dateTxt = new Date(dp.key + 'T12:00:00Z').toLocaleDateString(t.locale, { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+  return `<section class="section band-paper-2 daily-band" aria-labelledby="dl-title">
+  <div class="wrap">
+    <div class="section-head section-head-row">
+      <div>
+        <p class="eyebrow eyebrow-dark">${icon('clock', 'ico-sm')} ${esc(h.dailyEyebrow)} · <span class="daily-date">${esc(dateTxt)}</span></p>
+        <h2 id="dl-title" class="h2">${esc(h.dailyTitle)}</h2>
+        <p class="muted">${esc(h.dailyText)}</p>
+      </div>
+    </div>
+    <div class="daily-grid">${daily.PERIODS.map(per => { const x = dp.periods[per]; const g = x.guide && products.find(p => p.slug === x.guide && p.status !== 'hidden');
+      return `<article class="daily-card daily-${per}">
+        <p class="daily-period">${icon(PI[per], 'ico')} <span>${esc(h.periods[per])}</span></p>
+        <div class="daily-tea">${icon(x.icon, 'ico-lg')}<div><h3 class="h3"><a href="${url(lang, 'guide', x.tea)}" data-event="daily_tea">${esc(x.name)}</a></h3><p class="italic muted">${esc(x.tagline)}</p></div></div>
+        <dl class="daily-spec"><div><dt>${esc(t.guide.temp)}</dt><dd>${range(x.temp[0], x.temp[1], ' °C')}</dd></div><div><dt>${esc(t.guide.time)}</dt><dd>${x.time[1] < 1 ? Math.round(x.time[1] * 60) + ' s' : range(x.time[0], x.time[1]) + ' min'}</dd></div><div><dt>${esc(t.guide.caffeine)}</dt><dd>${x.caffeine[1] === 0 ? esc(h.dailyNoCaf) : range(x.caffeine[0], x.caffeine[1]) + ' mg'}</dd></div></dl>
+        <p class="daily-why"><span class="label">${esc(h.dailyWhy)}</span> ${esc([x.note, ...x.why].filter(Boolean).join(' '))}</p>
+        <div class="daily-links">
+          ${x.recipe ? `<a class="link-arrow" href="${url(lang, 'recipes', x.recipe.slug)}" data-event="daily_recipe">${icon('cup', 'ico-sm')} ${esc(h.dailyRecipe)}: ${esc(x.recipe.name)}</a>` : ''}
+          <a class="link-arrow" href="${url(lang, 'brewing')}?tea=${x.tea}" data-event="daily_brew">${icon('thermo', 'ico-sm')} ${esc(h.dailyBrew)}</a>
+          ${g ? `<a class="link-arrow" href="${url(lang, 'shop', g.slug)}" data-event="daily_guide">${icon('book', 'ico-sm')} ${esc(h.dailyGuide)}: ${esc(g.title[lang])}</a>` : ''}
+        </div>
+      </article>`; }).join('')}</div>
+  </div>
+</section>
+
+`; })()}<section class="section band-paper paths-band" aria-labelledby="pt-title">
   <div class="wrap">
     <div class="section-head">
-      <p class="eyebrow eyebrow-dark">${esc(h.pathsEyebrow)}</p>
+      <p class="eyebrow eyebrow-dark">${icon('leaf', 'ico-sm')} ${esc(h.pathsEyebrow)}</p>
       <h2 id="pt-title" class="h2">${esc(h.pathsTitle)}</h2>
       <p class="muted">${esc(h.pathsText)}</p>
     </div>
@@ -137,7 +164,7 @@ function home(lang, products) {
   <div class="wrap">
     <div class="section-head section-head-row">
       <div>
-        <p class="eyebrow eyebrow-dark">${esc(h.shopEyebrow)}</p>
+        <p class="eyebrow eyebrow-dark">${icon('book', 'ico-sm')} ${esc(h.shopEyebrow)}</p>
         <h2 id="sh-title" class="h2">${esc(h.shopTitle)}</h2>
         <p class="muted">${esc(h.shopText)}</p>
       </div>
@@ -150,7 +177,7 @@ function home(lang, products) {
 <section class="section band-paper" aria-labelledby="sp-title">
   <div class="wrap split">
     <div class="split-text">
-      <p class="eyebrow eyebrow-dark">${esc(h.spectrumEyebrow)}</p>
+      <p class="eyebrow eyebrow-dark">${icon('bud', 'ico-sm')} ${esc(h.spectrumEyebrow)}</p>
       <h2 id="sp-title" class="h2">${esc(h.spectrumTitle)}</h2>
       <p class="muted">${esc(h.spectrumText)}</p>
       <a class="link-arrow" href="${url(lang, 'guide')}">${esc(t.nav.guide)} ${icon('arrow', 'ico-sm')}</a>
@@ -184,7 +211,7 @@ function home(lang, products) {
 <section class="section band-paper-2" aria-labelledby="bn-title">
   <div class="wrap">
     <div class="section-head">
-      <p class="eyebrow eyebrow-dark">${esc(h.benefitsEyebrow)}</p>
+      <p class="eyebrow eyebrow-dark">${icon('spark', 'ico-sm')} ${esc(h.benefitsEyebrow)}</p>
       <h2 id="bn-title" class="h2">${esc(h.benefitsTitle)}</h2>
       <p class="muted">${esc(h.benefitsText)}</p>
     </div>
@@ -202,7 +229,7 @@ function home(lang, products) {
 <section class="section band-night brew-teaser" aria-labelledby="br-title">
   <div class="wrap split">
     <div class="split-text">
-      <p class="eyebrow">${esc(h.brewEyebrow)}</p>
+      <p class="eyebrow">${icon('thermo', 'ico-sm')} ${esc(h.brewEyebrow)}</p>
       <h2 id="br-title" class="h2">${esc(h.brewTitle)}</h2>
       <p class="muted-light">${esc(h.brewText)}</p>
       <a class="btn btn-gold" href="${url(lang, 'brewing')}">${esc(h.brewCta)}</a>
@@ -223,7 +250,7 @@ ${activeAff().length ? `<section class="section band-paper-2 gear-band" aria-lab
   <div class="wrap">
     <div class="section-head section-head-row">
       <div>
-        <p class="eyebrow eyebrow-dark">${esc(t.gear.eyebrow)}</p>
+        <p class="eyebrow eyebrow-dark">${icon('teapot', 'ico-sm')} ${esc(t.gear.eyebrow)}</p>
         <h2 id="gr-title" class="h2">${esc(t.gear.homeTitle)}</h2>
         <p class="muted">${esc(t.gear.homeText)}</p>
       </div>
@@ -237,7 +264,7 @@ ${activeAff().length ? `<section class="section band-paper-2 gear-band" aria-lab
 <section class="section band-paper about-band" aria-labelledby="ab-title">
   <div class="wrap split">
     <div class="split-text">
-      <p class="eyebrow eyebrow-dark">${esc(h.aboutEyebrow)}</p>
+      <p class="eyebrow eyebrow-dark">${icon('shield', 'ico-sm')} ${esc(h.aboutEyebrow)}</p>
       <h2 id="ab-title" class="h2">${esc(h.aboutTitle)}</h2>
       <p class="muted">${esc(h.aboutText)}</p>
       <a class="link-arrow" href="${url(lang, 'benefits')}">${esc(t.nav.benefits)} ${icon('arrow', 'ico-sm')}</a>
@@ -246,7 +273,20 @@ ${activeAff().length ? `<section class="section band-paper-2 gear-band" aria-lab
   </div>
 </section>
 
-<section class="section band-paper-2 quiz-band">
+${(() => { const qs = require('../community').publicList({ sort: 'top' }).filter(q => require('../community').approvedAnswers(q).length).slice(0, 3); const cv = require('./community').T[lang];
+  return `<section class="section band-paper-2 community-band" aria-labelledby="cm-title">
+  <div class="wrap split">
+    <div class="split-text">
+      <p class="eyebrow eyebrow-dark">${icon('chat', 'ico-sm')} ${esc(cv.eyebrow)}</p>
+      <h2 id="cm-title" class="h2">${esc(h.communityTitle)}</h2>
+      <p class="muted">${esc(h.communityText)}</p>
+      <a class="btn btn-dark" href="${url(lang, 'community')}" data-event="cta">${icon('question', 'ico-sm')} ${esc(cv.ask)}</a>
+    </div>
+    <div class="community-list">${qs.length ? qs.map(q => `<a class="community-q" href="${url(lang, 'community', require('../community').pathOf(q))}"><span class="community-q-text">${esc(q.text.length > 140 ? q.text.slice(0, 140) + '…' : q.text)}</span><span class="community-q-meta">${icon('chat', 'ico-sm')} ${esc(cv.answers(require('../community').approvedAnswers(q).length))}</span></a>`).join('') : `<div class="community-empty">${icon('chat', 'ico-xl')}<p class="muted">${esc(h.communityEmpty)}</p></div>`}</div>
+  </div>
+</section>
+
+`; })()}<section class="section band-paper quiz-band">
   <div class="wrap">
     <div class="quiz-cta">
       ${icon('cup', 'ico-xl')}
@@ -594,7 +634,7 @@ function product(lang, p, products) {
     soon ? null : fq.pay, fq.other.map(x => x.replace('{d}', config.maxDevices)), fq.help.map(x => x.replace('{e}', config.contactEmail))
   ].filter(Boolean);
   const body = `
-<section class="band-night product-hero">
+<section class="band-night product-hero" data-product-view="${esc(p.slug)}" data-price="${(p.price / 100).toFixed(2)}">
   <div class="wrap product-layout">
     <div class="product-visual">${cover(p, lang, 'cover-lg', true)}</div>
     <div class="product-info">
@@ -649,6 +689,7 @@ ${reviewsSection(lang, p)}
   <div class="wrap narrow">
     <h2 id="pfaq-title" class="h3">${esc(pr.faqTitle)}</h2>
     <div class="faq-list">${pFaq.map(([q, a]) => `<details class="faq-item"><summary><h3>${esc(q)}</h3></summary><p>${esc(a)}</p></details>`).join('')}</div>
+    ${require('./community').productBlock(lang, p)}
   </div>
 </section>
 ${related.length ? `<section class="section band-paper-2">

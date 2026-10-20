@@ -49,7 +49,7 @@ ${config.bingVerification ? `<meta name="msvalidate.01" content="${esc(config.bi
 <link rel="stylesheet" href="/assets/css/site.css?v=${ASSET_V}">
 <script type="application/ld+json">${JSON.stringify(ld.length === 1 ? ld[0] : ld).replace(/</g, '\\u003c')}</script>
 </head>
-<body class="${bodyClass}${dark ? ' header-dark' : ''}" data-lang="${lang}"${config.gaId ? ` data-ga="${esc(config.gaId)}"` : ''}${config.clarityId ? ` data-clarity="${esc(config.clarityId)}"` : ''}>
+<body class="${bodyClass}${dark ? ' header-dark' : ''}" data-lang="${lang}"${config.gaId ? ` data-ga="${esc(config.gaId)}"` : ''}${config.clarityId ? ` data-clarity="${esc(config.clarityId)}"` : ''}${process.env.META_PIXEL_ID ? ` data-pixel="${esc(process.env.META_PIXEL_ID)}"` : ''}>
 <a class="skip" href="#main">${esc(t.skip)}</a>
 <header class="site-header" id="top">
   <div class="wrap header-inner">
@@ -98,7 +98,7 @@ ${body}
     </div>
     <div>
       <h3 class="label">${esc(t.footer.learn)}</h3>
-      <ul>${['guide', 'benefits', 'brewing', 'recipes', 'gear', 'quiz', 'faq'].map(k => `<li><a href="${url(lang, k)}">${esc(t.nav[k])}</a></li>`).join('')}</ul>
+      <ul>${['guide', 'benefits', 'brewing', 'recipes', 'gear', 'quiz', 'faq', 'community'].map(k => `<li><a href="${url(lang, k)}">${esc(t.nav[k])}</a></li>`).join('')}</ul>
     </div>
     <div>
       <h3 class="label">${esc(t.footer.shop)}</h3>
@@ -106,7 +106,7 @@ ${body}
     </div>
     <div>
       <h3 class="label">${esc(t.footer.legal)}</h3>
-      <ul><li><a href="${url(lang, 'privacy')}">${esc(t.footer.privacy)}</a></li><li><a href="${url(lang, 'terms')}">${esc(t.footer.terms)}</a></li>${config.gaId || config.clarityId ? `<li><button type="button" class="link-btn" data-consent-open>${esc(t.footer.cookies)}</button></li>` : ''}</ul>
+      <ul><li><a href="${url(lang, 'privacy')}">${esc(t.footer.privacy)}</a></li><li><a href="${url(lang, 'terms')}">${esc(t.footer.terms)}</a></li>${config.gaId || config.clarityId || process.env.META_PIXEL_ID ? `<li><button type="button" class="link-btn" data-consent-open>${esc(t.footer.cookies)}</button></li>` : ''}</ul>
       <p class="tiny muted-light">${esc(t.footer.analytics)}</p>
     </div>
   </div>
@@ -115,7 +115,7 @@ ${body}
     <p class="tiny">© ${new Date().getFullYear()} Botânora. ${esc(t.footer.rights)}</p>
   </div>
 </footer>
-${config.gaId || config.clarityId ? `<div class="consent" role="dialog" aria-live="polite" aria-label="${esc(t.consent.label)}" hidden data-consent>
+${config.gaId || config.clarityId || process.env.META_PIXEL_ID ? `<div class="consent" role="dialog" aria-live="polite" aria-label="${esc(t.consent.label)}" hidden data-consent>
   <p>${esc(t.consent.text)} <a href="${url(lang, 'privacy')}">${esc(t.consent.more)}</a></p>
   <div class="consent-actions">
     <button type="button" class="btn btn-ghost btn-sm" data-consent-choice="necessary">${esc(t.consent.reject)}</button>

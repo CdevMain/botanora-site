@@ -50,6 +50,31 @@ data/                     criado automaticamente: banco, eventos e PDFs (fora do
 
 `src/content/discover.js` liga interesses, benefícios e guias: temas de cada guia (filtro da loja e relacionados), "para quem é" e os caminhos da home. Ao lançar um guia novo, adicione o slug lá. Receitas salvas e o último resultado do quiz ficam só no navegador (localStorage), sem conta.
 
+## Painel: 7 áreas
+
+Visão geral (com alertas e tarefas), Catálogo e biblioteca, Marketing e campanhas, Conteúdo diário, Comunidade e avaliações, Clientes e relatórios, Configurações e segurança.
+
+### Equipe, permissões, histórico e backups (`src/team.js`)
+- O dono é o usuário do `.env` (acesso total). Outras pessoas entram com usuário e senha próprios (scrypt), criados em Configurações → Usuários e permissões, com modelos (Gerente, Marketing, Moderação, Conteúdo, Somente leitura) ou permissões avulsas.
+- Cada rota do painel exige uma permissão (`ADMIN_PERMS` no `server.js`). Desativar ou trocar a senha derruba as sessões da pessoa.
+- Histórico: toda alteração no painel e cada entrada/falha de login ficam em `db.audit` (3.000 mais recentes).
+- Backups: um por dia em `data/backups` (14 mais recentes) e manual pelo painel, com download.
+
+### Campanhas (`src/meta.js`)
+- Com `META_ACCESS_TOKEN` e `META_AD_ACCOUNT_ID` no `.env`: campanhas, gasto, cliques, CTR, CPC, compras e ROAS da Meta, com pausar/ativar e orçamento diário (permissão `campaigns.edit`).
+- O site guarda as UTMs da visita e repassa para o link da Cakto; a venda chega com a campanha no webhook. "Origem das vendas no site" mostra visitas e vendas reais por `utm_campaign`.
+- `META_PIXEL_ID`: Pixel com consentimento (PageView, ViewContent, InitiateCheckout). Compra vai pela Conversions API, só depois da notificação oficial da Cakto.
+- Gerador de links com UTM no painel.
+
+### Chá do dia (`src/daily.js`)
+Análise diária (fuso de São Paulo) do melhor chá para manhã, tarde e noite: momento do dia (noite só sem cafeína), estação no Brasil, dia útil ou fim de semana e variedade em relação aos dias anteriores. Vem com receita grátis, guia e o porquê. Aparece na home; o painel troca qualquer dia.
+
+### Banco de receitas (`src/recipebank.js`)
+Lê as receitas dos PDFs (índice só no servidor) e do site, conta os ingredientes que aparecem juntos e cria rascunhos de combinações novas (que não existem em nenhum guia). Fila de 20 rascunhos, com novos todo dia. No painel: prévia PT/EN, edição, "testada", publicar agora ou agendar. Publicadas viram receitas grátis (página, índice, sitemap e "Com o que você tem").
+
+### Comunidade (`src/community.js`, `/pt/comunidade`)
+Perguntas com nome e e-mail obrigatórios, moderadas antes de ir ao ar. Respondem compradores (com a sessão da biblioteca, também moderados) e o dono pelo painel, com foto e selo da Botânora (Configurações → Perfil do dono). E-mails: pergunta publicada, recusada (com link para editar, 14 dias), nova resposta, resposta publicada ou recusada. "Útil" e "Também quero saber" (um voto por visitante). Dados estruturados QAPage.
+
 ## Avaliações dos clientes
 
 - Quem comprou avalia pela biblioteca (nota de 1 a 5, nome que aparece e comentário). Uma avaliação por e-mail e guia.

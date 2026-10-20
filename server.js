@@ -17,6 +17,12 @@ const affImage = require('./src/affimage');
 const access = require('./src/access');
 const mailer = require('./src/mailer');
 const reviews = require('./src/reviews');
+const team = require('./src/team');
+const meta = require('./src/meta');
+const daily = require('./src/daily');
+const recipeBank = require('./src/recipebank');
+const qa = require('./src/community');
+const qaView = require('./src/views/community');
 const { LANGS, routes, url, ui } = require('./src/i18n');
 const pages = require('./src/views/pages');
 const seo = require('./src/views/seo');
@@ -46,7 +52,7 @@ const SECURITY_HEADERS = {
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'X-Frame-Options': 'DENY',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-  'Content-Security-Policy': "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.clarity.ms https://*.clarity.ms; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; frame-ancestors 'none'; form-action 'self'; base-uri 'self'"
+  'Content-Security-Policy': "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.clarity.ms https://*.clarity.ms https://connect.facebook.net; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com https://www.facebook.com https://connect.facebook.net; frame-ancestors 'none'; form-action 'self'; base-uri 'self'"
 };
 
 if (config.siteUrl.startsWith('https://')) SECURITY_HEADERS['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains';
@@ -171,6 +177,15 @@ function renderPublic(req, res, lang, rest, ip, query) {
   else if (key === 'quiz' && !sub) html = pages.quizPage(lang, products);
   else if (key === 'privacy' && !sub) html = pages.privacy(lang);
   else if (key === 'terms' && !sub) html = pages.termsPage(lang);
+  else if (key === 'community' && !sub) html = qaView.index(lang, { product: String(query.get('guia') || '').slice(0, 40), sort: query.get('ordem') === 'top' ? 'top' : 'recent' });
+  else if (key === 'community' && (sub === 'editar' || sub === 'edit')) {
+    const t = String(query.get('t') || '');
+    return send(req, res, 200, qaView.editPage(lang, t, qa.byEditToken(t)), undefined, libHeaders());
+  }
+  else if (key === 'community' && sub) {
+    const q = qa.publicById(String(sub).split('-')[0]);
+    if (q) { if (sub !== qa.pathOf(q)) return redirect(res, url(lang, 'community', qa.pathOf(q)), 301); html = qaView.questionPage(lang, q, access.sessionEmail(req)); }
+  }
   else if (key === 'gear' && !sub) html = pages.gear(lang);
   else if (key === 'receive' && !sub) {
     // Volta do checkout da Cakto (?compra=ok / ?paid=1): quem já está conectado neste aparelho vai direto para a biblioteca
@@ -239,10 +254,12 @@ function publicUrls() {
   const list = [];
   const add = (pt, en, lastmod) => list.push({ pt, en, lastmod });
   const both = (key, ...rest) => add(url('pt', key, ...rest), url('en', key, ...rest));
-  ['home', 'guide', 'benefits', 'brewing', 'recipes', 'faq', 'gear', 'quiz', 'shop', 'privacy', 'terms'].forEach(k => both(k));
+  ['home', 'guide', 'benefits', 'brewing', 'recipes', 'faq', 'gear', 'quiz', 'shop', 'privacy', 'terms', 'community'].forEach(k => both(k));
   require('./src/content/teas').teas.forEach(t => both('guide', t.id));
   seo.recipes.forEach(r => { const p = seo.recipePaths(r); add(p.pt, p.en); });
   store.db.products.filter(p => p.status !== 'hidden').forEach(p => both('shop', p.slug));
+  // perguntas publicadas e já respondidas (sem resposta ficam fora do índice)
+  qa.publicList().filter(q => qa.approvedAnswers(q).length).forEach(q => both('community', qa.pathOf(q)));
   return list;
 }
 
@@ -276,7 +293,7 @@ async function apiPublic(req, res, pathname, ip, query) {
     const b = await readJson(req, 4096);
     const allowed = ['quiz_start', 'quiz_complete', 'timer_start', 'timer_done', 'lang_switch', 'download', 'cta', 'preview_open', 'preview_page', 'preview_zoom', 'checkout',
       'home_cta_quiz', 'home_cta_shop', 'home_cta_library', 'home_all_guides', 'path_free', 'path_guide', 'shop_filter', 'shop_quiz', 'buy_jump', 'waitlist_jump',
-      'quiz_restart', 'quiz_reco', 'quiz_recipe', 'quiz_tea', 'quiz_brew', 'quiz_benefit', 'recipe_save', 'recipe_unsave', 'review_up', 'review_open'];
+      'quiz_restart', 'quiz_reco', 'quiz_recipe', 'quiz_tea', 'quiz_brew', 'quiz_benefit', 'recipe_save', 'recipe_unsave', 'review_up', 'review_open', 'daily_tea', 'daily_recipe', 'daily_brew', 'daily_guide', 'qa_ask', 'qa_answer', 'qa_up'];
     if (b.type === 'engage') analytics.trackEngage(req, ip, b.path, b.ms);
     else if (allowed.includes(b.name)) {
       const props = {};
@@ -383,6 +400,47 @@ async function apiPublic(req, res, pathname, ip, query) {
     }
     return json(req, res, 200, { ok: true, status: r.review.status, left: reviews.editsLeft(r.review), free: !!r.free });
   }
+  // ---------- comunidade ----------
+  if (pathname === '/api/qa/ask' && req.method === 'POST') {
+    if (!rateLimit(ip, 'qa-ask', 5, 3600000)) return json(req, res, 429, { error: 'rate' });
+    const b = await readJson(req, 8192);
+    if (b.website) return json(req, res, 200, { ok: true }); // armadilha para robôs
+    const lang = LANGS.includes(b.lang) ? b.lang : 'pt';
+    const r = qa.ask({ name: b.name, email: b.email, text: b.text, product: b.product, lang });
+    if (r.error) return json(req, res, 400, { error: r.error });
+    analytics.trackEvent(req, ip, 'qa_ask', { product: r.question.product, path: '/community' });
+    if (mailer.enabled() && config.contactEmail) {
+      const p = r.question.product && store.getProduct(r.question.product);
+      mailer.send({ to: config.contactEmail, ...mailer.qaAdminEmail({ kind: 'question', guide: p ? p.title.pt : '', name: r.question.name, email: r.question.email, text: r.question.text, panel: config.siteUrl + '/admin#community' }) }).catch(e => console.error('e-mail da comunidade:', e.message));
+    }
+    return json(req, res, 200, { ok: true });
+  }
+  if (pathname === '/api/qa/edit' && req.method === 'POST') {
+    if (!rateLimit(ip, 'qa-ask', 5, 3600000)) return json(req, res, 429, { error: 'rate' });
+    const b = await readJson(req, 8192);
+    const r = qa.editByToken(String(b.t || ''), { name: b.name, text: b.text });
+    if (r.error) return json(req, res, 400, { error: r.error });
+    return json(req, res, 200, { ok: true });
+  }
+  if (pathname === '/api/qa/answer' && req.method === 'POST') {
+    const email = access.sessionEmail(req);
+    if (!email) return json(req, res, 401, { error: 'login' });
+    if (!rateLimit(ip, 'qa-answer', 10, 3600000)) return json(req, res, 429, { error: 'rate' });
+    const b = await readJson(req, 12288);
+    const r = qa.answer(String(b.qid || ''), { by: 'buyer', email, name: b.name, text: b.text });
+    if (r.error) return json(req, res, r.error === 'not_buyer' ? 403 : 400, { error: r.error });
+    analytics.trackEvent(req, ip, 'qa_answer', { path: '/community' });
+    if (mailer.enabled() && config.contactEmail) mailer.send({ to: config.contactEmail, ...mailer.qaAdminEmail({ kind: 'answer', guide: '', name: r.answer.name, email, text: `Pergunta: ${r.question.text}\n\nResposta: ${r.answer.text}`, panel: config.siteUrl + '/admin#community' }) }).catch(e => console.error('e-mail da comunidade:', e.message));
+    return json(req, res, 200, { ok: true });
+  }
+  if (pathname === '/api/qa/up' && req.method === 'POST') {
+    if (!rateLimit(ip, 'up', 40, 600000)) return json(req, res, 429, { error: 'rate' });
+    const b = await readJson(req, 512);
+    const r = qa.up(String(b.qid || ''), b.aid ? String(b.aid) : '', qa.voterKey(ip, req.headers['user-agent']));
+    if (!r) return json(req, res, 404, { error: 'not_found' });
+    return json(req, res, 200, r);
+  }
+
   // "Útil" numa avaliação publicada (um voto por visitante, liga/desliga)
   if (pathname === '/api/reviews/up' && req.method === 'POST') {
     if (!rateLimit(ip, 'up', 40, 600000)) return json(req, res, 429, { error: 'rate' });
@@ -463,7 +521,9 @@ async function caktoWebhook(req, res, pathname = '/api/webhooks/cakto') {
   let body;
   try { body = JSON.parse(raw.toString('utf8')); } catch (_) { return json(req, res, 400, { error: 'json' }); }
   const err = caktoVerify(req, raw, body);
-  if (err) { caktoLog({ event: body.event || '?', path: pathname, result: 'rejeitado: ' + err }); return json(req, res, 401, { error: err }); }
+  const cs = store.db.meta.caktoStats = Object.assign({ ok: 0, rejected: 0, lastOk: 0, lastRejected: 0, method: '' }, store.db.meta.caktoStats);
+  if (err) { cs.rejected++; cs.lastRejected = Date.now(); cs.lastError = err; caktoLog({ event: body.event || '?', path: pathname, result: 'rejeitado: ' + err }); return json(req, res, 401, { error: err }); }
+  cs.ok++; cs.lastOk = Date.now(); cs.method = req.headers['x-cakto-signature'] ? 'assinatura HMAC' : 'chave secreta';
   const event = String(body.event || '');
   const items = (Array.isArray(body.data) ? body.data : [body.data || {}]).filter(x => x && typeof x === 'object').slice(0, 20);
   if (!items.length) { caktoLog({ event, path: pathname, result: 'ignorado: sem dados' }); return json(req, res, 200, { ok: true }); }
@@ -473,6 +533,13 @@ async function caktoWebhook(req, res, pathname = '/api/webhooks/cakto') {
   return json(req, res, 200, { ok: true, results });
 }
 
+function caktoUtm(d) {
+  const src = Object.assign({}, d.tracking || {}, d);
+  const nested = d.utm && typeof d.utm === 'object' ? d.utm : {};
+  const pick = k => String(src['utm_' + k] || nested[k] || '').slice(0, 80);
+  const out = { source: pick('source'), medium: pick('medium'), campaign: pick('campaign'), content: pick('content') };
+  return out.source || out.campaign ? out : null;
+}
 function caktoHandle(event, d, pathname, mail) {
   const prod = d.product || {}, offer = d.offer || {}, cust = d.customer || {};
   const phone4 = String(cust.phone || cust.cellphone || cust.mobile || cust.phoneNumber || '').replace(/\D/g, '').slice(-4);
@@ -500,7 +567,19 @@ function caktoHandle(event, d, pathname, mail) {
         product: p, name: cust.name, email, amount: Math.round(total / matches.length), pdfLang,
         provider: 'cakto', externalId: String(d.id), refId: d.refId ? String(d.refId) : '', method: d.paymentMethodName || d.paymentMethod || '', phone4: phone4.length === 4 ? phone4 : ''
       });
-      if (r.created) { created.push(p.slug); mail.set(email, pdfLang); }
+      if (r.created) {
+        created.push(p.slug); mail.set(email, pdfLang);
+        // Origem da venda (UTMs que o site repassa ao checkout da Cakto)
+        const utm = caktoUtm(d);
+        if (utm) { r.order.utm = utm; store.save(); }
+      }
+    }
+    // Conversions API da Meta: só com venda validada pela notificação oficial da Cakto
+    if (created.length) {
+      const orderId = String(d.id);
+      meta.sendPurchase({ orderId, email, phone: cust.phone || cust.cellphone || '', value: total / 100, contentIds: created, fbc: d.fbc || (d.tracking && d.tracking.fbc), fbp: d.fbp || (d.tracking && d.tracking.fbp), url: config.siteUrl })
+        .then(r => { if (!r.skipped) caktoLog({ ...base, result: 'Meta CAPI: compra enviada' }); })
+        .catch(e => caktoLog({ ...base, result: 'Meta CAPI falhou: ' + e.message }));
     }
     caktoLog({ ...base, result: created.length ? 'liberado: ' + created.join(', ') : 'duplicado (já liberado)' });
     return { released: created };
@@ -525,16 +604,93 @@ function toCsv(rows, cols) {
 }
 const iso = ts => ts ? new Date(ts).toISOString() : '';
 
+// ---------- permissões e histórico do painel ----------
+const ADMIN_PERMS = [
+  [/^\/api\/admin\/(me|logout|stream|tasks)$/, null],
+  [/^\/api\/admin\/stats$/, 'stats'],
+  [/^\/api\/admin\/reports/, 'reports'],
+  [/^\/api\/admin\/clear$/, 'backups'],
+  [/^\/api\/admin\/(test-purchase|orders|audience|export)/, 'sales'],
+  [/^\/api\/admin\/reviews/, 'community'],
+  [/^\/api\/admin\/questions\/[^/]+\/answer$/, 'community.answer'],
+  [/^\/api\/admin\/questions/, 'community'],
+  [/^\/api\/admin\/(products|affiliates)/, 'catalog'],
+  [/^\/api\/admin\/(integrations|owner)/, 'settings'],
+  [/^\/api\/admin\/team\/users/, 'users'],
+  [/^\/api\/admin\/team\/(audit|backups)/, 'backups'],
+  [/^\/api\/admin\/campaigns/, (m) => m === 'GET' ? 'campaigns' : 'campaigns.edit'],
+  [/^\/api\/admin\/utm/, 'campaigns'],
+  [/^\/api\/admin\/daily/, 'content'],
+  [/^\/api\/admin\/recipes\/[^/]+\/(publish|unpublish)$/, 'content.publish'],
+  [/^\/api\/admin\/recipes/, 'content']
+];
+function adminPerm(pathname, method) {
+  for (const [re, p] of ADMIN_PERMS) if (re.test(pathname)) return typeof p === 'function' ? p(method) : p;
+  return 'users';
+}
+const AUDIT = [
+  [/reports$/, 'POST', 'Gerou relatório'], [/reports\/(.+)$/, 'DELETE', 'Apagou relatório'], [/clear$/, 'POST', 'Limpou dados'],
+  [/test-purchase$/, 'POST', 'Criou compra de teste'], [/test-purchase$/, 'DELETE', 'Apagou compras de teste'],
+  [/reviews\/(.+)\/approve$/, 'POST', 'Aprovou avaliação'], [/reviews\/(.+)\/reject$/, 'POST', 'Recusou avaliação'], [/reviews\/(.+)\/reset$/, 'POST', 'Zerou edições da avaliação'], [/reviews\/(.+)$/, 'DELETE', 'Excluiu avaliação'],
+  [/questions\/(.+)\/answers\/(.+)$/, 'DELETE', 'Excluiu resposta'], [/questions\/(.+)\/answers\/(.+)\/(approve|reject)$/, 'POST', 'Moderou resposta'], [/questions\/(.+)\/answer$/, 'POST', 'Respondeu pergunta como Botânora'],
+  [/questions\/(.+)\/approve$/, 'POST', 'Aprovou pergunta'], [/questions\/(.+)\/reject$/, 'POST', 'Recusou pergunta'], [/questions\/(.+)$/, 'DELETE', 'Excluiu pergunta'],
+  [/orders\/(.+)$/, null, 'Alterou pedido'], [/products\/(.+)\/pdf$/, null, 'Enviou PDF'], [/products\/(.+)$/, null, 'Alterou guia'],
+  [/affiliates\/(.+)\/(auto-)?image$/, null, 'Atualizou foto da recomendação'], [/affiliates\/(.+)$/, 'DELETE', 'Removeu recomendação'], [/affiliates(\/.+)?$/, null, 'Salvou recomendação'],
+  [/team\/users$/, 'POST', 'Criou usuário'], [/team\/users\/(.+)$/, 'DELETE', 'Removeu usuário'], [/team\/users\/(.+)$/, null, 'Alterou usuário'],
+  [/team\/backups$/, 'POST', 'Fez backup manual'], [/owner$/, null, 'Alterou perfil do dono'],
+  [/campaigns\/settings$/, null, 'Alterou configuração de campanhas'], [/campaigns\/(.+)$/, null, 'Alterou campanha'],
+  [/daily\/(.+)$/, null, 'Alterou chá do dia'], [/recipes\/(.+)\/publish$/, 'POST', 'Publicou receita'], [/recipes\/(.+)\/unpublish$/, 'POST', 'Despublicou receita'],
+  [/recipes\/generate$/, 'POST', 'Gerou rascunhos de receitas'], [/recipes\/(.+)$/, 'DELETE', 'Descartou receita'], [/recipes\/(.+)$/, null, 'Editou receita']
+];
+function auditLabel(pathname, method) {
+  const p = pathname.replace(/^\/api\/admin\//, '');
+  for (const [re, m, label] of AUDIT) { const x = p.match(re); if (x && (!m || m === method)) return [label, x[1] || '']; }
+  return [method + ' ' + p, ''];
+}
+
 async function apiAdmin(req, res, pathname, ip, query) {
   if (pathname === '/api/admin/login' && req.method === 'POST') {
     if (!sameOrigin(req)) return json(req, res, 403, { error: 'origin' });
     const b = await readJson(req);
     const r = auth.login(ip, String(b.user || ''), String(b.password || ''));
-    if (r.error) return json(req, res, r.error === 'locked' ? 429 : 401, { error: r.error });
+    if (r.error) { team.log(null, 'Falha de login', String(b.user || '').slice(0, 40), r.error === 'locked' ? 'bloqueado por 15 min' : '', ip); return json(req, res, r.error === 'locked' ? 429 : 401, { error: r.error }); }
+    team.log(r.user, 'Entrou no painel', '', '', ip);
     return json(req, res, 200, { ok: true }, { 'Set-Cookie': auth.cookieHeader(r.token, config.siteUrl.startsWith('https')) });
   }
-  if (!auth.isAuthed(req)) return json(req, res, 401, { error: 'auth' });
+  const me = auth.currentUser(req);
+  if (!me) return json(req, res, 401, { error: 'auth' });
   if (req.method !== 'GET' && !sameOrigin(req)) return json(req, res, 403, { error: 'origin' });
+  // Permissão por rota (o que não está na tabela fica só com quem gerencia usuários)
+  const need = adminPerm(pathname, req.method);
+  if (need && !team.can(me, need)) return json(req, res, 403, { error: 'perm', need, label: team.PERMS[need] });
+  // Histórico: registra toda alteração que deu certo
+  if (req.method !== 'GET' && pathname !== '/api/admin/logout') {
+    res.on('finish', () => { if (res.statusCode < 400) { const [action, target] = auditLabel(pathname, req.method); team.log(me, action, target, res.auditDetail || '', ip); } });
+  }
+  // Alertas e tarefas pendentes (Visão geral)
+  if (pathname === '/api/admin/tasks') {
+    const t = [];
+    const add = (n, label, tab, perm, level = 'todo') => { if (n) t.push({ n, label, tab, perm, level }); };
+    const rv = reviews.list().filter(r => r.status === 'pending').length;
+    const qs = qa.list(), qPend = qs.filter(q => q.status === 'pending').length, aPend = qs.reduce((s, q) => s + q.answers.filter(a => a.status === 'pending').length, 0);
+    const unanswered = qs.filter(q => q.status === 'approved' && !qa.approvedAnswers(q).length).length;
+    const bank = recipeBank.list(), drafts = bank.filter(d => d.status === 'draft').length, sched = bank.filter(d => d.status === 'draft' && d.scheduledFor).length;
+    add(rv, rv === 1 ? 'avaliação para aprovar' : 'avaliações para aprovar', 'reviews', 'community');
+    add(qPend, qPend === 1 ? 'pergunta para moderar' : 'perguntas para moderar', 'questions', 'community');
+    add(aPend, aPend === 1 ? 'resposta de comprador para moderar' : 'respostas de compradores para moderar', 'questions', 'community');
+    add(unanswered, unanswered === 1 ? 'pergunta publicada sem resposta' : 'perguntas publicadas sem resposta', 'questions', 'community.answer');
+    add(drafts, drafts === 1 ? 'rascunho de receita para revisar' : 'rascunhos de receita para revisar', 'recipes', 'content', 'info');
+    add(sched, sched === 1 ? 'receita agendada' : 'receitas agendadas', 'recipes', 'content', 'info');
+    const cs = store.db.meta.caktoStats || {};
+    if (cs.lastRejected && cs.lastRejected > Date.now() - 7 * 864e5) add(cs.rejected, 'notificações da Cakto recusadas (confira a chave do webhook)', 'integrations', 'settings', 'alert');
+    if (!config.cakto.secret) add(1, 'chave do webhook da Cakto não configurada: vendas não entram', 'integrations', 'settings', 'alert');
+    if (!mailer.enabled()) add(1, 'envio de e-mail desligado (RESEND_API_KEY)', 'security', 'backups', 'alert');
+    const bks = team.listBackups();
+    if (!bks.length || bks[0].t < Date.now() - 2 * 864e5) add(1, 'backup atrasado: faça um backup manual', 'security', 'backups', 'alert');
+    if (!meta.connected()) add(1, 'Meta Ads não conectado', 'campaigns', 'campaigns', 'info');
+    return json(req, res, 200, t.filter(x => team.can(me, x.perm)));
+  }
+  if (pathname === '/api/admin/me') return json(req, res, 200, { user: me.user, name: me.name, owner: !!me.owner, perms: me.owner ? Object.keys(team.PERMS) : me.perms });
 
   if (pathname === '/api/admin/logout' && req.method === 'POST') {
     auth.logout(req);
@@ -609,6 +765,192 @@ async function apiAdmin(req, res, pathname, ip, query) {
     store.save();
     return json(req, res, 200, { removed: before - store.db.orders.length });
   }
+  // ---------- campanhas (Meta Ads) + origem das vendas no site ----------
+  if (pathname === '/api/admin/campaigns' && req.method === 'GET') {
+    const days = [1, 7, 30, 90, 365].includes(Number(query.get('days'))) ? Number(query.get('days')) : 30;
+    const from = Date.now() - days * 864e5;
+    // No site: visitas e vendas por utm_campaign (vendas = pedidos pagos validados pela Cakto)
+    const visits = new Map();
+    for (const e of store.events) if (e.type === 'pv' && e.t >= from && (e.uc || e.fb)) { const k = e.uc || '(fbclid sem utm)'; const v = visits.get(k) || { visits: 0, people: new Set(), source: e.utm || '' }; v.visits++; v.people.add(e.v); visits.set(k, v); }
+    const sales = new Map();
+    for (const o of store.db.orders) if (o.status === 'paid' && !o.test && !o.archived && o.paidAt >= from && o.utm) { const k = o.utm.campaign || '(sem campanha)'; const v = sales.get(k) || { orders: 0, revenue: 0 }; v.orders++; v.revenue += o.amount || 0; sales.set(k, v); }
+    const keys = new Set([...visits.keys(), ...sales.keys()]);
+    const site = [...keys].map(k => ({ campaign: k, source: (visits.get(k) || {}).source || '', visits: (visits.get(k) || {}).visits || 0, people: ((visits.get(k) || {}).people || new Set()).size, orders: (sales.get(k) || {}).orders || 0, revenue: (sales.get(k) || {}).revenue || 0 }))
+      .sort((a, b) => b.revenue - a.revenue || b.visits - a.visits);
+    const c = meta.cfg();
+    const out = { days, connected: meta.connected(), pixel: !!c.pixel, capi: !!(c.pixel && c.capiToken), version: c.version, account: c.account ? 'act_' + c.account.replace(/\d(?=\d{4})/g, '•') : '', site, siteUrl: config.siteUrl,
+      products: store.db.products.filter(p => p.status !== 'hidden').map(p => ({ slug: p.slug, title: p.title.pt })) };
+    if (out.connected) {
+      try { out.meta = await meta.campaigns(days); }
+      catch (e) { out.error = e.message; out.errorCode = e.code || null; }
+    }
+    return json(req, res, 200, out);
+  }
+  if (pathname === '/api/admin/campaigns/refresh' && req.method === 'POST') { meta.clearCache(); return json(req, res, 200, { ok: true }); }
+  const cm = pathname.match(/^\/api\/admin\/campaigns\/(\d{5,25})$/);
+  if (cm && req.method === 'POST') {
+    if (!meta.connected()) return json(req, res, 400, { error: 'Meta Ads não conectado' });
+    const b = await readJson(req, 2048);
+    try {
+      await meta.updateCampaign(cm[1], { status: b.status, dailyBudget: b.dailyBudget });
+      res.auditDetail = [b.name ? String(b.name).slice(0, 60) : '', b.status ? 'status ' + b.status : '', b.dailyBudget !== undefined ? 'orçamento diário ' + (Number(b.dailyBudget) / 100).toFixed(2) : ''].filter(Boolean).join(' · ');
+      return json(req, res, 200, { ok: true });
+    } catch (e) { return json(req, res, 400, { error: e.message }); }
+  }
+
+  // ---------- comunidade (moderação e respostas da Botânora) ----------
+  if (pathname === '/api/admin/questions' && req.method === 'GET') {
+    return json(req, res, 200, { owner: team.owner(), items: qa.list().map(q => { const p = q.product && store.getProduct(q.product); return { ...q, edit: undefined, voters: undefined, history: undefined, guide: p ? p.title.pt : '', url: q.status === 'approved' ? url(q.lang, 'community', qa.pathOf(q)) : '', answers: q.answers.map(a => ({ ...a, voters: undefined })) }; }) });
+  }
+  const qm = pathname.match(/^\/api\/admin\/questions\/([a-f0-9]{10})(?:\/(approve|reject|answer)|\/answers\/([a-f0-9]{10})(?:\/(approve|reject))?)?$/);
+  if (qm) {
+    const [, qid, act, aid, aact] = qm;
+    const q0 = qa.byId(qid);
+    if (!q0) return json(req, res, 404, { error: 'not_found' });
+    const qLink = () => config.siteUrl + url(q0.lang, 'community', qa.pathOf(q0));
+    const mail = async (to, m) => { if (!mailer.enabled()) return 'disabled'; try { await mailer.send({ to, ...m }); return 'sent'; } catch (e) { return 'error: ' + e.message; } };
+    if (aid) {
+      if (req.method === 'DELETE' && !aact) return qa.removeAnswer(qid, aid) ? json(req, res, 200, { ok: true }) : json(req, res, 404, { error: 'not_found' });
+      if (req.method !== 'POST' || !aact) return json(req, res, 405, { error: 'method' });
+      const b = aact === 'reject' ? await readJson(req, 4096) : {};
+      const f = qa.moderateAnswer(qid, aid, aact === 'approve', b.reason);
+      if (!f) return json(req, res, 404, { error: 'not_found' });
+      res.auditDetail = `${aact === 'approve' ? 'aprovada' : 'recusada'}: ${f.a.name} · ${f.a.text.slice(0, 80)}`;
+      let m1 = 'none', m2 = 'none';
+      if (f.a.email) m1 = await mail(f.a.email, mailer.qaEmail({ lang: q0.lang, kind: aact === 'approve' ? 'a_approved' : 'a_rejected', name: f.a.name, question: q0.text, answer: f.a.text, reason: f.a.rejectReason, link: qLink() + '#a-' + f.a.id }));
+      if (aact === 'approve') m2 = await mail(q0.email, mailer.qaEmail({ lang: q0.lang, kind: 'answered', name: q0.name, question: q0.text, answer: f.a.text, link: qLink() + '#a-' + f.a.id }));
+      return json(req, res, 200, { ok: true, mail: m1, mailAsker: m2 });
+    }
+    if (req.method === 'DELETE' && !act) { res.auditDetail = q0.text.slice(0, 80); qa.remove(qid); return json(req, res, 200, { ok: true }); }
+    if (req.method !== 'POST' || !act) return json(req, res, 405, { error: 'method' });
+    if (act === 'answer') {
+      const b = await readJson(req, 12288);
+      const r = qa.answer(qid, { by: 'owner', email: me.user, text: b.text });
+      if (r.error) return json(req, res, 400, { error: r.error === 'question' ? 'Aprove a pergunta antes de responder.' : 'Escreva a resposta (mínimo de 10 caracteres).' });
+      res.auditDetail = r.answer.text.slice(0, 100);
+      const m = await mail(q0.email, mailer.qaEmail({ lang: q0.lang, kind: 'answered', name: q0.name, question: q0.text, answer: r.answer.text, link: qLink() + '#a-' + r.answer.id }));
+      return json(req, res, 200, { ok: true, mail: m });
+    }
+    const b = act === 'reject' ? await readJson(req, 4096) : {};
+    const q = act === 'approve' ? qa.approve(qid) : qa.reject(qid, b.reason);
+    res.auditDetail = q.text.slice(0, 80) + (act === 'reject' && q.rejectReason ? ' · motivo: ' + q.rejectReason : '');
+    let m;
+    if (act === 'approve') m = await mail(q.email, mailer.qaEmail({ lang: q.lang, kind: 'q_approved', name: q.name, question: q.text, link: qLink() }));
+    else { const t = qa.issueEdit(q); m = await mail(q.email, mailer.qaEmail({ lang: q.lang, kind: 'q_rejected', name: q.name, question: q.text, reason: q.rejectReason, link: config.siteUrl + url(q.lang, 'community', q.lang === 'en' ? 'edit' : 'editar') + '?t=' + t })); }
+    return json(req, res, 200, { ok: true, status: q.status, mail: m });
+  }
+
+  // ---------- banco de receitas ----------
+  if (pathname === '/api/admin/recipes' && req.method === 'GET') {
+    const l = recipeBank.list();
+    return json(req, res, 200, { items: l, counts: { draft: l.filter(d => d.status === 'draft').length, published: l.filter(d => d.status === 'published').length, discarded: l.filter(d => d.status === 'discarded').length }, analysed: recipeBank.analyse().sets.length });
+  }
+  if (pathname === '/api/admin/recipes/generate' && req.method === 'POST') {
+    const b = await readJson(req, 512);
+    const made = recipeBank.generate(Math.min(10, Math.max(1, Number(b.n) || 3)));
+    res.auditDetail = made.map(d => d.recipe.name.pt).join(', ');
+    return json(req, res, 200, { made: made.length });
+  }
+  const rbm = pathname.match(/^\/api\/admin\/recipes\/([a-f0-9]{10})(?:\/(publish|unpublish|schedule|preview))?$/);
+  if (rbm) {
+    const [, id, act] = rbm;
+    const d0 = recipeBank.byId(id);
+    if (!d0) return json(req, res, 404, { error: 'not_found' });
+    if (act === 'preview' && req.method === 'GET') {
+      const lang = query.get('lang') === 'en' ? 'en' : 'pt';
+      return send(req, res, 200, seo.recipePage(lang, d0.recipe), undefined, { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' });
+    }
+    if (req.method === 'PUT' && !act) { const r = recipeBank.update(id, await readJson(req, 32768)); if (r.error) return json(req, res, 400, r); res.auditDetail = r.draft.recipe.name.pt; return json(req, res, 200, r); }
+    if (req.method === 'DELETE' && !act) { recipeBank.discard(id); res.auditDetail = d0.recipe.name.pt; return json(req, res, 200, { ok: true }); }
+    if (req.method === 'POST' && act === 'publish') {
+      if (seo.recipes.some(r => r !== d0.recipe && (r.slug.pt === d0.recipe.slug.pt || r.slug.en === d0.recipe.slug.en))) return json(req, res, 400, { error: 'Já existe uma receita com esse nome. Mude o nome antes de publicar.' });
+      recipeBank.publish(id); res.auditDetail = d0.recipe.name.pt; return json(req, res, 200, { ok: true, url: url('pt', 'recipes', d0.recipe.slug.pt) });
+    }
+    if (req.method === 'POST' && act === 'unpublish') { recipeBank.unpublish(id); res.auditDetail = d0.recipe.name.pt; return json(req, res, 200, { ok: true }); }
+    if (req.method === 'POST' && act === 'schedule') { const b = await readJson(req, 512); recipeBank.schedule(id, b.date); res.auditDetail = `${d0.recipe.name.pt}: ${b.date || 'sem data'}`; return json(req, res, 200, { ok: true }); }
+    return json(req, res, 405, { error: 'method' });
+  }
+
+  // ---------- chá do dia ----------
+  if (pathname === '/api/admin/daily' && req.method === 'GET') {
+    const from = /^\d{4}-\d{2}-\d{2}$/.test(query.get('from') || '') ? query.get('from') : daily.dayKey();
+    const n = Math.min(31, Math.max(1, Number(query.get('days')) || 14));
+    const { teas } = require('./src/content/teas');
+    return json(req, res, 200, {
+      today: daily.dayKey(), days: Array.from({ length: n }, (_, i) => daily.plan(daily.addDays(from, i), 'pt')),
+      teas: teas.map(t => ({ id: t.id, name: t.name.pt, caffeineFree: t.caffeine[1] === 0 })),
+      recipes: seo.recipes.map(r => ({ slug: r.slug.pt, name: r.name.pt, iced: !!r.iced, caffeine: !!r.caffeine }))
+    });
+  }
+  const dm = pathname.match(/^\/api\/admin\/daily\/(\d{4}-\d{2}-\d{2})\/(morning|afternoon|night)$/);
+  if (dm && req.method === 'PUT') {
+    const b = await readJson(req, 4096);
+    const r = daily.setOverride(dm[1], dm[2], { tea: b.tea, recipe: b.recipe, notePt: b.notePt, noteEn: b.noteEn });
+    if (r.error) return json(req, res, 400, r);
+    res.auditDetail = `${dm[1]} ${dm[2]}: ${b.tea || 'automático'}${b.recipe ? ' · ' + b.recipe : ''}`;
+    return json(req, res, 200, { ok: true, plan: daily.plan(dm[1], 'pt') });
+  }
+
+  // ---------- equipe, histórico, backups, perfil do dono ----------
+  if (pathname === '/api/admin/team/users' && req.method === 'GET') return json(req, res, 200, { users: team.listUsers(), perms: team.PERMS, roles: team.ROLES });
+  if (pathname === '/api/admin/team/users' && req.method === 'POST') {
+    const b = await readJson(req, 4096);
+    const r = team.createUser(b);
+    if (r.error) return json(req, res, 400, { error: r.error });
+    res.auditDetail = `${r.user.user}: ${r.user.perms.join(', ')}`;
+    return json(req, res, 200, r);
+  }
+  const tu = pathname.match(/^\/api\/admin\/team\/users\/([a-f0-9]{10})$/);
+  if (tu) {
+    if (req.method === 'DELETE') { auth.endUser(tu[1]); return team.removeUser(tu[1]) ? json(req, res, 200, { ok: true }) : json(req, res, 404, { error: 'not_found' }); }
+    if (req.method === 'PUT') {
+      const b = await readJson(req, 4096);
+      const r = team.updateUser(tu[1], b);
+      if (r.error) return json(req, res, r.error === 'not_found' ? 404 : 400, { error: r.error });
+      if (b.pass || b.active === false) auth.endUser(tu[1]);
+      res.auditDetail = `${r.user.user}: ${r.user.active ? 'ativo' : 'desativado'} · ${r.user.perms.join(', ')}${b.pass ? ' · senha trocada' : ''}`;
+      return json(req, res, 200, r);
+    }
+  }
+  if (pathname === '/api/admin/team/audit') return json(req, res, 200, team.history(Math.min(1000, Number(query.get('n')) || 300), String(query.get('q') || '')));
+  if (pathname === '/api/admin/team/backups' && req.method === 'GET') return json(req, res, 200, team.listBackups());
+  if (pathname === '/api/admin/team/backups' && req.method === 'POST') { const name = team.backup('manual'); res.auditDetail = name; return json(req, res, 200, { name }); }
+  const bk = pathname.match(/^\/api\/admin\/team\/backups\/(db-\d{12}-(?:auto|manual)\.json)$/);
+  if (bk && req.method === 'GET') {
+    const f = team.backupFile(bk[1]);
+    if (!f) return json(req, res, 404, { error: 'not_found' });
+    team.log(me, 'Baixou backup', bk[1], '', ip);
+    return send(req, res, 200, fs.readFileSync(f), 'application/json; charset=utf-8', { 'Content-Disposition': `attachment; filename="botanora-${bk[1]}"`, 'Cache-Control': 'no-store' });
+  }
+  // Situação de segurança (só leitura)
+  if (pathname === '/api/admin/team/security') {
+    const cs = store.db.meta.caktoStats || {};
+    const pdfPublic = fs.existsSync(path.join(config.root, 'public', 'pdfs')) || store.PDF_DIR.startsWith(path.join(config.root, 'public'));
+    const bks = team.listBackups();
+    return json(req, res, 200, { checks: [
+      { ok: config.siteUrl.startsWith('https'), label: 'Site em HTTPS (cookies seguros e HSTS)' },
+      { ok: !!config.cakto.secret, label: 'Chave do webhook da Cakto configurada' },
+      { ok: !!cs.ok, label: cs.ok ? `Pagamentos validados pela Cakto: ${cs.ok} notificações aceitas (${cs.method || '-'})` : 'Nenhuma notificação da Cakto validada ainda' },
+      { ok: !cs.rejected || cs.lastOk > cs.lastRejected, label: cs.rejected ? `${cs.rejected} notificações recusadas (última: ${cs.lastError || '-'})` : 'Nenhuma notificação falsa ou inválida recebida' },
+      { ok: !pdfPublic, label: 'PDFs fora da pasta pública: só saem pela biblioteca, com sessão do aparelho e limite de downloads' },
+      { ok: bks.length > 0, label: bks.length ? `Backups: ${bks.length} guardados, último em ${new Date(bks[0].t).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}` : 'Nenhum backup ainda (o automático roda 30 s após iniciar)' },
+      { ok: String(config.adminPassword || '').length >= 12, label: 'Senha do dono com 12 caracteres ou mais' },
+      { ok: !!mailer.enabled(), label: 'E-mail transacional (Resend) ligado' }
+    ], maxDevices: config.maxDevices, maxDownloads: config.maxDownloads });
+  }
+  if (pathname === '/api/admin/owner' && req.method === 'GET') return json(req, res, 200, team.owner());
+  if (pathname === '/api/admin/owner' && req.method === 'PUT') { const b = await readJson(req, 4096); return json(req, res, 200, team.setOwner({ name: b.name, rolePt: b.rolePt, roleEn: b.roleEn })); }
+  if (pathname === '/api/admin/owner/photo' && req.method === 'POST') {
+    const buf = await readBody(req, 3 * 1024 * 1024);
+    const ext = buf.slice(0, 3).toString('hex') === 'ffd8ff' ? 'jpg' : buf.slice(1, 4).toString() === 'PNG' ? 'png' : buf.slice(8, 12).toString() === 'WEBP' ? 'webp' : null;
+    if (!ext) return json(req, res, 400, { error: 'notimage' });
+    const old = team.owner().photo;
+    const file = `owner-${Date.now().toString(36)}.${ext}`;
+    fs.writeFileSync(path.join(store.UPLOAD_DIR, file), buf);
+    if (old) { try { fs.unlinkSync(path.join(store.UPLOAD_DIR, old)); } catch (_) {} }
+    return json(req, res, 200, team.setOwner({ photo: file }));
+  }
+
   // Avaliações: aprovar, recusar (com e-mail), zerar edições, excluir
   if (pathname === '/api/admin/reviews' && req.method === 'GET') {
     return json(req, res, 200, reviews.list().map(r => {
@@ -782,6 +1124,14 @@ const withTimeout = (p, ms) => Promise.race([p, new Promise(r => setTimeout(() =
 // Fotos das recomendações: tenta preencher as que faltam 20 s após iniciar e depois uma vez por dia
 setTimeout(() => affImage.fillMissing().catch(e => console.error('fotos:', e.message)), 20000).unref();
 setInterval(() => affImage.fillMissing().catch(e => console.error('fotos:', e.message)), 24 * 3600 * 1000).unref();
+// Banco de receitas: coloca no ar as publicadas, publica as agendadas e mantém a fila de rascunhos
+recipeBank.boot();
+const bankTick = () => { try { recipeBank.runSchedule(); recipeBank.topUp(); } catch (e) { console.error('banco de receitas:', e.message); } };
+setTimeout(bankTick, 40000).unref();
+setInterval(bankTick, 3600 * 1000).unref();
+// Backup diário do banco (data/backups, 14 mais recentes)
+setTimeout(() => team.dailyBackup(), 30000).unref();
+setInterval(() => team.dailyBackup(), 3600 * 1000).unref();
 
 // Webhook da Cakto cadastrado em outro caminho (ex.: só o domínio): também é aceito
 const CAKTO_PATHS = new Set(['/', '/webhook', '/webhooks', '/webhook/cakto', '/webhooks/cakto', '/api/webhook/cakto', '/api/webhooks/cakto', '/cakto', '/api/cakto']);

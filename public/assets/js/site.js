@@ -10,7 +10,7 @@
 
   // ---------- cookies: Google Analytics e Microsoft Clarity só com consentimento ----------
   const CONSENT_KEY = 'botanora_consent';
-  const gaId = document.body.dataset.ga, clarityId = document.body.dataset.clarity;
+  const gaId = document.body.dataset.ga, clarityId = document.body.dataset.clarity, pixelId = document.body.dataset.pixel;
   function getConsent() {
     try { const v = localStorage.getItem(CONSENT_KEY); if (v) return v; } catch (_) {}
     const m = document.cookie.match(/(?:^|; )consent=(all|necessary)/);
@@ -40,16 +40,23 @@
         y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
       })(window, document, 'clarity', 'script', clarityId);
     }
+    if (pixelId) {
+      // Pixel da Meta: PageView, ViewContent (página do guia) e InitiateCheckout (clique em comprar). A compra vai pelo servidor (Conversions API)
+      (function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s); })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+      window.fbq('init', pixelId); window.fbq('track', 'PageView');
+      const pv = document.querySelector('[data-product-view]');
+      if (pv) window.fbq('track', 'ViewContent', { content_ids: [pv.dataset.productView], content_type: 'product', currency: 'BRL', value: Number(pv.dataset.price || 0) });
+    }
   }
   function clearThirdPartyCookies() {
     const host = location.hostname, root = host.split('.').slice(-3).join('.');
-    document.cookie.split('; ').map(c => c.split('=')[0]).filter(n => /^(_ga|_gid|_gat|_clck|_clsk|CLID|MUID)/.test(n)).forEach(n => {
+    document.cookie.split('; ').map(c => c.split('=')[0]).filter(n => /^(_ga|_gid|_gat|_clck|_clsk|CLID|MUID|_fbp|_fbc)/.test(n)).forEach(n => {
       [host, '.' + host, '.' + root, '.' + host.split('.').slice(-2).join('.')].forEach(d => { document.cookie = `${n}=; Path=/; Max-Age=0; Domain=${d}`; });
       document.cookie = `${n}=; Path=/; Max-Age=0`;
     });
   }
   const banner = document.querySelector('[data-consent]');
-  if (gaId || clarityId) {
+  if (gaId || clarityId || pixelId) {
     const current = getConsent();
     if (current === 'all') loadThirdParty();
     else if (!current && banner) banner.hidden = false;
@@ -63,6 +70,26 @@
     }));
     document.querySelectorAll('[data-consent-open]').forEach(b => b.addEventListener('click', () => { if (banner) { banner.hidden = false; const f = banner.querySelector('button'); if (f) f.focus(); } }));
   }
+
+  // ---------- origem da visita: repassa UTMs ao checkout da Cakto (para saber qual campanha vendeu) ----------
+  const UTM_KEY = 'btn_utm';
+  try {
+    const q = new URLSearchParams(location.search), keep = {};
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'].forEach(k => { if (q.get(k)) keep[k] = q.get(k).slice(0, 100); });
+    if (Object.keys(keep).length) localStorage.setItem(UTM_KEY, JSON.stringify(Object.assign(keep, { t: Date.now() })));
+  } catch (_) {}
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href*="pay.cakto.com.br"]');
+    if (!a) return;
+    try {
+      const v = JSON.parse(localStorage.getItem(UTM_KEY) || 'null');
+      if (window.fbq) window.fbq('track', 'InitiateCheckout', { content_ids: [a.dataset.product || ''], content_type: 'product', currency: 'BRL' });
+      if (!v || Date.now() - v.t > 30 * 864e5) return; // vale por 30 dias
+      const u = new URL(a.href);
+      Object.entries(v).forEach(([k, val]) => { if (k !== 't' && !u.searchParams.has(k)) u.searchParams.set(k, val); });
+      a.href = u.toString();
+    } catch (_) {}
+  }, true);
 
   // ---------- métricas ----------
   function track(name, props) {
@@ -500,6 +527,43 @@
   });
   const moreBtn = $('[data-reviews-more]');
   if (moreBtn) moreBtn.addEventListener('click', () => { $$('.review[data-more]').forEach(r => { r.hidden = false; }); moreBtn.remove(); track('review_open'); });
+
+  // ---------- comunidade: perguntar, editar, responder, votar ----------
+  const postJson = (u, body) => fetch(u, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(async r => ({ ok: r.ok, status: r.status, j: await r.json().catch(() => ({})) }));
+  function qaForm(f, url, extra, done) {
+    const M = JSON.parse(f.dataset.msg || '{}'), msg = $('.form-msg', f), btn = $('button[type=submit]', f);
+    f.addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(f).entries());
+      // checagem rápida antes de enviar (o servidor confere de novo)
+      const bad = 'name' in data && String(data.name).trim().length < 2 ? 'name' : 'email' in data && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(data.email).trim()) ? 'email' : 'text' in data && String(data.text).trim().length < (f.matches('[data-qa-answer]') ? 10 : 15) ? 'text' : '';
+      if (bad && M[bad]) { msg.textContent = M[bad]; msg.className = 'form-msg is-err'; return; }
+      btn.disabled = true; msg.className = 'form-msg'; msg.textContent = '…';
+      try {
+        const r = await postJson(url, Object.assign(data, extra()));
+        if (!r.ok) { msg.textContent = M[r.j.error] || (r.status === 429 ? M.rate : r.status === 401 ? M.login : M.generic); msg.className = 'form-msg is-err'; btn.disabled = false; return; }
+        msg.textContent = M.sent; msg.className = 'form-msg is-ok'; done(f);
+      } catch (_) { msg.textContent = M.generic; msg.className = 'form-msg is-err'; btn.disabled = false; }
+    });
+  }
+  $$('[data-qa-ask]').forEach(f => qaForm(f, '/api/qa/ask', () => ({ lang: f.dataset.lang }), f => { f.reset(); $$('input,textarea,select,button', f).forEach(x => { x.disabled = true; }); track('qa_ask'); }));
+  $$('[data-qa-edit]').forEach(f => qaForm(f, '/api/qa/edit', () => ({ t: f.dataset.t }), f => { $$('input,textarea,button', f).forEach(x => { x.disabled = true; }); }));
+  $$('[data-qa-answer]').forEach(f => qaForm(f, '/api/qa/answer', () => ({ qid: f.dataset.qaAnswer }), f => { $$('input,textarea,button', f).forEach(x => { x.disabled = true; }); track('qa_answer'); }));
+  $$('select[data-autosubmit]').forEach(s => s.addEventListener('change', () => s.form.submit()));
+  const QKEY = 'btn_qa_ups';
+  const qUps = new Set((() => { try { return JSON.parse(localStorage.getItem(QKEY) || '[]'); } catch (_) { return []; } })());
+  $$('[data-qa-up]').forEach(b => {
+    const qid = b.dataset.qaQ || (b.closest('[data-qa]') || {}).dataset?.qa, aid = b.dataset.qaUp, key = qid + ':' + aid;
+    if (qUps.has(key)) b.setAttribute('aria-pressed', 'true');
+    b.addEventListener('click', async () => {
+      b.disabled = true;
+      try {
+        const r = await postJson('/api/qa/up', { qid, aid });
+        if (r.ok) { b.setAttribute('aria-pressed', r.j.on); $('.review-up-n', b).textContent = r.j.ups; r.j.on ? qUps.add(key) : qUps.delete(key); try { localStorage.setItem(QKEY, JSON.stringify([...qUps].slice(-300))); } catch (_) {} if (r.j.on) track('qa_up'); }
+      } catch (_) {}
+      b.disabled = false;
+    });
+  });
 
   // ---------- prévia do guia (com zoom) ----------
   const pvDlg = $('[data-preview]');

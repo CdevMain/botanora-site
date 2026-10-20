@@ -72,6 +72,8 @@ function trackPageview(req, ctx) {
   store.addEvent({
     t: Date.now(), type: 'pv', path: u.pathname, lang: ctx.lang || '',
     ref: refHost(req.headers.referer, req.headers.host), utm: utm.slice(0, 60),
+    ...(u.searchParams.get('utm_campaign') ? { uc: u.searchParams.get('utm_campaign').slice(0, 80), um: (u.searchParams.get('utm_medium') || '').slice(0, 40) } : {}),
+    ...(u.searchParams.get('fbclid') ? { fb: 1 } : {}),
     dev: device(ua), br: browser(ua), os: os(ua),
     al: (req.headers['accept-language'] || '').slice(0, 5),
     v: visitorId(ctx.ip, ua)

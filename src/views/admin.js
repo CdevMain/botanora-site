@@ -1,5 +1,5 @@
 'use strict';
-const { logo } = require('./svg');
+const { logo, icon } = require('./svg');
 
 function shell(body, authed) {
   return `<!doctype html>
@@ -36,23 +36,34 @@ function loginPage() {
 </main>`, false);
 }
 
+// Áreas do painel (barra lateral). Cada aba tem uma permissão; o JS esconde o que o usuário não pode ver.
+const AREAS = [
+  ['overview', 'grid', 'Visão geral', 'Vendas, acessos, conversão, alertas e tarefas pendentes.', [['overview', 'Painel', 'stats']]],
+  ['catalog', 'book', 'Catálogo e biblioteca', 'eBooks, PDFs, recomendações, arquivos e produtos da Cakto.', [['products', 'Guias e PDFs', 'catalog'], ['gear', 'Recomendações', 'catalog']]],
+  ['marketing', 'megaphone', 'Marketing e campanhas', 'Meta Ads, links de campanha e origem das vendas.', [['campaigns', 'Campanhas', 'campaigns']]],
+  ['daily', 'cup', 'Conteúdo diário', 'Chá da manhã, tarde e noite, banco de receitas e agendamento.', [['daily', 'Chá do dia', 'content'], ['recipes', 'Banco de receitas', 'content']]],
+  ['community', 'chat', 'Comunidade e avaliações', 'Perguntas pendentes, respostas, avaliações e compradores verificados.', [['questions', 'Perguntas', 'community'], ['reviews', 'Avaliações', 'community']]],
+  ['clients', 'users', 'Clientes e relatórios', 'Pedidos, downloads, inscritos e indicadores comerciais.', [['sales', 'Pedidos e vendas', 'sales'], ['audience', 'Inscritos', 'sales']]],
+  ['settings', 'gear', 'Configurações e segurança', 'Integrações, permissões, identidade do proprietário, histórico e backups.', [['integrations', 'Integrações', 'settings'], ['team', 'Usuários e permissões', 'users'], ['security', 'Segurança e backups', 'backups'], ['history', 'Histórico', 'backups'], ['owner', 'Perfil do dono', 'settings']]]
+];
+
 function appPage() {
   return shell(`<header class="topbar">
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidenav" aria-label="Menu">${icon('grid', 'ico')}</button>
   <a class="tb-brand" href="/admin">${logo()}<span class="tb-tag">Painel</span></a>
-  <nav class="tabs" role="tablist">
-    <button role="tab" data-tab="overview" aria-selected="true">Visão geral</button>
-    <button role="tab" data-tab="sales" aria-selected="false">Vendas</button>
-    <button role="tab" data-tab="products" aria-selected="false">Produtos</button>
-    <button role="tab" data-tab="reviews" aria-selected="false">Avaliações <span class="tab-count" id="reviews-count" hidden></span></button>
-    <button role="tab" data-tab="gear" aria-selected="false">Recomendações</button>
-    <button role="tab" data-tab="audience" aria-selected="false">Público</button>
-    <button role="tab" data-tab="integrations" aria-selected="false">Integrações</button>
-  </nav>
   <div class="tb-actions">
+    <span class="tb-user" id="tb-user"></span>
     <a href="/" target="_blank" rel="noopener" class="tb-link">Ver site ↗</a>
     <button id="logout" class="tb-link">Sair</button>
   </div>
 </header>
+<div class="layout">
+<aside class="sidenav" id="sidenav" aria-label="Áreas do painel">
+  <nav>${AREAS.map(([id, ic, title, desc, tabs]) => `<div class="area" data-area="${id}">
+    <button type="button" class="area-head" data-tab="${tabs[0][0]}" data-perm="${tabs[0][2]}">${icon(ic, 'area-ico')}<span><b>${title}</b><small>${desc}</small></span><span class="area-count" data-count="${id}" hidden></span></button>
+    ${tabs.length > 1 ? `<div class="area-tabs">${tabs.map(([t, label, perm]) => `<button type="button" data-tab="${t}" data-perm="${perm}" role="tab" aria-selected="false">${label}<span class="tab-count" data-count-tab="${t}" hidden></span></button>`).join('')}</div>` : ''}
+  </div>`).join('')}</nav>
+</aside>
 <main class="app">
   <div class="toolbar">
     <div>
@@ -69,6 +80,7 @@ function appPage() {
   </div>
 
   <section data-panel="overview">
+    <div class="card tasks-card" id="tasks" hidden></div>
     <div class="panel-actions">
       <button class="btn-sm" type="button" data-report="geral">Gerar relatório do período</button>
       <button class="btn-sm danger" type="button" data-clear="overview">Limpar últimos 30 dias</button>
@@ -173,8 +185,25 @@ function appPage() {
     </div>
   </section>
   <section data-panel="integrations" hidden><div id="integrations"></div></section>
+  <section data-panel="campaigns" hidden><div id="campaigns"></div></section>
+  <section data-panel="daily" hidden><div id="daily"></div></section>
+  <section data-panel="recipes" hidden><div id="recipes"></div></section>
+  <section data-panel="questions" hidden>
+    <div class="card">
+      <div class="card-head"><h2>Perguntas da comunidade</h2>
+        <span class="select"><select id="q-filter" aria-label="Filtrar perguntas"><option value="pending">Para moderar</option><option value="unanswered">Publicadas sem resposta</option><option value="approved">Publicadas</option><option value="rejected">Recusadas</option><option value="">Todas</option></select></span>
+        <p class="hint">Perguntas e respostas de compradores só aparecem no site depois de aprovadas. Respostas da Botânora são publicadas na hora, com a foto e o selo do perfil do dono. Cada aprovação, recusa ou resposta envia um e-mail para quem perguntou.</p>
+      </div>
+      <div id="q-list" class="review-admin"></div>
+    </div>
+  </section>
+  <section data-panel="team" hidden><div id="team"></div></section>
+  <section data-panel="security" hidden><div id="security"></div></section>
+  <section data-panel="history" hidden><div id="history"></div></section>
+  <section data-panel="owner" hidden><div id="owner"></div></section>
   <p class="foot-note">Métricas coletadas pelo próprio servidor, sem cookies e sem serviços de terceiros. Visitantes são contados por dia com identificador anônimo (o IP não é armazenado).</p>
 </main>
+</div>
 <dialog class="clear-dlg" id="clear-dlg">
   <form method="dialog" id="clear-form">
     <h2>Limpar últimos 30 dias</h2>

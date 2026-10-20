@@ -89,11 +89,17 @@ function analyse(items, qtys = []) {
   return { keys, other };
 }
 
-const FREE = free.map(r => ({ r, ...analyse(r.ingredients.map(i => i.item.pt), r.ingredients.map(i => i.qty.pt)) }));
+let FREE = free.map(r => ({ r, ...analyse(r.ingredients.map(i => i.item.pt), r.ingredients.map(i => i.qty.pt)) }));
 const PAID = guideIndex.filter(x => !x.free).map(x => ({ x, ...analyse(x.items) }));
 
 // Lista de ingredientes que aparecem em alguma receita, por grupo
-const used = new Set([...FREE, ...PAID].flatMap(e => [...e.keys]));
+let used = new Set([...FREE, ...PAID].flatMap(e => [...e.keys]));
+// Recalcula quando o banco de receitas publica ou tira uma receita do ar
+function refresh() {
+  const live = require('./views/seo').recipes;
+  FREE = live.map(r => ({ r, ...analyse(r.ingredients.map(i => i.item.pt), r.ingredients.map(i => i.qty.pt)) }));
+  used = new Set([...FREE, ...PAID].flatMap(e => [...e.keys]));
+}
 function chips(lang) {
   const i = lang === 'en' ? 2 : 1;
   return Object.entries(GROUPS).map(([g, names]) => ({
@@ -136,4 +142,4 @@ function suggest(haveKeys, lang, { products = [], url }) {
   return { best, more, guides };
 }
 
-module.exports = { chips, suggest, freeRecipes: free, labelOf };
+module.exports = { chips, suggest, freeRecipes: free, labelOf, keysOf, refresh };

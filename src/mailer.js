@@ -109,6 +109,37 @@ function reviewAdminEmail({ guide, name, email, rating, text, edited, panel }) {
   return { subject: `${edited ? 'Avaliação editada' : 'Nova avaliação'}: ${guide} (${rating}/5)`, html, text: `${guide} · ${rating}/5 · ${name} (${email})\n\n${text}\n\n${panel}` };
 }
 
+// E-mails da comunidade (perguntas e respostas)
+const QT = {
+  pt: {
+    q_approved: { s: 'Sua pergunta foi publicada na Botânora', b: 'Sua pergunta já está na comunidade. Avisamos por e-mail quando chegar uma resposta.', cta: 'Ver minha pergunta' },
+    q_rejected: { s: 'Sua pergunta precisa de um ajuste', b: 'Lemos sua pergunta, mas ela não pôde ser publicada como está.', how: 'Você pode corrigir e reenviar pelo botão abaixo. O link vale por 14 dias.', cta: 'Editar minha pergunta' },
+    answered: { s: 'Sua pergunta recebeu uma resposta', b: 'Chegou uma resposta para a sua pergunta na comunidade Botânora.', cta: 'Ler a resposta' },
+    a_approved: { s: 'Sua resposta foi publicada', b: 'Obrigado por ajudar. Sua resposta já está na comunidade.', cta: 'Ver a resposta' },
+    a_rejected: { s: 'Sua resposta não foi publicada', b: 'Lemos sua resposta, mas ela não pôde ser publicada como está. Você pode responder de novo pela página da pergunta, com a biblioteca aberta neste aparelho.', cta: 'Abrir a pergunta' },
+    reason: 'Motivo', question: 'Pergunta', answer: 'Resposta'
+  },
+  en: {
+    q_approved: { s: 'Your question is live on Botânora', b: 'Your question is now in the community. We will email you when an answer arrives.', cta: 'See my question' },
+    q_rejected: { s: 'Your question needs a change', b: 'We read your question, but it could not be published as it is.', how: 'You can fix it and resend it with the button below. The link is valid for 14 days.', cta: 'Edit my question' },
+    answered: { s: 'Your question has an answer', b: 'An answer to your question has arrived in the Botânora community.', cta: 'Read the answer' },
+    a_approved: { s: 'Your answer is live', b: 'Thank you for helping. Your answer is now in the community.', cta: 'See the answer' },
+    a_rejected: { s: 'Your answer was not published', b: 'We read your answer, but it could not be published as it is. You can answer again from the question page, with your library open on this device.', cta: 'Open the question' },
+    reason: 'Reason', question: 'Question', answer: 'Answer'
+  }
+};
+function qaEmail({ lang, kind, name, question, answer, reason, link }) {
+  const t = T[lang] || T.pt, q = QT[lang] || QT.pt, k = q[kind];
+  const box = (label, txt) => `<div style="border-left:2px solid #d6b44c;padding:4px 0 4px 16px;margin:0 0 22px"><p style="font-family:Arial,sans-serif;font-size:11px;letter-spacing:3px;color:#d6b44c;margin:0 0 6px">${esc(label.toUpperCase())}</p><p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#d9d3c6;margin:0;white-space:pre-line">${esc(txt)}</p></div>`;
+  const inner = `<h1 style="font-weight:normal;font-size:28px;margin:0 0 14px">${esc(t.hello(name))}</h1>` + P(esc(k.b)) + (reason ? P(`<strong style="color:#f4efe4">${esc(q.reason)}:</strong> ${esc(reason)}`) : '') + (question ? box(q.question, question) : '') + (answer ? box(q.answer, answer.length > 600 ? answer.slice(0, 600) + '…' : answer) : '') + (k.how ? P(esc(k.how)) : '') + BTN(link, k.cta);
+  return { subject: k.s, html: shell(lang, inner), text: `${t.hello(name)}\n\n${k.b}\n${reason ? `\n${q.reason}: ${reason}\n` : ''}${question ? `\n${q.question}: ${question}\n` : ''}${answer ? `\n${q.answer}: ${answer}\n` : ''}${k.how ? '\n' + k.how + '\n' : ''}\n${k.cta}: ${link}` };
+}
+function qaAdminEmail({ kind, guide, name, email, text, panel }) {
+  const title = kind === 'answer' ? 'Nova resposta de comprador para aprovar' : 'Nova pergunta para aprovar';
+  const html = shell('pt', `<h1 style="font-weight:normal;font-size:24px;margin:0 0 14px">${title}</h1>` + P(`${esc(name)} (${esc(email)})${guide ? ' · ' + esc(guide) : ''}`) + P(esc(text).replace(/\n/g, '<br>')) + BTN(panel, 'Abrir o painel'));
+  return { subject: `${title}${guide ? ': ' + guide : ''}`, html, text: `${name} (${email})\n\n${text}\n\n${panel}` };
+}
+
 async function send({ to, subject, html, text }) {
   if (!enabled()) return { skipped: true };
   const res = await fetch('https://api.resend.com/emails', {
@@ -120,4 +151,4 @@ async function send({ to, subject, html, text }) {
   return res.json();
 }
 
-module.exports = { enabled, send, accessEmail, reviewEmail, reviewAdminEmail };
+module.exports = { enabled, send, accessEmail, reviewEmail, reviewAdminEmail, qaEmail, qaAdminEmail };

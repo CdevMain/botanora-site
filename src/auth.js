@@ -2,7 +2,7 @@
 const crypto = require('crypto');
 const config = require('./config');
 
-const sessions = new Map(); // token -> expira em
+const sessions = new Map(); // token -> { exp, uid }
 const attempts = new Map(); // ip -> { n, until }
 const TTL = 12 * 3600 * 1000;
 const COOKIE = 'btn_admin';
@@ -20,8 +20,8 @@ function blocked(ip) {
 
 function login(ip, user, pass) {
   if (blocked(ip)) return { error: 'locked' };
-  const ok = config.adminPassword && safeEqual(user, config.adminUser) && safeEqual(pass, config.adminPassword);
-  if (!ok) {
+  const u = require('./team').verify(user, pass);
+  if (!u) {
     const a = attempts.get(ip) || { n: 0, until: 0 };
     a.n++;
     if (a.n >= 5) { a.until = Date.now() + 15 * 60000; a.n = 0; }
@@ -30,8 +30,8 @@ function login(ip, user, pass) {
   }
   attempts.delete(ip);
   const token = crypto.randomBytes(32).toString('hex');
-  sessions.set(token, Date.now() + TTL);
-  return { token };
+  sessions.set(token, { exp: Date.now() + TTL, uid: u.id });
+  return { token, user: u };
 }
 
 function parseCookies(req) {
@@ -43,13 +43,19 @@ function parseCookies(req) {
   return out;
 }
 
-function isAuthed(req) {
+// Usuário logado (com permissões atualizadas) ou null
+function currentUser(req) {
   const t = parseCookies(req)[COOKIE];
-  if (!t) return false;
-  const exp = sessions.get(t);
-  if (!exp || exp < Date.now()) { sessions.delete(t); return false; }
-  return true;
+  if (!t) return null;
+  const s = sessions.get(t);
+  if (!s || s.exp < Date.now()) { sessions.delete(t); return null; }
+  const u = require('./team').current(s.uid);
+  if (!u) { sessions.delete(t); return null; }
+  return u;
 }
+const isAuthed = req => !!currentUser(req);
+// Encerra as sessões de um usuário (ao desativar ou trocar a senha)
+function endUser(uid) { for (const [t, s] of sessions) if (s.uid === uid) sessions.delete(t); }
 
 function logout(req) { sessions.delete(parseCookies(req)[COOKIE]); }
 
@@ -58,4 +64,4 @@ function cookieHeader(token, secure) {
   return token ? `${base}; Max-Age=${TTL / 1000}` : `${base}; Max-Age=0`;
 }
 
-module.exports = { login, logout, isAuthed, cookieHeader, parseCookies };
+module.exports = { login, logout, isAuthed, currentUser, endUser, cookieHeader, parseCookies, safeEqual };

@@ -75,9 +75,9 @@ const recipePaths = r => ({ pt: url('pt', 'recipes', r.slug.pt), en: url('en', '
 // Receitas ligadas a cada chá (por palavras dos ingredientes)
 const TEA_WORDS = { branco: ['branco', 'bai mu dan', 'shou mei'], verde: ['chá verde', 'sencha', 'long jing', 'gyokuro', 'jasmim'], matcha: ['matcha'], oolong: ['oolong'],
   preto: ['chá preto', 'assam', 'ceylon', 'earl grey', 'chai'], puer: ['pu-erh'], mate: ['erva-mate', 'mate'], rooibos: ['rooibos'], ervas: ['camomila', 'melissa', 'capim', 'hibisco', 'hortelã', 'gengibre', 'canela'] };
-function recipesForTea(id) {
+function recipesForTea(id, limit = 4) {
   const words = TEA_WORDS[id] || [];
-  return recipes.filter(r => r.ingredients.some(i => words.some(w => i.item.pt.toLowerCase().includes(w))) || words.some(w => r.name.pt.toLowerCase().includes(w))).slice(0, 4);
+  return recipes.filter(r => r.ingredients.some(i => words.some(w => i.item.pt.toLowerCase().includes(w))) || words.some(w => r.name.pt.toLowerCase().includes(w))).slice(0, limit);
 }
 
 function isoMinutes(txt) {

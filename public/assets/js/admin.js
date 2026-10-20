@@ -33,22 +33,51 @@
   };
   function toast(t, err) { const el = $('#toast'); el.textContent = t; el.className = 'toast show' + (err ? ' err' : ''); clearTimeout(el._t); el._t = setTimeout(() => el.className = 'toast', 2600); }
 
-  const titles = { overview: 'Visão geral', sales: 'Vendas', products: 'Produtos', reviews: 'Avaliações', gear: 'Recomendações', audience: 'Público', integrations: 'Integrações' };
-  $$('.tabs button').forEach(b => b.addEventListener('click', () => {
-    $$('.tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
-    $$('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== b.dataset.tab; });
-    $('#page-title').textContent = titles[b.dataset.tab];
-    history.replaceState(null, '', '#' + b.dataset.tab);
-    if (b.dataset.tab === 'audience') loadAudience();
-    if (b.dataset.tab === 'products') loadProducts();
-    if (b.dataset.tab === 'sales') { loadOrders(); renderTestBuy(); }
-    if (b.dataset.tab === 'integrations') loadIntegrations();
-    if (b.dataset.tab === 'gear') loadAff();
-    if (b.dataset.tab === 'reviews') loadReviews();
-  }));
+  const titles = { overview: 'Visão geral', sales: 'Pedidos e vendas', products: 'Guias e PDFs', reviews: 'Avaliações', gear: 'Recomendações', audience: 'Inscritos', integrations: 'Integrações',
+    campaigns: 'Campanhas', daily: 'Chá do dia', recipes: 'Banco de receitas', questions: 'Perguntas', team: 'Usuários e permissões', security: 'Segurança e backups', history: 'Histórico', owner: 'Perfil do dono' };
+  const loaders = {
+    audience: () => loadAudience(), products: () => loadProducts(), sales: () => { loadOrders(); renderTestBuy(); }, integrations: () => loadIntegrations(), gear: () => loadAff(),
+    reviews: () => loadReviews(), campaigns: () => loadCampaigns(), daily: () => loadDaily(), recipes: () => loadRecipes(), questions: () => loadQuestions(),
+    team: () => loadTeam(), security: () => loadSecurity(), history: () => loadHistory(), owner: () => loadOwner(), overview: () => loadTasks()
+  };
+  let ME = { perms: [] };
+  const allowed = perm => !perm || ME.owner || ME.perms.includes(perm);
+  function openTab(tab) {
+    const btn = $(`.sidenav [data-tab="${tab}"]:not([hidden])`);
+    if (!btn) return;
+    $$('.sidenav [data-tab]').forEach(x => x.setAttribute('aria-selected', x.dataset.tab === tab && !x.classList.contains('area-head')));
+    $$('.sidenav .area').forEach(a => a.classList.toggle('is-open', !!$(`[data-tab="${tab}"]`, a)));
+    $$('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== tab; });
+    $('#page-title').textContent = titles[tab] || '';
+    document.body.dataset.tab = tab;
+    history.replaceState(null, '', '#' + tab);
+    document.body.classList.remove('nav-open'); $('.nav-toggle').setAttribute('aria-expanded', 'false');
+    if (loaders[tab]) Promise.resolve(loaders[tab]()).catch(err => toast(err.need ? 'Sem permissão: ' + (err.label || err.need) : 'Não deu certo: ' + err.message, true));
+  }
+  $$('.sidenav [data-tab]').forEach(b => b.addEventListener('click', () => openTab(b.dataset.tab)));
+  $('.nav-toggle').addEventListener('click', () => { const o = !document.body.classList.contains('nav-open'); document.body.classList.toggle('nav-open', o); $('.nav-toggle').setAttribute('aria-expanded', o); });
+  // Mostra só as áreas e abas que o usuário pode usar
+  function applyPerms() {
+    $$('.sidenav .area').forEach(a => {
+      const subs = $$('.area-tabs [data-tab]', a);
+      subs.forEach(b => { b.hidden = !allowed(b.dataset.perm); });
+      const head = $('.area-head', a), firstOk = subs.length ? subs.find(b => !b.hidden) : (allowed(head.dataset.perm) ? head : null);
+      a.hidden = !firstOk;
+      if (firstOk) { head.dataset.tab = firstOk.dataset.tab; head.hidden = false; }
+    });
+    $('#tb-user').textContent = ME.user ? `${ME.owner ? ME.user + ' · dono' : (ME.name || ME.user)}` : '';
+    document.body.classList.toggle('can-stats', allowed('stats'));
+  }
+  // Contadores de pendências na barra lateral
+  function setCount(tab, n) {
+    const c = $(`[data-count-tab="${tab}"]`); if (c) { c.textContent = n; c.hidden = !n; }
+    const area = $(`.sidenav [data-tab="${tab}"]`)?.closest('.area');
+    if (area) { const total = $$('[data-count-tab]', area).reduce((s, x) => s + (x.hidden ? 0 : Number(x.textContent) || 0), 0); const ac = $('.area-count', area); ac.textContent = total; ac.hidden = !total; }
+  }
   $$('.range button').forEach(b => b.addEventListener('click', () => {
     $$('.range button').forEach(x => x.classList.toggle('on', x === b));
-    days = Number(b.dataset.days); loadStats();
+    days = Number(b.dataset.days);
+    if (current() === 'campaigns') loadCampaigns(); else loadStats();
   }));
   $('#logout').addEventListener('click', async () => { await api('/api/admin/logout', { method: 'POST' }); location.reload(); });
 
@@ -463,8 +492,7 @@
   const starTxt = n => '★'.repeat(n) + '☆'.repeat(5 - n);
   async function loadReviews(countOnly) {
     reviewsData = await api('/api/admin/reviews');
-    const pend = reviewsData.filter(r => r.status === 'pending').length, c = $('#reviews-count');
-    c.textContent = pend; c.hidden = !pend;
+    setCount('reviews', reviewsData.filter(r => r.status === 'pending').length);
     if (!countOnly) renderReviews();
   }
   function renderReviews() {
@@ -515,6 +543,328 @@
     } catch (err) { toast('Não deu certo: ' + err.message, true); btn.disabled = false; }
   });
 
+  // ---------- visão geral: alertas e tarefas ----------
+  async function loadTasks() {
+    const el = $('#tasks');
+    const t = await api('/api/admin/tasks');
+    el.hidden = !t.length;
+    el.innerHTML = `<div class="card-head"><h2>Alertas e tarefas</h2></div><ul class="tasks">${t.map(x => `<li class="task task-${x.level}"><button type="button" data-go="${x.tab}"><b>${nf.format(x.n)}</b> ${esc(x.label)} <span aria-hidden="true">→</span></button></li>`).join('')}</ul>`;
+  }
+  $('#tasks').addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) openTab(b.dataset.go); });
+
+  // ---------- campanhas (Meta Ads) ----------
+  let camp = null;
+  const money = (v, cur = 'BRL') => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: cur || 'BRL' }).format(Number(v) || 0);
+  const campStatus = { ACTIVE: 'Ativa', PAUSED: 'Pausada', DELETED: 'Excluída', ARCHIVED: 'Arquivada', IN_PROCESS: 'Em análise', WITH_ISSUES: 'Com problema', CAMPAIGN_PAUSED: 'Pausada', ADSET_PAUSED: 'Conjunto pausado', PENDING_REVIEW: 'Em revisão', DISAPPROVED: 'Reprovada' };
+  async function loadCampaigns() {
+    camp = await api('/api/admin/campaigns?days=' + days);
+    const c = camp, el = $('#campaigns'), canEdit = allowed('campaigns.edit');
+    const setup = `<div class="card"><div class="card-head"><h2>Conectar o Meta Ads</h2><span class="pill pill-pending">Não conectado</span></div>
+      <ol class="steps-admin">
+        <li>No <b>Gerenciador de Negócios da Meta</b> (business.facebook.com), em Usuários → Usuários do sistema, crie um usuário do sistema e dê acesso à sua conta de anúncios.</li>
+        <li>Gere um token para ele com as permissões <code>ads_read</code> e <code>ads_management</code>.</li>
+        <li>No <code>.env</code> da VPS, adicione <code>META_ACCESS_TOKEN=</code> (o token) e <code>META_AD_ACCOUNT_ID=</code> (só os números da conta, sem "act_"). Opcional: <code>META_APP_SECRET</code>, <code>META_PIXEL_ID</code> e <code>META_CAPI_TOKEN</code>.</li>
+        <li>Reinicie o site (<code>sudo systemctl restart botanora</code>). Os números aparecem aqui.</li>
+      </ol>
+      <p class="hint">O token fica só no servidor e nunca vai para o navegador.</p></div>`;
+    const flags = `<div class="flags"><span class="pill ${c.connected ? 'pill-paid' : 'pill-pending'}">Marketing API ${c.connected ? 'conectada · ' + esc(c.account) : 'não conectada'}</span><span class="pill ${c.pixel ? 'pill-paid' : 'pill-cancelled'}">Pixel ${c.pixel ? 'ativo (com consentimento)' : 'não configurado'}</span><span class="pill ${c.capi ? 'pill-paid' : 'pill-cancelled'}">Conversions API ${c.capi ? 'ativa: compras validadas pela Cakto' : 'desligada'}</span><span class="pill">API ${esc(c.version)}</span></div>`;
+    let metaHtml = '';
+    if (c.connected && c.error) metaHtml = `<div class="card"><div class="card-head"><h2>Meta Ads</h2><span class="pill pill-refunded">Erro</span></div><p class="hint">A Meta respondeu: <b>${esc(c.error)}</b>${c.errorCode === 190 ? ' (token expirado ou sem permissão: gere um novo token)' : ''}</p><button class="btn-sm" data-camp-refresh>Tentar de novo</button></div>`;
+    else if (c.meta) {
+      const m = c.meta, cur = m.account.currency, tt = m.totals;
+      metaHtml = `<div class="kpis kpis-6">${[['Investido', money(tt.spend, cur)], ['Impressões', nf.format(tt.impressions)], ['Cliques no link', nf.format(tt.clicks)], ['CPC médio', tt.clicks ? money(tt.spend / tt.clicks, cur) : '-'], ['Compras (Meta)', nf.format(tt.purchases)], ['ROAS (Meta)', tt.spend ? (tt.value / tt.spend).toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + '×' : '-']].map(([l, v]) => `<div class="kpi"><span class="kpi-label">${l}</span><div class="kpi-value">${v}</div></div>`).join('')}</div>
+      <div class="card"><div class="card-head"><h2>Campanhas · ${esc(m.account.name)}</h2><span class="hint">Atualizado ${dt(m.fetchedAt)} · <button class="link-btn" data-camp-refresh>atualizar agora</button></span></div>
+      <div class="table-wrap"><table class="table"><thead><tr><th>Campanha</th><th>Status</th><th class="num">Orçamento/dia</th><th class="num">Investido</th><th class="num">Cliques</th><th class="num">CTR</th><th class="num">CPC</th><th class="num">Compras</th><th class="num">ROAS</th>${canEdit ? '<th></th>' : ''}</tr></thead><tbody>
+      ${m.rows.length ? m.rows.map(r => `<tr data-camp="${r.id}" data-name="${esc(r.name)}"><td data-l="Campanha"><b>${esc(r.name)}</b><br><small class="muted">${esc(r.objective || '')}</small></td>
+        <td data-l="Status"><span class="pill ${r.effective === 'ACTIVE' ? 'pill-paid' : 'pill-pending'}">${esc(campStatus[r.effective] || r.effective)}</span></td>
+        <td class="num" data-l="Orçamento/dia">${r.dailyBudget ? money(r.dailyBudget / 100, cur) : r.lifetimeBudget ? 'total ' + money(r.lifetimeBudget / 100, cur) : '-'}</td>
+        <td class="num" data-l="Investido">${money(r.spend, cur)}</td><td class="num" data-l="Cliques">${nf.format(r.clicks)}</td><td class="num" data-l="CTR">${r.ctr.toLocaleString('pt-BR', { maximumFractionDigits: 2 })}%</td>
+        <td class="num" data-l="CPC">${r.cpc ? money(r.cpc, cur) : '-'}</td><td class="num" data-l="Compras">${nf.format(r.purchases)}</td><td class="num" data-l="ROAS">${r.roas ? r.roas.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + '×' : '-'}</td>
+        ${canEdit ? `<td data-l="Ações" class="row-actions">${['ACTIVE', 'PAUSED'].includes(r.status) ? `<button class="btn-sm" data-camp-status="${r.status === 'ACTIVE' ? 'PAUSED' : 'ACTIVE'}">${r.status === 'ACTIVE' ? 'Pausar' : 'Ativar'}</button>` : ''}${r.dailyBudget ? `<button class="btn-sm" data-camp-budget="${r.dailyBudget}">Orçamento</button>` : ''}</td>` : ''}</tr>`).join('') : `<tr><td class="empty" colspan="10">Nenhuma campanha na conta.</td></tr>`}
+      </tbody></table></div>
+      <p class="hint">Compras e ROAS da Meta dependem do Pixel/Conversions API. A coluna de vendas reais está em "Origem das vendas no site", logo abaixo.</p></div>`;
+    }
+    const site = `<div class="card"><div class="card-head"><h2>Origem das vendas no site</h2><p class="hint">Visitas que chegaram com <code>utm_campaign</code> e vendas validadas pela notificação oficial da Cakto. O site repassa as UTMs para o checkout da Cakto automaticamente.</p></div>
+      <div class="table-wrap"><table class="table"><thead><tr><th>Campanha (utm_campaign)</th><th>Fonte</th><th class="num">Visitas</th><th class="num">Pessoas</th><th class="num">Vendas</th><th class="num">Receita</th></tr></thead><tbody>
+      ${c.site.length ? c.site.map(r => `<tr><td data-l="Campanha"><b>${esc(r.campaign)}</b></td><td data-l="Fonte">${esc(r.source || '-')}</td><td class="num" data-l="Visitas">${nf.format(r.visits)}</td><td class="num" data-l="Pessoas">${nf.format(r.people)}</td><td class="num" data-l="Vendas">${nf.format(r.orders)}</td><td class="num" data-l="Receita">${brl(r.revenue)}</td></tr>`).join('') : '<tr><td class="empty" colspan="6">Nenhuma visita com utm_campaign no período. Use o gerador abaixo nos anúncios.</td></tr>'}
+      </tbody></table></div></div>`;
+    const pages = [['/pt', 'Home (PT)'], ['/en', 'Home (EN)'], ['/pt/loja', 'Loja'], ['/pt/receitas', 'Receitas'], ['/pt/quiz', 'Quiz'], ...c.products.map(p => ['/pt/loja/' + p.slug, 'Guia: ' + p.title])];
+    const utm = `<div class="card"><div class="card-head"><h2>Gerar link de campanha</h2><p class="hint">Use este link no anúncio. A campanha aparece na tabela acima quando alguém visitar ou comprar.</p></div>
+      <form class="aff-form utm-form" id="utm-form">
+        <label>Página<span class="select"><select name="page">${pages.map(([u, l]) => `<option value="${esc(u)}">${esc(l)}</option>`).join('')}</select></span></label>
+        <label>Nome da campanha<input name="campaign" placeholder="ex.: matcha-outubro" required></label>
+        <label>Anúncio/criativo (opcional)<input name="content" placeholder="ex.: video-15s"></label>
+        <label>Fonte<span class="select"><select name="source"><option value="meta">Meta (Facebook/Instagram)</option><option value="instagram">Instagram orgânico</option><option value="google">Google</option><option value="email">E-mail</option><option value="whatsapp">WhatsApp</option></select></span></label>
+        <div class="utm-out"><input name="out" readonly placeholder="O link aparece aqui"><button class="btn-sm primary" type="submit">Gerar e copiar</button></div>
+      </form></div>`;
+    el.innerHTML = flags + (c.connected ? metaHtml : setup) + site + utm;
+  }
+  const slugU = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+  $('#campaigns').addEventListener('submit', async e => {
+    if (e.target.id !== 'utm-form') return;
+    e.preventDefault();
+    const f = e.target, u = new URL(f.page.value, camp.siteUrl);
+    const medium = { meta: 'paid_social', instagram: 'social', google: 'cpc', email: 'email', whatsapp: 'social' }[f.source.value];
+    u.searchParams.set('utm_source', f.source.value); u.searchParams.set('utm_medium', medium); u.searchParams.set('utm_campaign', slugU(f.campaign.value));
+    if (f.content.value) u.searchParams.set('utm_content', slugU(f.content.value));
+    f.out.value = u.toString();
+    try { await navigator.clipboard.writeText(f.out.value); toast('Link copiado.'); } catch (_) { f.out.select(); }
+  });
+  $('#campaigns').addEventListener('click', async e => {
+    if (e.target.closest('[data-camp-refresh]')) { await api('/api/admin/campaigns/refresh', { method: 'POST', body: '{}' }); return loadCampaigns(); }
+    const row = e.target.closest('[data-camp]'); if (!row) return;
+    const st = e.target.closest('[data-camp-status]'), bg = e.target.closest('[data-camp-budget]');
+    let body;
+    if (st) { if (!confirm(`${st.dataset.campStatus === 'PAUSED' ? 'Pausar' : 'Ativar'} a campanha "${row.dataset.name}" na Meta?`)) return; body = { status: st.dataset.campStatus }; }
+    else if (bg) { const v = prompt(`Novo orçamento diário para "${row.dataset.name}" (em reais):`, (Number(bg.dataset.campBudget) / 100).toFixed(2).replace('.', ',')); if (v === null) return; const n = Math.round(Number(String(v).replace(/\./g, '').replace(',', '.')) * 100); if (!(n >= 100)) return toast('Valor inválido.', true); body = { dailyBudget: n }; }
+    else return;
+    body.name = row.dataset.name;
+    try { await api('/api/admin/campaigns/' + row.dataset.camp, { method: 'POST', body: JSON.stringify(body) }); toast('Alteração enviada para a Meta.'); loadCampaigns(); }
+    catch (err) { toast(err.need ? 'Sem permissão para mudar campanhas.' : 'A Meta recusou: ' + err.message, true); }
+  });
+
+  // ---------- chá do dia ----------
+  let dailyData = null;
+  const periodName = { morning: 'Manhã', afternoon: 'Tarde', night: 'Noite' };
+  const seasonName = { verao: 'verão', outono: 'outono', inverno: 'inverno', primavera: 'primavera' };
+  async function loadDaily() {
+    dailyData = await api('/api/admin/daily?days=14');
+    const d = dailyData, teaName = Object.fromEntries(d.teas.map(t => [t.id, t.name]));
+    $('#daily').innerHTML = `<div class="card"><div class="card-head"><h2>Chá do dia: próximos 14 dias</h2><p class="hint">A escolha é automática (momento do dia, estação no Brasil, dia útil ou fim de semana e variedade em relação aos dias anteriores) e aparece na home. À noite só entram chás sem cafeína. Troque o chá, a receita ou escreva uma nota quando quiser; "Automático" volta para a análise.</p></div>
+      <div class="daily-admin">${d.days.map(day => {
+        const dl = new Date(day.key + 'T12:00:00Z').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit', timeZone: 'UTC' });
+        return `<div class="day${day.key === d.today ? ' is-today' : ''}"><h3>${esc(dl)}${day.key === d.today ? ' · hoje' : ''} <small>${seasonName[day.season]}${day.weekend ? ' · fim de semana' : ''}</small></h3>
+        ${['morning', 'afternoon', 'night'].map(per => { const x = day.periods[per]; return `<form class="day-row" data-day="${day.key}" data-period="${per}">
+          <span class="day-per">${periodName[per]}</span>
+          <span class="select"><select name="tea" aria-label="Chá"><option value="">Automático: ${esc(teaName[x.autoTea])}</option>${d.teas.filter(t => per !== 'night' || t.caffeineFree).map(t => `<option value="${t.id}"${x.manual && x.tea === t.id ? ' selected' : ''}>${esc(t.name)}</option>`).join('')}</select></span>
+          <span class="select"><select name="recipe" aria-label="Receita"><option value="">Receita automática${x.recipe && !x.manual ? ': ' + esc(x.recipe.name) : ''}</option>${d.recipes.filter(r => per !== 'night' || !r.caffeine).map(r => `<option value="${esc(r.slug)}"${x.recipe && x.recipe.slugPt === r.slug && x.manual ? ' selected' : ''}>${esc(r.name)}${r.iced ? ' (gelada)' : ''}</option>`).join('')}</select></span>
+          <input name="notePt" placeholder="Nota (opcional)" maxlength="200" value="${esc(x.note || '')}">
+          <button class="btn-sm" type="submit">Salvar</button>
+        </form>`; }).join('')}</div>`;
+      }).join('')}</div></div>`;
+  }
+  $('#daily').addEventListener('submit', async e => {
+    const f = e.target.closest('form[data-day]'); if (!f) return;
+    e.preventDefault();
+    try { await api(`/api/admin/daily/${f.dataset.day}/${f.dataset.period}`, { method: 'PUT', body: JSON.stringify({ tea: f.tea.value, recipe: f.recipe.value, notePt: f.notePt.value }) }); toast('Chá do dia salvo.'); loadDaily(); }
+    catch (err) { toast(err.message === 'night_caffeine' ? 'À noite só chás sem cafeína.' : 'Não deu certo: ' + err.message, true); }
+  });
+
+  // ---------- banco de receitas ----------
+  let bank = null, bankFilter = 'draft';
+  const styleName = { hot: 'Quente', iced: 'Gelada', latte: 'Latte' };
+  async function loadRecipes() {
+    bank = await api('/api/admin/recipes');
+    const canPub = allowed('content.publish');
+    const list = bank.items.filter(d => d.status === bankFilter);
+    $('#recipes').innerHTML = `<div class="card"><div class="card-head"><h2>Banco de receitas não publicadas</h2>
+        <button class="btn-sm primary" data-rb-gen>Gerar mais 3 rascunhos</button>
+        <p class="hint">Os rascunhos nascem da análise de ${nf.format(bank.analysed)} receitas (guias em PDF e site): o sistema procura ingredientes que aparecem juntos e monta combinações novas, que não existem em nenhum guia. Todo dia entram novos rascunhos até manter 20 na fila. <b>Prepare antes de publicar</b>: ajuste medidas e texto, marque como testada e publique na hora ou agende.</p></div>
+      <div class="chip-row rb-filter">${[['draft', 'Rascunhos'], ['published', 'Publicadas'], ['discarded', 'Descartadas']].map(([k, l]) => `<button class="btn-sm${k === bankFilter ? ' primary' : ''}" data-rb-filter="${k}">${l} (${bank.counts[k]})</button>`).join('')}</div>
+      <div class="review-admin">${list.length ? list.map(d => { const r = d.recipe; return `<article class="rv-item rb-item" data-rb="${d.id}">
+        <header class="rv-top"><strong>${esc(r.name.pt)}</strong> <span class="pill">${styleName[d.style] || d.style}</span>${r.caffeine ? '' : ' <span class="pill">Sem cafeína</span>'}${d.tested ? ' <span class="pill pill-paid">Testada</span>' : ''}${d.scheduledFor ? ` <span class="pill pill-pending">Agendada: ${esc(d.scheduledFor.split('-').reverse().join('/'))}</span>` : ''}</header>
+        <p class="rv-who">${esc(r.name.en)} · ${esc(r.time.pt)} · ${esc(r.yield.pt)} · criada ${dt(d.createdAt)}${d.publishedAt ? ' · publicada ' + dt(d.publishedAt) : ''}</p>
+        <p class="rv-text">${esc(r.tag.pt)}</p>
+        <details class="rb-more"><summary>Ingredientes, preparo e de onde veio</summary>
+          <ul>${r.ingredients.map(i => `<li>${esc(i.qty.pt)} ${esc(i.item.pt)}</li>`).join('')}</ul><ol>${r.steps.map(x => `<li>${esc(x.pt)}</li>`).join('')}</ol>
+          <p class="hint">${d.basis.map(b => `<b>${esc(b.pair.join(' + '))}</b> aparecem juntos em ${b.count} receita(s): ${esc(b.examples.join('; '))}`).join('<br>')}</p>
+        </details>
+        <form class="rb-edit" hidden>
+          <div class="grid-2f"><label>Nome (PT)<input name="name_pt" value="${esc(r.name.pt)}"></label><label>Nome (EN)<input name="name_en" value="${esc(r.name.en)}"></label>
+          <label>Descrição (PT)<textarea name="tag_pt" rows="2">${esc(r.tag.pt)}</textarea></label><label>Descrição (EN)<textarea name="tag_en" rows="2">${esc(r.tag.en)}</textarea></label></div>
+          <label>Ingredientes, um por linha: <code>qtd PT | item PT | qtd EN | item EN</code><textarea name="ingredients" rows="7">${esc(r.ingredients.map(i => [i.qty.pt, i.item.pt, i.qty.en, i.item.en].join(' | ')).join('\n'))}</textarea></label>
+          <label>Preparo, um passo por linha: <code>PT || EN</code><textarea name="steps" rows="6">${esc(r.steps.map(x => x.pt + ' || ' + x.en).join('\n'))}</textarea></label>
+          <div class="grid-2f"><label>Tempo (PT)<input name="time_pt" value="${esc(r.time.pt)}"></label><label>Dica (PT)<textarea name="tip_pt" rows="2">${esc((r.tip && r.tip.pt) || '')}</textarea></label></div>
+          <label class="check"><input type="checkbox" name="tested"${d.tested ? ' checked' : ''}> Já preparei e aprovei esta receita</label>
+          <div class="rv-actions"><button class="btn-sm primary" type="submit">Salvar</button><button class="btn-sm" type="button" data-rb="cancel">Cancelar</button></div>
+        </form>
+        <div class="rv-actions">
+          <a class="btn-sm" href="/api/admin/recipes/${d.id}/preview?lang=pt" target="_blank" rel="noopener">Prévia PT ↗</a><a class="btn-sm" href="/api/admin/recipes/${d.id}/preview?lang=en" target="_blank" rel="noopener">Prévia EN ↗</a>
+          ${d.status !== 'discarded' ? '<button class="btn-sm" data-rb="edit">Editar</button>' : ''}
+          ${d.status === 'draft' && canPub ? `<button class="btn-sm primary" data-rb="publish">Publicar agora</button><label class="rb-sched">Agendar <input type="date" data-rb-date value="${esc(d.scheduledFor || '')}"></label>` : ''}
+          ${d.status === 'published' && canPub ? `<a class="btn-sm" href="/pt/receitas/${esc(r.slug.pt)}" target="_blank" rel="noopener">Ver no site ↗</a><button class="btn-sm" data-rb="unpublish">Tirar do ar</button>` : ''}
+          ${d.status === 'discarded' ? '<button class="btn-sm" data-rb="restore">Voltar para rascunhos</button>' : '<button class="btn-sm danger" data-rb="discard">Descartar</button>'}
+        </div>
+      </article>`; }).join('') : '<p class="empty">Nada aqui.</p>'}</div>`;
+  }
+  $('#recipes').addEventListener('click', async e => {
+    if (e.target.closest('[data-rb-gen]')) { const r = await api('/api/admin/recipes/generate', { method: 'POST', body: JSON.stringify({ n: 3 }) }); toast(r.made ? `${r.made} rascunho(s) novo(s).` : 'Nenhuma combinação nova encontrada agora.'); return loadRecipes(); }
+    const fb = e.target.closest('[data-rb-filter]'); if (fb) { bankFilter = fb.dataset.rbFilter; return loadRecipes(); }
+    const b = e.target.closest('button[data-rb]'); if (!b) return;
+    const item = b.closest('[data-rb]:not(button)'), id = item.dataset.rb, act = b.dataset.rb;
+    if (act === 'edit') { $('.rb-edit', item).hidden = false; return; }
+    if (act === 'cancel') { $('.rb-edit', item).hidden = true; return; }
+    try {
+      if (act === 'discard') { await api('/api/admin/recipes/' + id, { method: 'DELETE' }); toast('Descartada.'); }
+      else if (act === 'restore') { await api('/api/admin/recipes/' + id + '/unpublish', { method: 'POST', body: '{}' }); toast('Voltou para os rascunhos.'); }
+      else { const r = await api(`/api/admin/recipes/${id}/${act}`, { method: 'POST', body: '{}' }); toast(act === 'publish' ? 'Publicada no site.' : 'Tirada do ar.'); }
+      loadRecipes();
+    } catch (err) { toast(err.need ? 'Sem permissão para publicar receitas.' : err.message, true); }
+  });
+  $('#recipes').addEventListener('change', async e => {
+    const inp = e.target.closest('[data-rb-date]'); if (!inp) return;
+    const id = inp.closest('[data-rb]').dataset.rb;
+    await api(`/api/admin/recipes/${id}/schedule`, { method: 'POST', body: JSON.stringify({ date: inp.value }) });
+    toast(inp.value ? 'Agendada: publica sozinha nesse dia.' : 'Agendamento removido.'); loadRecipes();
+  });
+  $('#recipes').addEventListener('submit', async e => {
+    const f = e.target.closest('.rb-edit'); if (!f) return;
+    e.preventDefault();
+    const id = f.closest('[data-rb]').dataset.rb, body = Object.fromEntries(new FormData(f).entries());
+    body.tested = f.tested.checked;
+    try { await api('/api/admin/recipes/' + id, { method: 'PUT', body: JSON.stringify(body) }); toast('Receita salva.'); loadRecipes(); } catch (err) { toast(err.message, true); }
+  });
+
+  // ---------- perguntas da comunidade ----------
+  let qData = null;
+  const qStatus = { pending: 'Para moderar', approved: 'Publicada', rejected: 'Recusada' };
+  async function loadQuestions(countOnly) {
+    qData = await api('/api/admin/questions');
+    const pend = qData.items.filter(q => q.status === 'pending').length + qData.items.reduce((s, q) => s + q.answers.filter(a => a.status === 'pending').length, 0);
+    setCount('questions', pend);
+    if (countOnly) return;
+    const f = $('#q-filter').value, canAns = allowed('community.answer');
+    const list = qData.items.filter(q => !f || (f === 'pending' ? q.status === 'pending' || q.answers.some(a => a.status === 'pending') : f === 'unanswered' ? q.status === 'approved' && !q.answers.some(a => a.status === 'approved') : q.status === f));
+    const ownerName = qData.owner.name;
+    $('#q-list').innerHTML = list.length ? list.map(q => `<article class="rv-item" data-q="${q.id}">
+      <header class="rv-top"><strong>${esc(q.guide || 'Assunto geral')}</strong> <span class="pill ${rvPill[q.status]}">${qStatus[q.status]}</span>${q.buyer ? ' <span class="pill pill-paid">Comprador</span>' : ''}${q.edited ? ' <span class="pill">Editada</span>' : ''}${q.ups ? ` <span class="pill">▲ ${q.ups}</span>` : ''}</header>
+      <p class="rv-who"><b>${esc(q.name)}</b> · ${esc(q.email)} · ${q.lang.toUpperCase()} · ${dt(q.createdAt)}${q.url ? ` · <a href="${q.url}" target="_blank" rel="noopener">ver no site ↗</a>` : ''}</p>
+      <p class="rv-text">${esc(q.text)}</p>
+      ${q.rejectReason ? `<p class="hint">Motivo da recusa: ${esc(q.rejectReason)}</p>` : ''}
+      <div class="rv-actions">
+        ${q.status !== 'approved' ? '<button class="btn-sm primary" data-qa-act="approve">Aprovar e publicar</button>' : ''}
+        ${q.status !== 'rejected' ? '<button class="btn-sm" data-qa-act="reject-open">Recusar…</button>' : ''}
+        <button class="btn-sm danger" data-qa-act="delete">Excluir</button>
+      </div>
+      <form class="rv-reject" data-qa-reject hidden><label>Motivo (vai no e-mail, com um link para a pessoa editar)<textarea name="reason" rows="2" maxlength="400"></textarea></label><div class="rv-actions"><button class="btn-sm primary" type="submit">Recusar e enviar e-mail</button><button class="btn-sm" type="button" data-qa-act="reject-cancel">Cancelar</button></div></form>
+      ${q.answers.length ? `<div class="qa-admin-answers">${q.answers.map(a => `<div class="qa-admin-answer" data-a="${a.id}">
+        <p class="rv-who">${a.by === 'owner' ? `<b>${esc(ownerName)}</b> · Botânora` : `<b>${esc(a.name)}</b> · ${esc(a.email)} · comprador`} · ${dt(a.createdAt)} · <span class="pill ${rvPill[a.status]}">${qStatus[a.status] || a.status}</span>${a.ups ? ` · ▲ ${a.ups}` : ''}</p>
+        <p class="rv-text">${esc(a.text)}</p>
+        <div class="rv-actions">${a.status === 'pending' ? '<button class="btn-sm primary" data-a-act="approve">Aprovar</button><button class="btn-sm" data-a-act="reject">Recusar</button>' : ''}<button class="btn-sm danger" data-a-act="delete">Excluir</button></div>
+      </div>`).join('')}</div>` : ''}
+      ${q.status === 'approved' && canAns ? `<form class="qa-owner-answer" data-qa-answer><label>Responder como ${esc(ownerName)} (publica na hora, com sua foto e o selo da Botânora)<textarea name="text" rows="3" minlength="10"></textarea></label><button class="btn-sm primary" type="submit">Publicar resposta</button></form>` : ''}
+    </article>`).join('') : '<p class="empty">Nada neste filtro.</p>';
+  }
+  $('#q-filter').addEventListener('change', () => loadQuestions());
+  $('#q-list').addEventListener('click', async e => {
+    const item = e.target.closest('[data-q]'); if (!item) return;
+    const qid = item.dataset.q, b = e.target.closest('[data-qa-act],[data-a-act]'); if (!b) return;
+    const mailNote2 = m => m === 'sent' ? ' E-mail enviado.' : m === 'disabled' ? ' (e-mail desligado)' : m && m.startsWith('error') ? ' Falha no e-mail.' : '';
+    try {
+      if (b.dataset.qaAct === 'reject-open') { $('[data-qa-reject]', item).hidden = false; return; }
+      if (b.dataset.qaAct === 'reject-cancel') { $('[data-qa-reject]', item).hidden = true; return; }
+      if (b.dataset.qaAct === 'delete') { if (!confirm('Excluir esta pergunta e as respostas?')) return; await api('/api/admin/questions/' + qid, { method: 'DELETE' }); toast('Excluída.'); }
+      else if (b.dataset.qaAct === 'approve') { const r = await api(`/api/admin/questions/${qid}/approve`, { method: 'POST', body: '{}' }); toast('Publicada.' + mailNote2(r.mail)); }
+      else if (b.dataset.aAct) {
+        const aid = b.closest('[data-a]').dataset.a, act = b.dataset.aAct;
+        if (act === 'delete') { if (!confirm('Excluir esta resposta?')) return; await api(`/api/admin/questions/${qid}/answers/${aid}`, { method: 'DELETE' }); toast('Resposta excluída.'); }
+        else { const reason = act === 'reject' ? prompt('Motivo (vai no e-mail para quem respondeu):', '') : ''; if (reason === null) return; const r = await api(`/api/admin/questions/${qid}/answers/${aid}/${act}`, { method: 'POST', body: JSON.stringify({ reason }) }); toast((act === 'approve' ? 'Resposta publicada.' : 'Resposta recusada.') + mailNote2(r.mail)); }
+      }
+      loadQuestions();
+    } catch (err) { toast('Não deu certo: ' + err.message, true); }
+  });
+  $('#q-list').addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = e.target, qid = f.closest('[data-q]').dataset.q;
+    try {
+      if (f.matches('[data-qa-reject]')) { const r = await api(`/api/admin/questions/${qid}/reject`, { method: 'POST', body: JSON.stringify({ reason: f.reason.value }) }); toast('Recusada.' + (r.mail === 'sent' ? ' E-mail com link de edição enviado.' : '')); }
+      else if (f.matches('[data-qa-answer]')) { const r = await api(`/api/admin/questions/${qid}/answer`, { method: 'POST', body: JSON.stringify({ text: f.text.value }) }); toast('Resposta publicada.' + (r.mail === 'sent' ? ' Quem perguntou recebeu um e-mail.' : '')); }
+      loadQuestions();
+    } catch (err) { toast(err.need ? 'Sem permissão para responder como Botânora.' : err.message, true); }
+  });
+
+  // ---------- usuários e permissões ----------
+  let teamData = null;
+  async function loadTeam() {
+    teamData = await api('/api/admin/team/users');
+    const P = teamData.perms, R = teamData.roles;
+    const permBoxes = (sel, dis) => `<div class="perm-grid">${Object.entries(P).map(([k, l]) => `<label class="check"><input type="checkbox" name="perm" value="${k}"${sel.includes(k) ? ' checked' : ''}${dis ? ' disabled' : ''}> ${esc(l)}</label>`).join('')}</div>`;
+    const roleSel = `<span class="select"><select data-role><option value="">Aplicar um modelo de permissões…</option>${Object.entries(R).map(([k, r]) => `<option value="${k}">${esc(r.label)}</option>`).join('')}</select></span>`;
+    $('#team').innerHTML = `<div class="card"><div class="card-head"><h2>Usuários do painel</h2><p class="hint">O dono (usuário do .env) tem acesso total e não pode ser removido. Cada pessoa da equipe entra com usuário e senha próprios e só vê o que tem permissão. Desativar ou trocar a senha encerra as sessões abertas dessa pessoa. Tudo fica no Histórico.</p></div>
+      <div class="review-admin">${teamData.users.map(u => `<article class="rv-item" data-user="${u.id}">
+        <header class="rv-top"><strong>${esc(u.name)}</strong> <span class="pill">${esc(u.user)}</span>${u.owner ? ' <span class="pill pill-paid">Dono</span>' : u.active ? ' <span class="pill pill-paid">Ativo</span>' : ' <span class="pill pill-cancelled">Desativado</span>'}</header>
+        <p class="rv-who">${u.owner ? 'Acesso total' : `${u.perms.length} permissões · último acesso ${u.lastLogin ? dt(u.lastLogin) : 'nunca'}`}</p>
+        ${u.owner ? '' : `<form class="user-form">${roleSel}${permBoxes(u.perms)}
+          <div class="grid-2f"><label>Nome<input name="name" value="${esc(u.name)}"></label><label>Nova senha (opcional, mínimo 10)<input name="pass" type="password" autocomplete="new-password"></label></div>
+          <div class="rv-actions"><button class="btn-sm primary" type="submit">Salvar</button><button class="btn-sm" type="button" data-user-act="toggle">${u.active ? 'Desativar' : 'Reativar'}</button><button class="btn-sm danger" type="button" data-user-act="delete">Remover</button></div></form>`}
+      </article>`).join('')}</div></div>
+      <div class="card"><div class="card-head"><h2>Adicionar pessoa</h2></div>
+      <form class="user-form" id="user-new">${roleSel}${permBoxes(R.moderacao.perms)}
+        <div class="grid-3f"><label>Nome<input name="name" required></label><label>Usuário (letras, números, . _ -)<input name="user" required pattern="[A-Za-z0-9._-]{3,32}"></label><label>Senha (mínimo 10)<input name="pass" type="password" required minlength="10" autocomplete="new-password"></label></div>
+        <button class="btn-sm primary" type="submit">Criar usuário</button></form></div>`;
+  }
+  const permsOf = f => $$('input[name=perm]:checked', f).map(x => x.value);
+  $('#team').addEventListener('change', e => {
+    const s = e.target.closest('[data-role]'); if (!s || !s.value) return;
+    const f = s.closest('form'), perms = teamData.roles[s.value].perms;
+    $$('input[name=perm]', f).forEach(x => { x.checked = perms.includes(x.value); });
+  });
+  $('#team').addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = e.target;
+    const errs = { user: 'Usuário inválido (3 a 32 letras, números, . _ -).', exists: 'Esse usuário já existe.', pass: 'A senha precisa de pelo menos 10 caracteres.' };
+    try {
+      if (f.id === 'user-new') { await api('/api/admin/team/users', { method: 'POST', body: JSON.stringify({ name: f.name.value, user: f.user.value, pass: f.pass.value, perms: permsOf(f) }) }); toast('Usuário criado.'); }
+      else { const id = f.closest('[data-user]').dataset.user; await api('/api/admin/team/users/' + id, { method: 'PUT', body: JSON.stringify({ name: f.name.value, perms: permsOf(f), pass: f.pass.value }) }); toast('Usuário salvo.'); }
+      loadTeam();
+    } catch (err) { toast(errs[err.message] || err.message, true); }
+  });
+  $('#team').addEventListener('click', async e => {
+    const b = e.target.closest('[data-user-act]'); if (!b) return;
+    const id = b.closest('[data-user]').dataset.user, u = teamData.users.find(x => x.id === id);
+    if (b.dataset.userAct === 'delete') { if (!confirm(`Remover ${u.name}?`)) return; await api('/api/admin/team/users/' + id, { method: 'DELETE' }); toast('Removido.'); }
+    else { await api('/api/admin/team/users/' + id, { method: 'PUT', body: JSON.stringify({ active: !u.active }) }); toast(u.active ? 'Desativado: as sessões dessa pessoa foram encerradas.' : 'Reativado.'); }
+    loadTeam();
+  });
+
+  // ---------- segurança e backups ----------
+  async function loadSecurity() {
+    const [sec, bks] = await Promise.all([api('/api/admin/team/security'), api('/api/admin/team/backups')]);
+    $('#security').innerHTML = `<div class="card"><div class="card-head"><h2>Situação de segurança</h2></div>
+      <ul class="checklist">${sec.checks.map(c => `<li class="${c.ok ? 'ok' : 'warn'}"><span aria-hidden="true">${c.ok ? '✓' : '!'}</span> ${esc(c.label)}</li>`).join('')}</ul>
+      <p class="hint">Proteção dos PDFs: os arquivos ficam fora da pasta pública e só saem pela biblioteca, com o cookie do aparelho (até ${sec.maxDevices} aparelhos por e-mail) e limite de ${sec.maxDownloads} downloads por pedido. Pagamentos só liberam acesso com a notificação oficial da Cakto, conferida pela assinatura ou pela chave secreta do webhook.</p></div>
+      <div class="card"><div class="card-head"><h2>Backups do banco de dados</h2><button class="btn-sm primary" data-backup-now>Fazer backup agora</button>
+        <p class="hint">Um backup automático por dia (guarda os 14 mais recentes) em <code>data/backups</code> na VPS. Baixe e guarde uma cópia fora do servidor de vez em quando. O backup não inclui os PDFs (ficam em <code>data/pdfs</code>).</p></div>
+      <div class="table-wrap"><table class="table"><thead><tr><th>Arquivo</th><th>Tipo</th><th>Data</th><th class="num">Tamanho</th><th></th></tr></thead><tbody>
+      ${bks.length ? bks.map(b => `<tr><td data-l="Arquivo"><code>${esc(b.name)}</code></td><td data-l="Tipo">${b.kind === 'auto' ? 'Automático' : 'Manual'}</td><td data-l="Data">${dt(b.t)}</td><td class="num" data-l="Tamanho">${(b.size / 1024).toLocaleString('pt-BR', { maximumFractionDigits: 0 })} KB</td><td><a class="btn-sm" href="/api/admin/team/backups/${encodeURIComponent(b.name)}">Baixar</a></td></tr>`).join('') : '<tr><td class="empty" colspan="5">Nenhum backup ainda.</td></tr>'}
+      </tbody></table></div></div>`;
+  }
+  $('#security').addEventListener('click', async e => {
+    if (!e.target.closest('[data-backup-now]')) return;
+    const r = await api('/api/admin/team/backups', { method: 'POST', body: '{}' }); toast('Backup criado: ' + r.name); loadSecurity();
+  });
+
+  // ---------- histórico ----------
+  async function loadHistory() {
+    const q = ($('#hist-q') || {}).value || '';
+    const list = await api('/api/admin/team/audit?n=400&q=' + encodeURIComponent(q));
+    $('#history').innerHTML = `<div class="card"><div class="card-head"><h2>Histórico de alterações</h2>
+      <input id="hist-q" class="hist-q" placeholder="Filtrar pela ação (ex.: Aprovou, Publicou, Alterou campanha)" value="${esc(q)}">
+      <p class="hint">Cada alteração feita no painel (e cada entrada ou falha de login) fica registrada com quem fez, quando e o que mudou. Guarda as 3.000 mais recentes.</p></div>
+      <div class="table-wrap"><table class="table"><thead><tr><th>Quando</th><th>Quem</th><th>Ação</th><th>Item</th><th>Detalhe</th></tr></thead><tbody>
+      ${list.length ? list.map(x => `<tr class="${/Falha/.test(x.action) ? 'is-alert' : ''}"><td data-l="Quando">${dt(x.t)}</td><td data-l="Quem">${esc(x.name || x.by)}${x.ip ? ` <small class="muted">#${esc(x.ip)}</small>` : ''}</td><td data-l="Ação">${esc(x.action)}</td><td data-l="Item"><code>${esc(x.target)}</code></td><td data-l="Detalhe">${esc(x.detail)}</td></tr>`).join('') : '<tr><td class="empty" colspan="5">Nada registrado ainda.</td></tr>'}
+      </tbody></table></div></div>`;
+  }
+  let histT;
+  $('#history').addEventListener('input', e => { if (e.target.id !== 'hist-q') return; clearTimeout(histT); histT = setTimeout(async () => { await loadHistory(); const i = $('#hist-q'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 400); });
+
+  // ---------- perfil do dono ----------
+  async function loadOwner() {
+    const o = await api('/api/admin/owner');
+    $('#owner').innerHTML = `<div class="card"><div class="card-head"><h2>Perfil do dono</h2><p class="hint">Aparece nas respostas da Botânora na comunidade: sua foto, o selo da Botânora e o nome abaixo.</p></div>
+      <div class="owner-grid"><div class="owner-photo">${o.photo ? `<img src="/media/${esc(o.photo)}" alt="" width="120" height="120">` : '<span>Sem foto</span>'}<label class="btn-sm">Trocar foto<input type="file" accept="image/jpeg,image/png,image/webp" id="owner-file" hidden></label></div>
+      <form id="owner-form" class="aff-form"><label>Nome que aparece<input name="name" value="${esc(o.name)}" maxlength="60"></label>
+        <label>Cargo (PT)<input name="rolePt" value="${esc(o.role.pt)}" maxlength="60"></label><label>Cargo (EN)<input name="roleEn" value="${esc(o.role.en)}" maxlength="60"></label>
+        <button class="btn-sm primary" type="submit">Salvar</button></form></div></div>`;
+  }
+  $('#owner').addEventListener('submit', async e => { e.preventDefault(); const f = e.target; await api('/api/admin/owner', { method: 'PUT', body: JSON.stringify({ name: f.name.value, rolePt: f.rolePt.value, roleEn: f.roleEn.value }) }); toast('Perfil salvo.'); });
+  $('#owner').addEventListener('change', async e => {
+    if (e.target.id !== 'owner-file' || !e.target.files[0]) return;
+    const r = await fetch('/api/admin/owner/photo', { method: 'POST', headers: { 'Content-Type': 'application/octet-stream' }, body: e.target.files[0] });
+    if (!r.ok) return toast('Imagem inválida (use JPG, PNG ou WEBP até 3 MB).', true);
+    toast('Foto atualizada.'); loadOwner();
+  });
+
   // ---------- público ----------
   async function loadAudience() {
     const a = await api('/api/admin/audience');
@@ -525,11 +875,14 @@
 
   // inicialização
   loadReports().catch(() => {});
-  loadReviews(true).catch(() => {});
-  loadStats().then(() => {
+  api('/api/admin/me').then(me => {
+    ME = me; applyPerms();
+    if (allowed('stats')) loadReports().catch(() => {});
+    if (allowed('community')) { loadReviews(true).catch(() => {}); loadQuestions(true).catch(() => {}); }
     const h = location.hash.slice(1);
-    const tab = $(`.tabs button[data-tab="${h}"]`);
-    if (tab) tab.click();
+    const first = $('.sidenav [data-tab]:not([hidden])');
+    const start = () => openTab($(`.sidenav [data-tab="${h}"]:not([hidden])`) ? h : (allowed('stats') ? 'overview' : first && first.dataset.tab));
+    if (allowed('stats')) loadStats().then(start, start); else start();
   });
   // ---------- relatórios ----------
   const kindName = { geral: 'Visão geral', vendas: 'Vendas', completo: 'Completo' };
@@ -593,7 +946,7 @@
   // ---------- ao vivo ----------
   // O servidor avisa quando chega visita, venda, inscrição ou download; o painel recarrega o que está na tela.
   const liveEl = $('#live-sync');
-  const current = () => ($('.tabs button[aria-selected="true"]') || {}).dataset?.tab || 'overview';
+  const current = () => document.body.dataset.tab || 'overview';
   let busy = false, again = false, lastKinds = new Set();
   async function refresh() {
     if (document.visibilityState !== 'visible') { again = true; return; }
@@ -601,10 +954,11 @@
     busy = true;
     try {
       const tab = current();
-      if (tab === 'overview' || tab === 'sales' || lastKinds.has('ev')) await loadStats();
+      if (allowed('stats') && (tab === 'overview' || tab === 'sales' || lastKinds.has('ev'))) await loadStats();
       if (tab === 'sales' && lastKinds.has('db')) await loadOrders();
       if (tab === 'audience' && lastKinds.has('db')) await loadAudience();
-      if (lastKinds.has('db')) await loadReviews(tab !== 'reviews');
+      if (lastKinds.has('db') && allowed('community')) { await loadReviews(tab !== 'reviews'); await loadQuestions(tab !== 'questions'); }
+      if (tab === 'overview' && lastKinds.has('db')) await loadTasks();
       lastKinds = new Set();
       liveEl.textContent = 'Ao vivo · ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       liveEl.classList.add('flash'); setTimeout(() => liveEl.classList.remove('flash'), 900);

@@ -16,7 +16,8 @@ const routes = {
   library: { pt: 'biblioteca', en: 'library' },
   recipes: { pt: 'receitas', en: 'recipes' },
   faq: { pt: 'perguntas', en: 'questions' },
-  terms: { pt: 'termos', en: 'terms' }
+  terms: { pt: 'termos', en: 'terms' },
+  community: { pt: 'comunidade', en: 'community' }
 };
 
 function url(lang, key, ...rest) {
@@ -31,7 +32,7 @@ const ui = {
   pt: {
     locale: 'pt-BR', htmlLang: 'pt-BR', other: 'en', otherLabel: 'English', langShort: 'PT',
     tagline: 'Chás e botânicos',
-    nav: { guide: 'Tipos de chá', benefits: 'Benefícios', brewing: 'Preparo', recipes: 'Receitas', gear: 'Utensílios', quiz: 'Quiz', faq: 'Perguntas', shop: 'Guias em PDF', myGuides: 'Meus guias' },
+    nav: { guide: 'Tipos de chá', benefits: 'Benefícios', brewing: 'Preparo', recipes: 'Receitas', gear: 'Utensílios', quiz: 'Quiz', faq: 'Perguntas', shop: 'Guias em PDF', myGuides: 'Meus guias', community: 'Comunidade' },
     skip: 'Pular para o conteúdo',
     menu: 'Menu',
     footer: {
@@ -57,6 +58,8 @@ const ui = {
       h1a: 'Descubra o universo do chá,', h1b: 'uma xícara de cada vez',
       lead: 'Aprenda a preparar, explorar e combinar chás e infusões com guias ilustrados, receitas autorais e conhecimento botânico acessível.',
       ctaQuiz: 'Descobrir meu chá', ctaGuide: 'Explorar os guias em PDF',
+      dailyEyebrow: 'Chá do dia', dailyTitle: 'O chá certo para cada hora de hoje', dailyText: 'Escolhido todo dia pela estação, pelo dia da semana e pela cafeína de cada momento. Amanhã tem outro.', periods: { morning: 'Manhã', afternoon: 'Tarde', night: 'Noite' }, dailyRecipe: 'Receita para hoje', dailyBrew: 'Preparar', dailyGuide: 'No guia', dailyWhy: 'Por que hoje', dailyNoCaf: 'sem cafeína',
+      communityTitle: 'Pergunte a quem já prepara', communityText: 'Dúvidas sobre chá, preparo ou os guias? Respondem leitores que compraram e a equipe da Botânora.', communityEmpty: 'As primeiras perguntas da comunidade aparecem aqui.',
       pathsEyebrow: 'Por onde começar', pathsTitle: 'O que você quer descobrir hoje?', pathsText: 'Cada caminho começa num conteúdo grátis. Se quiser ir mais fundo, mostramos o guia que trata do assunto.', pathGuide: 'Para ir mais fundo',
       aboutEyebrow: 'Sobre a Botânora', aboutTitle: 'Conteúdo feito com cuidado, sem promessas milagrosas',
       aboutText: 'A Botânora é uma central independente sobre chás e infusões. Explicamos o que cada chá é, como prepará-lo bem e o que a ciência diz, separando evidência de tradição.',
@@ -177,7 +180,7 @@ const ui = {
       title: 'Privacidade | Botânora', h1: 'Privacidade',
       body: [
         'A Botânora não usa ferramentas de publicidade. Cookies de medição de terceiros só são ativados se você aceitar no aviso de cookies.',
-        'Se você aceitar, usamos o Google Analytics (estatísticas de visitas) e o Microsoft Clarity (mapas de calor e gravações anônimas de navegação, sem o que você digita em formulários) para entender como o site é usado e melhorá-lo. Você pode mudar a escolha a qualquer momento em "Preferências de cookies", no rodapé.',
+        'Se você aceitar, usamos o Google Analytics (estatísticas de visitas) e o Microsoft Clarity (mapas de calor e gravações anônimas de navegação, sem o que você digita em formulários) para entender como o site é usado e melhorá-lo. Quando houver campanhas na Meta (Facebook e Instagram), o Pixel da Meta também só é ativado com a sua permissão, para medir os anúncios. Você pode mudar a escolha a qualquer momento em "Preferências de cookies", no rodapé.',
         'Para medir o uso do site, registramos a página visitada, a origem da visita, o tipo de dispositivo e um identificador anônimo gerado a partir do seu IP e navegador combinados com um código que muda todos os dias. O IP não é armazenado.',
         'Quando você compra um guia, entra numa lista de espera ou assina a newsletter, guardamos nome e e-mail apenas para entregar o que você pediu. Você pode pedir a exclusão a qualquer momento pelo e-mail de contato.',
         'Se você avaliar um guia, o nome que escolher, a nota e o comentário ficam públicos na página do guia depois da aprovação. O e-mail nunca é exibido. Para apagar uma avaliação, escreva para o e-mail de contato.',
@@ -244,7 +247,7 @@ const ui = {
   en: {
     locale: 'en-US', htmlLang: 'en', other: 'pt', otherLabel: 'Português', langShort: 'EN',
     tagline: 'Tea and botanicals',
-    nav: { guide: 'Types of tea', benefits: 'Benefits', brewing: 'Brewing', recipes: 'Recipes', gear: 'Gear', quiz: 'Quiz', faq: 'Questions', shop: 'PDF guides', myGuides: 'My guides' },
+    nav: { guide: 'Types of tea', benefits: 'Benefits', brewing: 'Brewing', recipes: 'Recipes', gear: 'Gear', quiz: 'Quiz', faq: 'Questions', shop: 'PDF guides', myGuides: 'My guides', community: 'Community' },
     skip: 'Skip to content',
     menu: 'Menu',
     footer: {
@@ -270,6 +273,8 @@ const ui = {
       h1a: 'Discover the world of tea,', h1b: 'one cup at a time',
       lead: 'Learn to brew, explore and pair teas and infusions with illustrated guides, original recipes and approachable botanical know-how.',
       ctaQuiz: 'Find my tea', ctaGuide: 'Explore the PDF guides',
+      dailyEyebrow: 'Tea of the day', dailyTitle: 'The right tea for every part of today', dailyText: 'Picked every day by season, day of the week and the caffeine each moment calls for. Tomorrow brings another.', periods: { morning: 'Morning', afternoon: 'Afternoon', night: 'Night' }, dailyRecipe: 'Recipe for today', dailyBrew: 'Brew', dailyGuide: 'In the guide', dailyWhy: 'Why today', dailyNoCaf: 'caffeine-free',
+      communityTitle: 'Ask people who brew', communityText: 'Questions about tea, brewing or the guides? Readers who bought a guide and the Botânora team answer.', communityEmpty: 'The first community questions will show up here.',
       pathsEyebrow: 'Where to start', pathsTitle: 'What would you like to discover today?', pathsText: 'Every path starts with free content. If you want to go deeper, we show you the guide that covers it.', pathGuide: 'To go deeper',
       aboutEyebrow: 'About Botânora', aboutTitle: 'Content made with care, no miracle claims',
       aboutText: 'Botânora is an independent hub about tea and infusions. We explain what each tea is, how to brew it well and what the science says, keeping evidence and tradition apart.',
@@ -390,7 +395,7 @@ const ui = {
       title: 'Privacy | Botânora', h1: 'Privacy',
       body: [
         'Botânora uses no advertising tools. Third-party measurement cookies are only enabled if you accept them in the cookie notice.',
-        'If you accept, we use Google Analytics (visit statistics) and Microsoft Clarity (heatmaps and anonymous session recordings, without what you type into forms) to understand how the site is used and improve it. You can change your choice at any time under "Cookie preferences" in the footer.',
+        'If you accept, we use Google Analytics (visit statistics) and Microsoft Clarity (heatmaps and anonymous session recordings, without what you type into forms) to understand how the site is used and improve it. When we run Meta (Facebook and Instagram) campaigns, the Meta Pixel is also only enabled with your permission, to measure the ads. You can change your choice at any time under "Cookie preferences" in the footer.',
         'To measure site usage we record the page visited, the referrer, the device type and an anonymous identifier derived from your IP and browser combined with a code that changes every day. Your IP is never stored.',
         'When you buy a guide, join a waitlist or subscribe to the newsletter, we keep your name and email only to deliver what you asked for. You can request deletion at any time via the contact email.',
         'If you review a guide, the name you choose, your rating and your comment become public on the guide page once approved. Your email is never shown. To delete a review, write to the contact email.',
